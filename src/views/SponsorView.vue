@@ -24,7 +24,7 @@
                     </tbody>
                     <tbody v-else>
                         <tr>
-                            <td colspan="4">Carregando Doadores...</td>
+                            <td colspan="3">Carregando Doadores...</td>
                         </tr>
                     </tbody>
                 </table>
