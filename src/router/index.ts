@@ -6,6 +6,9 @@ import NeighborhoodEditView from "@/views/inputs/NeighborhoodEditView.vue";
 import CampaignView from "@/views/CampaignView.vue";
 import CampaignCreateView from "@/views/inputs/CampaignCreateView.vue";
 import CampaignEditView from "@/views/inputs/CampaignEditView.vue";
+import ChildView from '@/views/ChildView.vue';
+import ChildCreateView from '@/views/inputs/ChildCreateView.vue';
+import ChildEditView from '@/views/inputs/ChildEditView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -44,6 +47,21 @@ const router = createRouter({
         path: "/neighborhood/:id/edit",
         name: "neighborhood-edit",
         component: NeighborhoodEditView,
+    },
+    {
+      path: "/child",
+      name: "child",
+      component: ChildView,
+    },
+    {
+      path: "/child/create",
+      name: "child-create",
+      component: ChildCreateView,
+    },
+    {
+      path: "/child/:id/edit",
+      name: "child-edit",
+      component: ChildEditView,
     },
     {
       path: "/about",
