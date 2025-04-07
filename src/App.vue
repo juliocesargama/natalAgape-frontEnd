@@ -32,6 +32,7 @@ const closeMobileMenu = () => {
             <div class="navbar-nav ms-auto mb-2 mb-lg-0">
                 <RouterLink class="nav-link" to="/family" aria-current="Famílias">Famílias</RouterLink>
                 <RouterLink class="nav-link" to="/leader" aria-current="Lideres">Lideres</RouterLink>
+                <RouterLink class="nav-link" to="/sponsor" aria-current="Doadores">Doadores</RouterLink>
                 <RouterLink class="nav-link" to="/neighborhood" aria-current="Bairros">Bairros</RouterLink>
                 <RouterLink class="nav-link" to="/campaign" aria-current="Campanhas">Campanhas</RouterLink>
                 <RouterLink class="nav-link" to="/about" aria-current="Sobre">Sobre</RouterLink>
