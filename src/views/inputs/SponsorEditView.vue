@@ -52,7 +52,7 @@ export default {
     methods: {
         editSponsor() {
             var $this = this;
-            var url = '/api/sponsor'
+            var url = '/api/sponsor/' + this.$route.params.id
             axios.put(url, {
                 sponsorId: this.$route.params.id,
                 sponsorName: this.model.sponsor.sponsorName,
@@ -62,7 +62,7 @@ export default {
                     this.$router.push('/sponsor')
                 })
                 .catch(function (error) {
-                    if (error.response.status == 400) {
+                    if (error.response.status == 404) {
                         $this.errorList.push("Ocorreu um erro ao salvar o doador, verifique o preenchimento de todos os campos e tente novamente.")
                     } else if (error.response.status == 500) {
                         $this.errorList.push("Ocorreu um erro interno no servidor, tente novamente mais tarde.")
@@ -80,7 +80,7 @@ export default {
                     this.model.sponsor.sponsorPhone = result.data.sponsorPhone
                 })
                 .catch(function (error) {
-                    if (error.response.status == 400) {
+                    if (error.response.status == 404) {
                         $this.errorList.push("Ocorreu um erro ao buscar o doador, verifique o preenchimento de todos os campos e tente novamente.")
                     } else if (error.response.status == 500) {
                         $this.errorList.push("Ocorreu um erro interno no servidor, tente novamente mais tarde.")

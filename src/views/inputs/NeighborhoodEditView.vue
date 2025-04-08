@@ -47,9 +47,9 @@ export default {
         this.getNeighborhood()
     },
     methods: {
-        saveNeighborhood() {
+        editNeighborhood() {
             var $this = this;
-            var url = '/api/neighborhood'
+            var url = '/api/neighborhood/' + this.$route.params.id
             axios.put(url, {
                 neighborhoodId: this.$route.params.id,
                 neighborhoodName: this.model.neighborhood.neighborhoodName,
@@ -58,7 +58,7 @@ export default {
                     this.$router.push('/neighborhood')
                 })
                 .catch(function (error) {
-                    if (error.response.status == 400) {
+                    if (error.response.status == 404) {
                         $this.errorList.push("Ocorreu um erro ao salvar o bairro, verifique o preenchimento de todos os campos e tente novamente.")
                     } else if (error.response.status == 500) {
                         $this.errorList.push("Ocorreu um erro interno no servidor, tente novamente mais tarde.")
@@ -75,7 +75,7 @@ export default {
                     this.model.neighborhood.neighborhoodName = result.data.neighborhoodName
                 })
                 .catch(function (error) {
-                    if (error.response.status == 400) {
+                    if (error.response.status == 404) {
                         $this.errorList.push("Ocorreu um erro ao buscar o bairro, verifique o preenchimento de todos os campos e tente novamente.")
                     } else if (error.response.status == 500) {
                         $this.errorList.push("Ocorreu um erro interno no servidor, tente novamente mais tarde.")
@@ -94,7 +94,7 @@ export default {
                 this.errorList.push('O nome do bairro é obrigatório.');
             }
             if(!this.errorList.length){
-                this.saveNeighborhood();
+                this.editNeighborhood();
             };
         }
     }

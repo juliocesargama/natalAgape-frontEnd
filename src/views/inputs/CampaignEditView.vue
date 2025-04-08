@@ -55,7 +55,7 @@ export default {
     methods: {
         editCampaign() {
             var $this = this;
-            var url = '/api/campaign'
+            var url = '/api/campaign/' + this.$route.params.id
             axios.put(url, {
                 campaignId: this.$route.params.id,
                 campaignYear: this.model.campaign.campaignYear,
@@ -66,7 +66,7 @@ export default {
                     this.$router.push('/campaign')
                 })
                 .catch(function (error) {
-                    if (error.response.status == 400) {
+                    if (error.response.status == 404) {
                         $this.errorList.push("Ocorreu um erro ao salvar a campanha, verifique o preenchimento de todos os campos e tente novamente.")
                     } else if (error.response.status == 500) {
                         $this.errorList.push("Ocorreu um erro interno no servidor, tente novamente mais tarde.")
@@ -85,7 +85,7 @@ export default {
                     this.model.campaign.foodDonationPerFamily = result.data.foodDonationPerFamily
                 })
                 .catch(function (error) {
-                    if (error.response.status == 400) {
+                    if (error.response.status == 404) {
                         $this.errorList.push("Ocorreu um erro ao buscar a campanha, verifique o preenchimento de todos os campos e tente novamente.")
                     } else if (error.response.status == 500) {
                         $this.errorList.push("Ocorreu um erro interno no servidor, tente novamente mais tarde.")
