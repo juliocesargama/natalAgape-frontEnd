@@ -9,6 +9,9 @@ import CampaignEditView from "@/views/inputs/CampaignEditView.vue";
 import SponsorView from "@/views/SponsorView.vue";
 import SponsorCreateView from "@/views/inputs/SponsorCreateView.vue";
 import SponsorEditView from "@/views/inputs/SponsorEditView.vue";
+import FamilyView from "@/views/FamilyView.vue";
+import FamilyCreateView from "@/views/inputs/FamilyCreateView.vue";
+import FamilyEditView from "@/views/inputs/FamilyEditView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -62,6 +65,21 @@ const router = createRouter({
       path: "/sponsor/:id/edit",
       name: "sponsor-edit",
       component: SponsorEditView,
+    },
+    {
+      path: "/family",
+      name: "family",
+      component: FamilyView
+    },
+    {
+      path: "/family/create",
+      name: "family-create",
+      component: FamilyCreateView
+    },
+    {
+      path: "/family/:id/edit",
+      name: "family-edit",
+      component: FamilyEditView
     },
     {
       path: "/about",
