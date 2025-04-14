@@ -12,7 +12,7 @@
                         <tr>
                             <th><b>Nome do Responsável</b></th>
                             <th><b>Bairro</b></th>
-                            <th><b>Filiação</b></th>
+                            <th><b>Crianças</b></th>
                             <th><b>Ações</b></th>
                         </tr>
                     </thead>
@@ -20,7 +20,7 @@
                         <tr v-for="family in families" :key="family.familyId">
                             <td>{{ family.responsibleName }}</td>
                             <td>{{ family.neighborhoodName }}</td>
-                            <td>{{ getChildrenNames(family.children) }}</td>  
+                            <td>{{ family.children.length }}</td>  
                             <td><RouterLink :to="{path: '/family/'+family.familyId +'/edit'}" class="btn btn-primary" aria-describedby="Botão para alterar a família">Alterar</RouterLink></td>
                         </tr>
                     </tbody>
@@ -51,9 +51,6 @@ export default {
         this.getFamilies();
     },
     methods: {
-        getChildrenNames(children: { childName: string }[]) {
-            return children.map(child => child.childName).join(', \n');
-        },
         getFamilies() {
             var url = 'api/family';
             return axios.get(url).then(result => this.families = result.data);

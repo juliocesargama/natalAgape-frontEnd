@@ -56,10 +56,10 @@
                         </ul>
                     </div>
                 </ul>
-                <div class="row g-0">
+                <div class="row g-12">
                     <div class="col-4">
-                        <img src="@/assets/profile.jpg" alt="Imagem de Criança" class="img-fluid"
-                            aria-describedby="Imagem da criança">
+                        <img name="profile-picture" :src="imageObjectUrl || defaultImage" alt="Imagem de Criança"
+                            class="float-start img-fluid img-thumbnail" aria-describedby="Imagem da criança">
                     </div>
                     <div class="col">
                         <label aria-label="Nome da Criança">Nome da Criança</label>
@@ -82,8 +82,8 @@
                             aria-describedby="Campo de texto para o tamanho do calçado">
                         <label aria-label="Foto da criança">Foto da Criança</label>
                         <div class="input-group mb-3">
-                            <input type="file" class="form-control" id="inputGroupFile">
-                            <label class="input-group-text" for="inputGroupFile">Upload</label>
+                            <input type="file" accept="image/*" ref="fileInput" class="form-control" id="inputGroupFile">
+                            <label class="input-group-text" @click="uploadPicture">Upload</label>
                         </div>
                     </div>
                 </div>
@@ -146,6 +146,7 @@
 import type { child } from '@/models/child';
 import type { Neighborhood } from '@/models/neighborhood';
 import axios from 'axios';
+import { onUnmounted } from 'vue';
 
 export default {
 
@@ -154,6 +155,8 @@ export default {
         return {
             errorList: [] as string[],
             neighborhoods: [] as Neighborhood[],
+            imageObjectUrl: null as string | null,
+            defaultImage: new URL('@/assets/profile.jpg', import.meta.url).href,
             model: {
                 family: {
                     familyId: '',
@@ -170,7 +173,7 @@ export default {
                     birthDate: '',
                     clothes: '',
                     shoes: '',
-                    pictureUrl: undefined,
+                    pictureUrl: '' as string | undefined,
                     familyId: 0,
                 },
                 children: [] as child[],
@@ -225,17 +228,17 @@ export default {
                 pictureUrl: this.model.child.pictureUrl,
                 familyId: this.model.family.familyId
             }).catch(function (error) {
-                    if (error.response.status == 400) {
-                        $this.errorList.push("Ocorreu um erro ao salvar a criança, verifique o preenchimento de todos os campos e tente novamente.")
-                    } else if (error.response.status == 500) {
-                        $this.errorList.push("Ocorreu um erro interno no servidor, tente novamente mais tarde.")
-                    } else {
-                        $this.errorList.push("Ocorreu um erro desconhecido, tente novamente mais tarde.")
-                    }
-                }).finally(() => {
-                    this.getFamily(this.model.family.familyId);
-                    this.clearChildForm();
-                })
+                if (error.response.status == 400) {
+                    $this.errorList.push("Ocorreu um erro ao salvar a criança, verifique o preenchimento de todos os campos e tente novamente.")
+                } else if (error.response.status == 500) {
+                    $this.errorList.push("Ocorreu um erro interno no servidor, tente novamente mais tarde.")
+                } else {
+                    $this.errorList.push("Ocorreu um erro desconhecido, tente novamente mais tarde.")
+                }
+            }).finally(() => {
+                this.getFamily(this.model.family.familyId);
+                this.clearChildForm();
+            })
         },
         getNeighborhoods() {
             var $this = this;
@@ -312,7 +315,53 @@ export default {
             this.model.child.shoes = '';
             this.model.child.pictureUrl = undefined;
             this.model.child.familyId = 0;
-        }
+
+            (this.$refs.fileInput as HTMLInputElement).value = '';
+            this.imageObjectUrl = this.defaultImage;
+
+        },
+        uploadPicture: function () {
+            const input = document.getElementById('inputGroupFile') as HTMLInputElement;
+
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                const formData = new FormData();
+                formData.append('file', file);
+
+                axios.post('/api/upload', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                    .then(response => {
+                        this.model.child.pictureUrl = response.data;
+                        this.loadImageFromApi();
+                    })
+                    .catch(error => {
+                        console.error('Erro ao fazer upload da imagem:', error);
+                    });
+            } else {
+                console.error('Nenhum arquivo selecionado.');
+            }
+        },
+        async loadImageFromApi() {
+            try {
+                const response = await axios.get('/api/upload/open/' + this.model.child.pictureUrl, {
+                    responseType: 'blob'
+                });
+
+                // Create object URL from blob
+                const blobUrl = URL.createObjectURL(response.data);
+                this.imageObjectUrl = blobUrl;
+
+                // Clean up when component is destroyed
+                onUnmounted(() => {
+                    URL.revokeObjectURL(blobUrl);
+                });
+            } catch (error) {
+                console.error("Image load failed:", error);
+            }
+        },
     }
 }
 </script>

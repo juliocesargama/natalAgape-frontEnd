@@ -5,6 +5,6 @@ export interface child {
     birthDate: string;
     clothes?: string;
     shoes?: string;
-    pictureUrl?: string;
+    pictureUrl: string;
     familyId: number;
 }
