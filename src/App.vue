@@ -23,7 +23,7 @@ const closeMobileMenu = () => {
     <div class="wrapper">
       <nav class="navbar navbar-expand-lg bg-success navbar-dark">
         <div class="container">
-          <RouterLink class="navbar-brand" to="/" aria-current="Página Inicial"><b>Ágape</b></RouterLink>
+          <RouterLink class="navbar-brand" to="/" aria-current="Página Inicial"><b><h2>Ágape</h2></b></RouterLink>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
             aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
