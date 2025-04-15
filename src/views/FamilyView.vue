@@ -1,13 +1,13 @@
 <template>
-    <div class="container mt-5">
+    <div class="container mt-5 mb-3">
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">Famílias
-                    <RouterLink to="/family/create" class="btn btn-primary float-end" aria-describedby="Botão para incluir nova família">Nova Família</RouterLink>
+                    <RouterLink to="/family/create" class="btn btn-dark float-end" aria-describedby="Botão para incluir nova família">Nova Família</RouterLink>
                 </h3>
             </div>
             <div class="card-body">
-                <table class="table">
+                <table class="table table-sm">
                     <thead>
                         <tr>
                             <th><b>Nome do Responsável</b></th>
@@ -21,7 +21,7 @@
                             <td>{{ family.responsibleName }}</td>
                             <td>{{ family.neighborhoodName }}</td>
                             <td>{{ family.children.length }}</td>  
-                            <td><RouterLink :to="{path: '/family/'+family.familyId +'/edit'}" class="btn btn-primary" aria-describedby="Botão para alterar a família">Alterar</RouterLink></td>
+                            <td><RouterLink :to="{path: '/family/'+family.familyId +'/edit'}" class="btn btn-success" aria-describedby="Botão para alterar a família">Alterar</RouterLink></td>
                         </tr>
                     </tbody>
                     <tbody v-else>

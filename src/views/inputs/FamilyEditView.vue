@@ -1,5 +1,5 @@
 <template>
-    <div class="container mt-5">
+    <div class="container mt-3 mb-3">
         <div class="card">
             <div class="card-header">
                 <h3 aria-label="Alteração de família existente">Alterar Família</h3>
@@ -14,24 +14,69 @@
                     </div>
                 </ul>
                 <div class="mb-3">
-                   <label aria-label="Nome do Responsável">Nome do Responsável</label>
-                    <input type="text" v-model="model.family.responsibleName" class="form-control" aria-describedby="Campo de texto para o nome do doador">
+                    <label aria-label="Nome do Responsável">Nome do Responsável</label>
+                    <input type="text" v-model="model.family.responsibleName" class="form-control"
+                        aria-describedby="Campo de texto para o nome do doador">
                     <label aria-label="Telefone do doador">Telefone</label>
-                    <input type="text" v-model="model.family.phoneNumber" class="form-control" aria-describedby="Campo de texto para o telefone do responsável">
+                    <input type="text" v-model="model.family.phoneNumber" class="form-control"
+                        aria-describedby="Campo de texto para o telefone do responsável">
                     <label aria-label="Endereço da família">Endereço</label>
-                    <input type="text" v-model="model.family.address" class="form-control" aria-describedby="Campo de texto para o endereço da família">
+                    <input type="text" v-model="model.family.address" class="form-control"
+                        aria-describedby="Campo de texto para o endereço da família">
                     <label aria-label="Bairro da família">Bairro</label>
-                    <select v-model="model.family.neighborhoodId" class="form-select form-control" aria-describedby="Campo de seleção para bairro da família">
+                    <select v-model="model.family.neighborhoodId" class="form-select form-control"
+                        aria-describedby="Campo de seleção para bairro da família">
                         <option disabled value="">Selecione...</option>
-                        <option v-for="neighborhood in neighborhoods" :key="neighborhood.neighborhoodId" :value="neighborhood.neighborhoodId">
+                        <option v-for="neighborhood in neighborhoods" :key="neighborhood.neighborhoodId"
+                            :value="neighborhood.neighborhoodId">
                             {{ neighborhood.neighborhoodName }} </option>
-                        </select>
+                    </select>
                     <label aria-label="Observações">Observações</label>
-                    <input type="text" v-model="model.family.observation" class="form-control" aria-describedby="Campo de texto para observações">
+                    <input type="text" v-model="model.family.observation" class="form-control"
+                        aria-describedby="Campo de texto para observações">
                 </div>
-                <div class="float-end">
-                    <button type="button" @click="checkForm" class="btn btn-primary m-2" aria-describedby="Botão para alterar os novos dados da família">Alterar</button>
-                    <button type="reset" @click="cancelForm" class="btn btn-secondary" aria-describedby="Botão para cancelar o formulário">Cancelar</button>
+                <div class="col d-flex justify-content-end m-3">
+                    <button type="button" @click="checkForm" class="btn btn-success"
+                        aria-describedby="Botão para alterar os novos dados da família">Alterar Família</button>
+                    <button type="reset" @click="cancelForm" class="btn btn-secondary ms-2"
+                        aria-describedby="Botão para cancelar o formulário">Cancelar</button>
+
+                </div>
+                <div v-show="model.children.length > 0">
+                    <div class="card-header mt-4 mb-0 me-3 ms-3">
+                        <h5 aria-label="Listagem de crianças cadastradas">Crianças</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped mb-3">
+                                <thead>
+                                    <tr>
+                                        <th><b>Nome da Criança</b></th>
+                                        <th><b>Roupa</b></th>
+                                        <th><b>Calçado</b></th>
+                                        <th><b>Ações</b></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="child in model.children" :key="child.childId">
+                                        <td>{{ child.childName }}</td>
+                                        <td>{{ child.clothes }}</td>
+                                        <td>{{ child.shoes }}</td>
+                                        <td>
+                                            <button class="btn btn-success m-1"
+                                            aria-describedby="Botão para alterar a criança">Alterar</button>
+                                           
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2 col-6 mx-auto">
+                    <button type="button" @click="" class="btn btn-dark"
+                        aria-describedby="Botão para adicionar criança">Adicionar Criança</button>
                 </div>
             </div>
         </div>
@@ -39,6 +84,7 @@
 </template>
 
 <script lang="ts">
+import type { child } from '@/models/child';
 import type { Neighborhood } from '@/models/neighborhood';
 import axios from 'axios';
 
@@ -57,8 +103,19 @@ export default {
                     address: '',
                     neighborhoodId: '',
                     observation: ''
-                }
-            }
+                },
+                child: {
+                    childId: 0,
+                    childName: '',
+                    gender: '',
+                    birthDate: '',
+                    clothes: '',
+                    shoes: '',
+                    pictureUrl: '' as string | undefined,
+                    familyId: 0,
+                },
+                children: [] as child[]
+            },
         }
 
     },
@@ -78,7 +135,7 @@ export default {
                 neighborhoodId: this.model.family.neighborhoodId,
                 observation: this.model.family.observation
             })
-            .then(result => {
+                .then(result => {
                     this.$router.push('/family')
                 })
                 .catch(function (error) {
@@ -101,6 +158,7 @@ export default {
                     this.model.family.address = result.data.address
                     this.model.family.neighborhoodId = result.data.neighborhoodId
                     this.model.family.observation = result.data.observation
+                    this.model.children = result.data.children
                 })
                 .catch(function (error) {
                     if (error.response.status == 404) {
@@ -112,21 +170,21 @@ export default {
                     }
                 })
         },
-            getNeighborhoods() {
-                var $this = this;
-                var url = '/api/neighborhood'
-                axios.get(url)
-                    .then(result => {
-                        this.neighborhoods = result.data;
-                    })
-                    .catch(function (error) {
-                        if (error.response && error.response.status == 500) {
-                            $this.errorList.push("Erro ao carregar os bairros. Tente novamente mais tarde.");
-                        } else {
-                            $this.errorList.push("Erro desconhecido ao carregar os bairros.");
-                        }
-                    });
-            },
+        getNeighborhoods() {
+            var $this = this;
+            var url = '/api/neighborhood'
+            axios.get(url)
+                .then(result => {
+                    this.neighborhoods = result.data;
+                })
+                .catch(function (error) {
+                    if (error.response && error.response.status == 500) {
+                        $this.errorList.push("Erro ao carregar os bairros. Tente novamente mais tarde.");
+                    } else {
+                        $this.errorList.push("Erro desconhecido ao carregar os bairros.");
+                    }
+                });
+        },
         cancelForm() {
             this.$router.push('/family')
         },
@@ -146,7 +204,7 @@ export default {
             if (this.model.family.neighborhoodId == '') {
                 this.errorList.push('O bairro é obrigatório.');
             }
-            if(!this.errorList.length){
+            if (!this.errorList.length) {
                 this.editfamily();
             };
         }
