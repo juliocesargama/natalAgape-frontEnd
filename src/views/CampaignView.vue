@@ -3,7 +3,7 @@
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">Campanhas
-                    <RouterLink to="/campaign/create" class="btn btn-primary float-end" aria-describedby="Botão para incluir nova campanha">Nova Campanha</RouterLink>
+                    <RouterLink to="/campaign/create" class="btn btn-dark float-end" aria-describedby="Botão para incluir nova campanha">Nova Campanha</RouterLink>
                 </h3>
             </div>
             <div class="card-body">
@@ -21,7 +21,7 @@
                             <td>{{ campaign.campaignYear }}</td>
                             <td>{{ campaign.campaignChurch }}</td>
                             <td>{{ campaign.foodDonationPerFamily }}</td>
-                            <td><RouterLink :to="{path: '/campaign/'+campaign.campaignId +'/edit'}" class="btn btn-primary" aria-describedby="Botão para alterar a campanha">Alterar</RouterLink></td>
+                            <td><RouterLink :to="{path: '/campaign/'+campaign.campaignId +'/edit'}" class="btn btn-success" aria-describedby="Botão para alterar a campanha">Alterar</RouterLink></td>
                         </tr>
                     </tbody>
                     <tbody v-else>

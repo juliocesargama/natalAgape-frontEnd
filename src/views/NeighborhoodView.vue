@@ -3,7 +3,7 @@
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">Bairros
-                    <RouterLink to="/neighborhood/create" class="btn btn-primary float-end" aria-describedby="Botão para incluir novo bairro">Novo Bairro</RouterLink>
+                    <RouterLink to="/neighborhood/create" class="btn btn-dark float-end" aria-describedby="Botão para incluir novo bairro">Novo Bairro</RouterLink>
                 </h3>
             </div>
             <div class="card-body">
@@ -17,7 +17,7 @@
                     <tbody v-if="neighborhoods.length > 0">
                         <tr v-for="neighborhood in neighborhoods" :key="neighborhood.neighborhoodId">
                             <td>{{ neighborhood.neighborhoodName }}</td>
-                            <td><RouterLink :to="{path: '/neighborhood/'+neighborhood.neighborhoodId +'/edit'}" class="btn btn-primary" aria-describedby="Botão para alterar o bairro">Alterar</RouterLink></td>
+                            <td><RouterLink :to="{path: '/neighborhood/'+neighborhood.neighborhoodId +'/edit'}" class="btn btn-success" aria-describedby="Botão para alterar o bairro">Alterar</RouterLink></td>
                         </tr>
                     </tbody>
                     <tbody v-else>
