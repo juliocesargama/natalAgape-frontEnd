@@ -3,7 +3,7 @@
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">Doadores
-                    <RouterLink to="/sponsor/create" class="btn btn-primary float-end" aria-describedby="Botão para incluir novo doador">Novo Doador</RouterLink>
+                    <RouterLink to="/sponsor/create" class="btn btn-dark float-end" aria-describedby="Botão para incluir novo doador">Novo Doador</RouterLink>
                 </h3>
             </div>
             <div class="card-body">
@@ -19,7 +19,7 @@
                         <tr v-for="sponsor in sponsors" :key="sponsor.sponsorId">
                             <td>{{ sponsor.sponsorName }}</td>
                             <td>{{ sponsor.sponsorPhone }}</td>
-                            <td><RouterLink :to="{path: '/sponsor/'+sponsor.sponsorId +'/edit'}" class="btn btn-primary" aria-describedby="Botão para alterar o doador">Alterar</RouterLink></td>
+                            <td><RouterLink :to="{path: '/sponsor/'+sponsor.sponsorId +'/edit'}" class="btn btn-success" aria-describedby="Botão para alterar o doador">Alterar</RouterLink></td>
                         </tr>
                     </tbody>
                     <tbody v-else>

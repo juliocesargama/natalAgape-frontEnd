@@ -5,4 +5,7 @@ export interface family {
     address: string;
     neighborhoodName: string;
     observations: string;
+    children: Array<{
+        childName: string;
+    }>;
 }

@@ -18,7 +18,7 @@
                     <input type="text" v-model="model.neighborhood.neighborhoodName" class="form-control" aria-describedby="Campo texto para inserir novo nome do bairro">
                 </div>
                 <div class="float-end">
-                    <button type="button" @click="checkForm" class="btn btn-primary m-2" aria-describedby="Botão para alterar os novos dados do bairro">Alterar</button>
+                    <button type="button" @click="checkForm" class="btn btn-success m-2" aria-describedby="Botão para alterar os novos dados do bairro">Alterar</button>
                     <button type="reset" @click="cancelForm" class="btn btn-secondary" aria-describedby="Botão para cancelar o formulário">Cancelar</button>
                 </div>
             </div>
