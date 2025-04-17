@@ -1,0 +1,1 @@
+import{_ as c,c as r,a as e,o as t}from"./index-D5Un-vE1.js";const a={},o={class:"container mt-5"};function n(d,s){return t(),r("div",o,s[0]||(s[0]=[e("div",{class:"card"},[e("div",{class:"card-header"},[e("h3",null,"Sobre")]),e("div",{class:"card-body text-center m-5"},[e("b",null,"Versão 1.0")])],-1)]))}const i=c(a,[["render",n]]);export{i as default};
