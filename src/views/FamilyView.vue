@@ -7,7 +7,7 @@
                 </h3>
             </div>
             <div class="card-body">
-                <table class="table table-sm">
+                <table class="table table-striped table-sm">
                     <thead>
                         <tr>
                             <th><b>Nome do Responsável</b></th>
