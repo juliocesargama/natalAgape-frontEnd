@@ -16,7 +16,9 @@
                     <label for="campaignId" class="form-label">Campanha</label>
                     <select v-model="model.campaignId" class="form-control selectpicker show-tick" id="campaignId"
                         title="Selecione uma campanha...">
-                        <option v-for="campaign in campaigns" :value="campaign.campaignId"> {{campaign.campaignYear}} | {{campaign.campaignChurch}}</option>
+                        <option v-for="campaign in campaigns" :value="campaign.campaignId"> {{ campaign.campaignYear }}
+                            |
+                            {{ campaign.campaignChurch }}</option>
                     </select>
                     <label for="sponsorId" class="form-label">Doador</label>
                     <select v-model="model.sponsorId" data-live-search="true"
@@ -77,7 +79,8 @@
                     <div class="container" v-show="model.wasDelivered">
                         <label for="donationDate" class="form-label">Data da doação</label>
                         <input type="date" v-model="model.donationDate" class="form-control" id="donationDate">
-                        <div class="form-text">Ao preencher a data em que a doação foi realizada, será dada como concluída.</div>
+                        <div class="form-text">Ao preencher a data em que a doação foi realizada, será dada como
+                            concluída.</div>
                     </div>
 
                     <label for="observation" class="form-label mt-3">Observação</label>
@@ -179,7 +182,7 @@ export default {
         saveContribution() {
 
             console.log(this.model);
-            
+
             var $this = this;
             var url = "/api/food-contribution";
             axios.post(url, {
@@ -193,11 +196,14 @@ export default {
                 observation: this.model.observation,
             })
                 .then(() => {
-                    this.$router.push({ path: '/food-contribution' });
+                    this.$router.push('/food-contribution');
                 })
                 .catch(function (error) {
-                    console.log(error);
-                    $this.errorList.push("Erro ao salvar doação");
+                    if (error.response.status === 403) {
+                        $this.errorList.push("A família já atingiu a quantidade de doações permitidas nesta campanha.");
+                    } else {
+                        $this.errorList.push("Erro ao salvar doação");
+                    }
                 });
         },
         validateForm() {
