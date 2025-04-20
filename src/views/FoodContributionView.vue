@@ -13,7 +13,6 @@
                         <thead>
                             <tr>
                                 <th><b>Ano</b></th>
-                                <th><b>Igreja</b></th>
                                 <th><b>Doador</b></th>
                                 <th><b>Família</b></th>
                                 <th><b>Entregue</b></th>
@@ -23,12 +22,11 @@
                         <tbody>
                             <tr v-for="foodContribution in foodContributions" :key="foodContribution.id">
                                 <td>{{ foodContribution.campaignYear}}</td>
-                                <td>{{ foodContribution.campaignChurch }}</td>
                                 <td>{{ foodContribution.sponsorName }}</td>
                                 <td>{{ foodContribution.responsibleName }}</td>
                                 <td>{{ setWasDelivered(foodContribution.wasDelivered) }}</td>
                                 <td>
-                                    <RouterLink :to="'/food-contribution/edit/' + foodContribution.id" class="btn btn-success">Alterar</RouterLink>
+                                    <RouterLink :to="{path: '/food-contribution/'+foodContribution.id+'/edit'}" class="btn btn-success">Alterar</RouterLink>
                                 </td>
                             </tr>
                         </tbody>

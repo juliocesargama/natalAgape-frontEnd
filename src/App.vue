@@ -38,7 +38,7 @@ const closeMobileMenu = () => {
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
                   aria-expanded="false"><b>Doações</b></a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <RouterLink class="dropdown-item" to="/sponsor" aria-current="Doadores">Doadores</RouterLink>
+                  <RouterLink class="dropdown-item" to="/sponsor" aria-current="Doadores">Cadastrar Doadores</RouterLink>
                   <li><hr class="dropdown-divider"></li>
                   <RouterLink class="dropdown-item" to="/food-contribution" aria-current="Cestas Básicas">Cestas Básicas</RouterLink>
                   <RouterLink class="dropdown-item" to="/child-contribution" aria-current="Roupas">Roupas e Calçados</RouterLink>
