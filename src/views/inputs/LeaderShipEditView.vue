@@ -18,6 +18,20 @@
                     <input type="text" v-model="model.leader.leaderName" class="form-control" aria-describedby="Campo de texto para o nome do líder">
                     <label aria-label="Telefone do líder">Telefone</label>
                     <input type="text" v-model="model.leader.leaderPhone" class="form-control" aria-describedby="Campo de texto para o telefone do líder">
+                    <label for="leaderColor">Cor</label>
+                        <select v-model="model.leader.leaderColor" class="form-select form-control">
+                            <option disabled value="">Selecione...</option>
+                            <option value="RED">VERMELHO</option>
+                            <option value="BLUE">AZUL</option>
+                            <option value="GREEN">VERDE</option>
+                            <option value="YELLOW">AMARELO</option>
+                            <option value="ORANGE">LARANJA</option>
+                            <option value="PURPLE">ROXO</option>
+                            <option value="PINK">ROSA</option>
+                            <option value="BROWN">MARRON</option>
+                            <option value="BLACK">PRETO</option>
+                            <option value="WHITE">BRANCO</option>
+                        </select>                    
                 </div>
                 <div class="float-end">
                     <button type="button" @click="checkForm" class="btn btn-primary m-2" aria-describedby="Botão para alterar os novos dados do líder">Alterar</button>
@@ -40,7 +54,9 @@ export default {
             model: {
                 leader: {
                     leaderName: '',
-                    leaderPhone: ''
+                    leaderPhone: '',
+                    leaderColor: '',
+                    leaderRole: 'LEADER'
                 }
             }
         }
@@ -57,6 +73,8 @@ export default {
                 leaderId: this.$route.params.id,
                 leaderName: this.model.leader.leaderName,
                 leaderPhone: this.model.leader.leaderPhone,
+                leaderColor: this.model.leader.leaderColor,
+                leaderRole: this.model.leader.leaderRole
             })
             .then(result => {
                     this.$router.push('/leader')
@@ -78,6 +96,8 @@ export default {
                 .then(result => {
                     this.model.leader.leaderName = result.data.leaderName
                     this.model.leader.leaderPhone = result.data.leaderPhone
+                    this.model.leader.leaderColor = result.data.leaderColor
+                    this.model.leader.leaderRole = result.data.leaderRole
                 })
                 .catch(function (error) {
                     if (error.response.status == 404) {
@@ -101,6 +121,9 @@ export default {
             }
             if (this.model.leader.leaderPhone == '') {
                 this.errorList.push('O telefone do líder é obrigatório.');
+            }
+            if (this.model.leader.leaderColor == '') {
+                this.errorList.push('Seleciona uma cor para o líder.');
             }
             if(!this.errorList.length){
                 this.editLeader();

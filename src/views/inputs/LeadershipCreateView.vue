@@ -29,13 +29,7 @@
   </option>
 </select>-->
 
-<!-- Dropdown para leaderColor 
-<label for="leaderColor">Leader Color</label>
-<select id="leaderColor" v-model="model.leader.LeaderColor" required>
-    <option v-for="(name, hex) in leaderColors" :key="name" :value="name" :style="{ backgroundColor: hex, color: getTextColor(hex) }">
-        {{ name }}
-    </option>
-</select> -->
+
 
 
                         <label for="leaderColor">Cor</label>
@@ -43,6 +37,14 @@
                             <option disabled value="">Selecione...</option>
                             <option value="RED">VERMELHO</option>
                             <option value="BLUE">AZUL</option>
+                            <option value="GREEN">VERDE</option>
+                            <option value="YELLOW">AMARELO</option>
+                            <option value="ORANGE">LARANJA</option>
+                            <option value="PURPLE">ROXO</option>
+                            <option value="PINK">ROSA</option>
+                            <option value="BROWN">MARRON</option>
+                            <option value="BLACK">PRETO</option>
+                            <option value="WHITE">BRANCO</option>
                         </select>
 
                 </div>
@@ -57,7 +59,7 @@
 
 <script lang="ts">
 import axios from 'axios';
-import { LeaderRole, LeaderColor } from '@/models/leader';
+import { LeaderRole } from '@/models/leader';
 
 
 
@@ -76,8 +78,7 @@ data() {
                 leaderColor: ''
             }
         },
-        leaderRoles: Object.values(LeaderRole), 
-        leaderColors: Object.entries(LeaderColor) 
+        leaderRoles: Object.values(LeaderRole)
     };
 },
     methods: {
@@ -116,6 +117,9 @@ data() {
             }
             if (this.model.leader.leaderPhone == '') {
                 this.errorList.push('O telefone do líder é obrigatório.');
+            }
+            if (this.model.leader.leaderColor == '') {
+                this.errorList.push('Seleciona uma cor para o líder.');
             }
 
             if(!this.errorList.length){
