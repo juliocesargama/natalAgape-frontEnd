@@ -3,6 +3,6 @@ export interface FamilyWithPendingContribution {
         totalChildren: 0,
         sponsorName: '',
         sponsorPhone: '',
-        paidInSpecies: null,
+        paidInSpecies: false,
         leaderName: '',
 }

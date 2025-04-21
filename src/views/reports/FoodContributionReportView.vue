@@ -28,9 +28,11 @@
                         </div>
                     </div>
 
-                    <div class="table-responsive">
+                    <div class="table-responsive" v-show="familiesWithContributionList.length > 0">
                         <table class="table table-striped table-hover caption-top mt-3">
-                            <caption class="text-center"><h5>Famílias com doações</h5></caption>
+                            <caption class="text-center">
+                                <h5>Famílias com doações</h5>
+                            </caption>
                             <thead>
                                 <tr>
                                     <th><b>Família</b></th>
@@ -47,17 +49,25 @@
                                 </tr>
                             </tbody>
                         </table>
+                        <div class="text-end">
+                            <button class="btn btn-success" @click="exportfamiliesWithContributionReport">Exportar
+                                Relatório</button>
+                        </div>
+                        <hr>
                     </div>
 
-                    <div class="table-responsive">
+                    <div class="table-responsive" v-show="familiesWithPendingContributionList.length > 0">
                         <table class="table table-striped table-hover caption-top mt-3">
-                            <caption class="text-center"><h5>Famílias com doações pendentes</h5></caption>
+                            <caption class="text-center">
+                                <h5>Famílias com doações pendentes</h5>
+                            </caption>
                             <thead>
                                 <tr>
                                     <th><b>Família</b></th>
                                     <th><b>Total de Crianças</b></th>
                                     <th><b>Doador</b></th>
                                     <th><b>Telefone do Doador</b></th>
+                                    <th><b>Em Dinheiro</b></th>
                                     <th><b>Líder</b></th>
                                 </tr>
                             </thead>
@@ -67,16 +77,24 @@
                                     <td>{{ family.totalChildren }}</td>
                                     <td>{{ family.sponsorName }}</td>
                                     <td>{{ family.sponsorPhone }}</td>
+                                    <td>{{ translatePaidInSpecies(family.paidInSpecies) }}</td>
                                     <td>{{ family.leaderName }}</td>
 
                                 </tr>
                             </tbody>
                         </table>
+                        <div class="text-end">
+                            <button class="btn btn-success" @click="exportfamiliesWithPendingContributionReport">Exportar
+                                Relatório</button>
+                        </div>
+                        <hr>
                     </div>
 
-                    <div class="table-responsive">
+                    <div class="table-responsive" v-show="familiesWithNoContributionList.length > 0">
                         <table class="table table-striped table-hover caption-top mt-3">
-                            <caption class="text-center"><h5>Famílias sem doações</h5></caption>
+                            <caption class="text-center">
+                                <h5>Famílias sem doações</h5>
+                            </caption>
                             <thead>
                                 <tr>
                                     <th><b>Família</b></th>
@@ -93,6 +111,10 @@
                                 </tr>
                             </tbody>
                         </table>
+                        <div class="text-end">
+                            <button class="btn btn-success" @click="exportfamiliesWithNoContributionReport">Exportar
+                                Relatório</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -102,6 +124,9 @@
 <script lang="ts">
 import type { campaign } from '@/models/campaign';
 import axios from 'axios';
+import autoTable from 'jspdf-autotable';
+import jsPDF from 'jspdf';
+
 import type { FamilyWithContribution } from '@/models/reports/food-contribution/family_with_contribution';
 import type { FamilyWithNoContribution } from '@/models/reports/food-contribution/family_without_contribution';
 import type { FamilyWithPendingContribution } from '@/models/reports/food-contribution/family_with_pending_contribution';
@@ -184,6 +209,190 @@ export default {
                 default:
                     return color;
             }
+        },
+        translatePaidInSpecies(paidInSpecies: boolean) {
+            switch (paidInSpecies) {
+                case true:
+                    return 'Sim';
+                case false:
+                    return 'Não';
+                default:
+                    return paidInSpecies;
+            }
+        },
+        exportfamiliesWithContributionReport() {
+            const doc = new jsPDF('l', 'pt', 'a4');
+
+            // Title
+            doc.setFontSize(18);
+            doc.setTextColor(40);
+            doc.text('Famílias com Doações', 40, 40);
+
+            // Subtitle
+            doc.setFontSize(12);
+            doc.text(`Gerado em: ${new Date().toLocaleString()}`, 40, 60);
+
+            // Table data
+            const tableData = this.familiesWithContributionList.map(item => [
+                item.responsibleName,
+                item.leaderName,
+                this.translateColor(item.leaderColor),
+            ]);
+
+            // AutoTable
+            autoTable(doc, {
+                head: [['Família', 'Líder', 'Cor']],
+                body: tableData,
+                startY: 80,
+                styles: {
+                    cellPadding: 5,
+                    fontSize: 10,
+                    valign: 'middle',
+                    overflow: 'linebreak',
+                },
+                headStyles: {
+                    fillColor: [25, 135, 84],
+                    textColor: 255,
+                    fontStyle: 'bold'
+                },
+                alternateRowStyles: {
+                    fillColor: [245, 245, 245]
+                },
+                columnStyles: {
+                    0: { cellWidth: 'auto' },
+                    1: { cellWidth: 'auto' },
+                    2: { cellWidth: 'auto' },
+                }
+            });
+
+            // Footer
+            const pageCount = doc.getNumberOfPages();
+            for (let i = 1; i <= pageCount; i++) {
+                doc.setPage(i);
+                doc.setFontSize(10);
+                doc.text(`Página ${i} de ${pageCount}`, doc.internal.pageSize.width - 100, doc.internal.pageSize.height - 20);
+            }
+
+            doc.save('familias-com-contribuição.pdf');
+
+        },
+        exportfamiliesWithNoContributionReport() {
+            const doc = new jsPDF('l', 'pt', 'a4');
+
+            // Title
+            doc.setFontSize(18);
+            doc.setTextColor(40);
+            doc.text('Famílias sem Doações', 40, 40);
+
+            // Subtitle
+            doc.setFontSize(12);
+            doc.text(`Gerado em: ${new Date().toLocaleString()}`, 40, 60);
+
+            // Table data
+            const tableData = this.familiesWithNoContributionList.map(item => [
+                item.responsibleName,
+                item.neighborhoodName,
+                item.totalChildren,
+            ]);
+
+            // AutoTable
+            autoTable(doc, {
+                head: [['Família', 'Bairro', 'Total de Crianças']],
+                body: tableData,
+                startY: 80,
+                styles: {
+                    cellPadding: 5,
+                    fontSize: 10,
+                    valign: 'middle',
+                    overflow: 'linebreak',
+                },
+                headStyles: {
+                    fillColor: [25, 135, 84],
+                    textColor: 255,
+                    fontStyle: 'bold'
+                },
+                alternateRowStyles: {
+                    fillColor: [245, 245, 245]
+                },
+                columnStyles: {
+                    0: { cellWidth: 'auto' },
+                    1: { cellWidth: 'auto' },
+                    2: { cellWidth: 'auto' },
+                }
+            });
+
+            // Footer
+            const pageCount = doc.getNumberOfPages();
+            for (let i = 1; i <= pageCount; i++) {
+                doc.setPage(i);
+                doc.setFontSize(10);
+                doc.text(`Página ${i} de ${pageCount}`, doc.internal.pageSize.width - 100, doc.internal.pageSize.height - 20);
+            }
+
+            doc.save('familias-sem-contribuição.pdf');
+
+        },
+        exportfamiliesWithPendingContributionReport() {
+            const doc = new jsPDF('l', 'pt', 'a4');
+
+            // Title
+            doc.setFontSize(18);
+            doc.setTextColor(40);
+            doc.text('Famílias com Doações Pendentes', 40, 40);
+
+            // Subtitle
+            doc.setFontSize(12);
+            doc.text(`Gerado em: ${new Date().toLocaleString()}`, 40, 60);
+
+            // Table data
+            const tableData = this.familiesWithPendingContributionList.map(item => [
+                item.responsibleName,
+                item.totalChildren,
+                item.sponsorName,
+                item.sponsorPhone,
+                this.translatePaidInSpecies(item.paidInSpecies),
+                item.leaderName,
+            ]);
+
+            // AutoTable
+            autoTable(doc, {
+                head: [['Família', 'Total de Crianças', 'Doador', 'Telefone do Doador', 'Em Dinheiro', 'Líder']],
+                body: tableData,
+                startY: 80,
+                styles: {
+                    cellPadding: 5,
+                    fontSize: 10,
+                    valign: 'middle',
+                    overflow: 'linebreak',
+                },
+                headStyles: {
+                    fillColor: [25, 135, 84],
+                    textColor: 255,
+                    fontStyle: 'bold'
+                },
+                alternateRowStyles: {
+                    fillColor: [245, 245, 245]
+                },
+                columnStyles: {
+                    0: { cellWidth: 'auto' },
+                    1: { cellWidth: 'auto' },
+                    2: { cellWidth: 'auto' },
+                    3: { cellWidth: 'auto' },
+                    4: { cellWidth: 'auto' },
+                    5: { cellWidth: 'auto' },
+                }
+            });
+
+            // Footer
+            const pageCount = doc.getNumberOfPages();
+            for (let i = 1; i <= pageCount; i++) {
+                doc.setPage(i);
+                doc.setFontSize(10);
+                doc.text(`Página ${i} de ${pageCount}`, doc.internal.pageSize.width - 100, doc.internal.pageSize.height - 20);
+            }
+
+            doc.save('familias-com-contribuição-pendente.pdf');
+
         },
     },
 }
