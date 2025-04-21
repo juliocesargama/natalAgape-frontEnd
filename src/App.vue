@@ -32,20 +32,45 @@ const closeMobileMenu = () => {
           </button>
           <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav ms-auto mb-2 mb-lg-0">
-              <RouterLink class="nav-link" to="/family" aria-current="Famílias"><b>Famílias</b></RouterLink>
+
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+                  aria-expanded="false"><b>Famílias</b></a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <RouterLink class="dropdown-item" to="/family" aria-current="Famílias">Cadastrar Famílias</RouterLink>
+                  <RouterLink class="dropdown-item" to="/neighborhood" aria-current="Bairros">Cadastrar Bairros
+                  </RouterLink>
+                </ul>
+              </li>
+
               <RouterLink class="nav-link" to="/leader" aria-current="Lideres"><b>Lideres</b></RouterLink>
+
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
                   aria-expanded="false"><b>Doações</b></a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <RouterLink class="dropdown-item" to="/sponsor" aria-current="Doadores">Cadastrar Doadores</RouterLink>
-                  <li><hr class="dropdown-divider"></li>
-                  <RouterLink class="dropdown-item" to="/food-contribution" aria-current="Cestas Básicas">Cestas Básicas</RouterLink>
-                  <RouterLink class="dropdown-item" to="/child-contribution" aria-current="Roupas">Roupas e Calçados</RouterLink>
+                  <RouterLink class="dropdown-item" to="/sponsor" aria-current="Doadores">Doadores</RouterLink>
+                  <RouterLink class="dropdown-item" to="/food-contribution" aria-current="Cestas Básicas">Cestas Básicas
+                  </RouterLink>
+                  <RouterLink class="dropdown-item" to="/child-contribution" aria-current="Roupas">Roupas e Calçados
+                  </RouterLink>
                 </ul>
               </li>
-              <RouterLink class="nav-link" to="/neighborhood" aria-current="Bairros"><b>Bairros</b></RouterLink>
-              <RouterLink class="nav-link" to="/campaign" aria-current="Campanhas"><b>Campanhas</b></RouterLink>
+
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+                  aria-expanded="false"><b>Campanhas</b></a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <RouterLink class="dropdown-item" to="/campaign" aria-current="Campanhas">Nova Campanha</RouterLink>
+                  <li>
+                    <hr class="drop-divider">
+                  </li>
+                  <a class="nav-link disabled text-muted" href="#" tabindex="-1" aria-disabled="true">Relatórios</a>
+                  <RouterLink class="dropdown-item" to="/food-contribution/report" aria-current="Relatório de Doações">
+                    Cestas Básicas</RouterLink>
+                </ul>
+              </li>
+
               <RouterLink class="nav-link" to="/about" aria-current="Sobre"><b>Sobre</b></RouterLink>
             </div>
           </div>

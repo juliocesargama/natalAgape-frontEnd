@@ -16,6 +16,7 @@ import FoodContribution from "@/views/FoodContributionView.vue";
 import FoodContributionView from "@/views/FoodContributionView.vue";
 import FoodContributionCreateView from "@/views/inputs/FoodContributionCreateView.vue";
 import FoodContributionEditView from "@/views/inputs/FoodContributionEditView.vue";
+import FoodContributionReportView from "@/views/reports/FoodContributionReportView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -99,6 +100,11 @@ const router = createRouter({
       path: "/food-contribution/:id/edit",
       name: "food-contribution-edit",
       component: FoodContributionEditView
+    },
+    {
+      path: "/food-contribution/report",
+      name: "food-contribution-report",
+      component: FoodContributionReportView
     },
     {
       path: "/about",
