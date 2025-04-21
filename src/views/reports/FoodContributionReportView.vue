@@ -13,23 +13,18 @@
                 </select>
 
                 <div class="container" v-show="selectedCampaign">
-                    <div class="row mt-3">
-                        <div class="col">
-                            <h5>Famílias com doações: {{ familiesWithContribution }}</h5>
-                        </div>
-                        <div class="col">
-                            <h5>Famílias sem doações: {{ familiesWithNoContribution }}</h5>
-                        </div>
-                        <div class="col">
-                            <h5>Famílias com doações pendentes: {{ familiesWithPendingContribution }}</h5>
-                        </div>
-                        <div class="col">
-                            <h5>Total de famílias ativas: {{ totalActiveFamilies }}</h5>
-                        </div>
+
+                    <div>
+                        <PieChart class="m-3" :chart-data="chartData" :chart-options="chartOptions" v-if="loadChart" />
                     </div>
 
+                    <div class="row mt-3">
+                        <h6 class="text-center">Total de famílias: {{ totalActiveFamilies }}</h6>
+                    </div>
+                    <hr>
+
                     <div class="table-responsive" v-show="familiesWithContributionList.length > 0">
-                        <table class="table table-striped table-hover caption-top mt-3">
+                        <table class="table table-striped table-hover caption-top">
                             <caption class="text-center">
                                 <h5>Famílias com doações</h5>
                             </caption>
@@ -84,7 +79,8 @@
                             </tbody>
                         </table>
                         <div class="text-end">
-                            <button class="btn btn-success" @click="exportfamiliesWithPendingContributionReport">Exportar
+                            <button class="btn btn-success"
+                                @click="exportfamiliesWithPendingContributionReport">Exportar
                                 Relatório</button>
                         </div>
                         <hr>
@@ -126,6 +122,7 @@ import type { campaign } from '@/models/campaign';
 import axios from 'axios';
 import autoTable from 'jspdf-autotable';
 import jsPDF from 'jspdf';
+import PieChart from '@/components/PieChart.vue';
 
 import type { FamilyWithContribution } from '@/models/reports/food-contribution/family_with_contribution';
 import type { FamilyWithNoContribution } from '@/models/reports/food-contribution/family_without_contribution';
@@ -133,7 +130,7 @@ import type { FamilyWithPendingContribution } from '@/models/reports/food-contri
 
 export default {
     name: 'FoodContributionReportView',
-    components: {},
+    components: { PieChart },
     data() {
         return {
             campaigns: [] as campaign[],
@@ -146,9 +143,24 @@ export default {
             familiesWithContributionList: [] as FamilyWithContribution[],
             familiesWithNoContributionList: [] as FamilyWithNoContribution[],
             familiesWithPendingContributionList: [] as FamilyWithPendingContribution[],
-        };
+
+            loadChart: false,
+            chartData: null as { labels: string[]; datasets: {data: number[]; backgroundColor: string[]; }[] } | null,
+            chartOptions: {
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Relação de Doações de Cestas Básicas',
+                        font: {
+                            size: 18
+                        }
+                    }
+                }
+            }
+        }
     },
     mounted() {
+        this.loadChart = false;
         this.getCampaigns();
     },
     methods: {
@@ -166,7 +178,6 @@ export default {
             if (this.selectedCampaign) {
                 axios.get(`/api/food-contribution/report/${this.selectedCampaign}`)
                     .then((response) => {
-                        console.log(response.data);
                         this.familiesWithContribution = response.data.familiesWithContribution;
                         this.familiesWithNoContribution = response.data.familiesWithNoContribution;
                         this.familiesWithPendingContribution = response.data.familiesWithPendingContribution;
@@ -175,6 +186,23 @@ export default {
                         this.familiesWithContributionList = response.data.familiesWithContributionList;
                         this.familiesWithNoContributionList = response.data.familiesWithNoContributionList;
                         this.familiesWithPendingContributionList = response.data.familiesWithPendingContributionList;
+
+                        this.chartData = {
+                            labels: ['Famílias com doações', 'Famílias sem doações', 'Famílias com doações pendentes'],
+                            datasets: [{
+                                data: [
+                                    this.familiesWithContribution,
+                                    this.familiesWithNoContribution,
+                                    this.familiesWithPendingContribution
+                                ],
+                                backgroundColor: [
+                                    '#198754',
+                                    '#dc3545',
+                                    '#ffc107',
+                                ],
+                            }]
+                        };
+                        this.loadChart = true;
                     })
                     .catch((error) => {
                         console.error('Erro ao carregar relatório', error);
@@ -183,6 +211,8 @@ export default {
         },
         onCampaignChange() {
             this.getReport();
+            this.loadChart = false;
+            this.chartData = null;
         },
         translateColor(color: string) {
             switch (color) {
