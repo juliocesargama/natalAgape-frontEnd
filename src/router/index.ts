@@ -12,6 +12,11 @@ import SponsorEditView from "@/views/inputs/SponsorEditView.vue";
 import FamilyView from "@/views/FamilyView.vue";
 import FamilyCreateView from "@/views/inputs/FamilyCreateView.vue";
 import FamilyEditView from "@/views/inputs/FamilyEditView.vue";
+import FoodContribution from "@/views/FoodContributionView.vue";
+import FoodContributionView from "@/views/FoodContributionView.vue";
+import FoodContributionCreateView from "@/views/inputs/FoodContributionCreateView.vue";
+import FoodContributionEditView from "@/views/inputs/FoodContributionEditView.vue";
+import FoodContributionReportView from "@/views/reports/FoodContributionReportView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -80,6 +85,26 @@ const router = createRouter({
       path: "/family/:id/edit",
       name: "family-edit",
       component: FamilyEditView
+    },
+    {
+      path: "/food-contribution",
+      name: "food-contribution",
+      component: FoodContributionView
+    },
+    {
+      path: "/food-contribution/create",
+      name: "food-contribution-create",
+      component: FoodContributionCreateView
+    },
+    {
+      path: "/food-contribution/:id/edit",
+      name: "food-contribution-edit",
+      component: FoodContributionEditView
+    },
+    {
+      path: "/food-contribution/report",
+      name: "food-contribution-report",
+      component: FoodContributionReportView
     },
     {
       path: "/about",
