@@ -35,14 +35,14 @@
 
 <script lang="ts">
 import axios from "axios";
-import { type leader } from "../models/leader";
+import { type Leader } from "../models/leader";
 
 export default {
 
     name: 'leader-view',
     data() {
         return {
-            leaders: [] as leader[]
+            leaders: [] as Leader[]
         }
     },
     mounted() {

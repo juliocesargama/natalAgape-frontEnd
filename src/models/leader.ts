@@ -1,4 +1,4 @@
-export interface leader {
+export interface Leader {
     leaderId: number;
     leaderName: string;
     leaderPhone: string;

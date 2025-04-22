@@ -8,4 +8,6 @@ export interface family {
     children: Array<{
         childName: string;
     }>;
+    leaderId: number;
+    leaderName: string;
 }
