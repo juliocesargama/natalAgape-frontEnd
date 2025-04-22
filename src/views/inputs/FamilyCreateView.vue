@@ -312,6 +312,9 @@ export default {
             if (this.model.family.neighborhoodId == 0) {
                 this.errorList.push('O bairro é obrigatório.');
             }
+            if (this.model.family.leaderId == 0) {
+                this.errorList.push('O líder é obrigatório.');
+            }
             if (!this.errorList.length) {
                 this.saveFamily();
                 this.enableAddChild = true;
