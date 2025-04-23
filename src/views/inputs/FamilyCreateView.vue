@@ -30,6 +30,20 @@
                             :value="neighborhood.neighborhoodId">
                             {{ neighborhood.neighborhoodName }} </option>
                     </select>
+        <!-- Dropdown para Selecionar Líder -->
+        <div class="mb-3">
+          <label for="leader">Líder</label>
+          <select
+            id="leader"
+            v-model="model.family.leaderId"
+            class="form-select form-control"
+          >
+            <option disabled value="">Selecione um líder...</option>
+            <option v-for="leader in leaders" :key="leader.leaderId" :value="leader.leaderId">
+              {{ leader.leaderName }}
+            </option>
+          </select>
+        </div>                    
                     <label aria-label="Observações">Observações</label>
                     <input type="text" v-model="model.family.observation" class="form-control"
                         aria-describedby="Campo de texto para observações">
@@ -156,6 +170,7 @@ export default {
             errorList: [] as string[],
             neighborhoods: [] as Neighborhood[],
             imageObjectUrl: null as string | null,
+            leaders: [] as any[], // Lista de líderes disponíveis
             defaultImage: new URL('@/assets/profile.jpg', import.meta.url).href,
             model: {
                 family: {
@@ -165,6 +180,7 @@ export default {
                     address: "",
                     neighborhoodId: 0,
                     observation: '',
+                    leaderId:  0,
                 },
                 child: {
                     childId: 0,
@@ -187,6 +203,9 @@ export default {
     mounted() {
         this.getNeighborhoods();
     },
+    created() {
+    this.fetchLeaders(); // Busca os líderes ao carregar a página
+  },    
     methods: {
         saveFamily() {
             var $this = this;
@@ -196,7 +215,8 @@ export default {
                 phoneNumber: this.model.family.phoneNumber,
                 address: this.model.family.address,
                 neighborhoodId: this.model.family.neighborhoodId,
-                observation: this.model.family.observation
+                observation: this.model.family.observation,
+                leaderId: this.model.family.leaderId
             })
                 .then(result => {
                     this.model.family.familyId = result.data.familyId
@@ -204,7 +224,8 @@ export default {
                     this.model.family.phoneNumber = result.data.phoneNumber
                     this.model.family.address = result.data.address
                     this.model.family.neighborhoodId = result.data.neighborhoodId
-                    this.model.family.observation = result.data.observation
+                    this.model.family.observation = result.data.observation,
+                    this.model.family.leaderId = result.data.leaderId
                 })
                 .catch(function (error) {
                     if (error.response.status == 400) {
@@ -216,6 +237,16 @@ export default {
                     }
                 })
         },
+        fetchLeaders() {
+      axios
+        .get("/api/leadership") // Endpoint para buscar os líderes
+        .then((response) => {
+          this.leaders = response.data;
+        })
+        .catch(() => {
+          this.errorList.push("Erro ao carregar a lista de líderes.");
+        });
+    },       
         saveChild() {
             var $this = this;
             var url = '/api/child'
@@ -259,7 +290,8 @@ export default {
                     this.model.family.address = result.data.address
                     this.model.family.neighborhoodId = result.data.neighborhoodId
                     this.model.family.observation = result.data.observation
-                    this.model.children = result.data.children
+                    this.model.children = result.data.children,
+                    this.model.family.leaderId = result.data.leaderId
                 })
         },
         abortFormSubmission() {
@@ -280,7 +312,9 @@ export default {
             if (this.model.family.neighborhoodId == 0) {
                 this.errorList.push('O bairro é obrigatório.');
             }
-
+            if (this.model.family.leaderId == 0) {
+                this.errorList.push('O líder é obrigatório.');
+            }
             if (!this.errorList.length) {
                 this.saveFamily();
                 this.enableAddChild = true;

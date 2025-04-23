@@ -31,6 +31,17 @@
                             :value="neighborhood.neighborhoodId">
                             {{ neighborhood.neighborhoodName }} </option>
                     </select>
+                            <!-- Dropdown para Selecionar Líder -->
+        
+          <label for="leader">Líder</label>
+          <select v-model="model.family.leaderId" class="form-select form-control" aria-describedby="Campo de seleção do líder responsável
+          pela família">
+            <option disabled value="">Selecione um líder...</option>
+            <option v-for="leader in leaders" :key="leader.leaderId" :value="leader.leaderId">
+              {{ leader.leaderName }}
+            </option>
+          </select>
+         
                     <label aria-label="Observações">Observações</label>
                     <input type="text" v-model="model.family.observation" class="form-control"
                         aria-describedby="Campo de texto para observações">
@@ -151,6 +162,7 @@ import type { child } from '@/models/child';
 import type { Neighborhood } from '@/models/neighborhood';
 import axios from 'axios';
 import { onUnmounted } from 'vue';
+import type { Leader } from '@/models/leader';
 
 export default {
 
@@ -160,6 +172,7 @@ export default {
             errorList: [] as string[],
             neighborhoods: [] as Neighborhood[],
             imageObjectUrl: null as string | null,
+            leaders: [] as Leader[], 
             defaultImage: new URL('@/assets/profile.jpg', import.meta.url).href,
             model: {
                 family: {
@@ -168,7 +181,8 @@ export default {
                     phoneNumber: '',
                     address: '',
                     neighborhoodId: '',
-                    observation: ''
+                    observation: '',
+                    leaderId: '',
                 },
                 child: {
                     childId: 0,
@@ -190,7 +204,8 @@ export default {
     },
     mounted() {
         this.getNeighborhoods();
-        this.getFamily()
+        this.getFamily();
+        this.getLeaders()
     },
     methods: {
         editfamily() {
@@ -202,7 +217,8 @@ export default {
                 phoneNumber: this.model.family.phoneNumber,
                 address: this.model.family.address,
                 neighborhoodId: this.model.family.neighborhoodId,
-                observation: this.model.family.observation
+                observation: this.model.family.observation,
+                leaderId: this.model.family.leaderId
             })
                 .then(result => {
                     alert('Família alterada com sucesso!');
@@ -302,7 +318,8 @@ export default {
                     this.model.family.address = result.data.address
                     this.model.family.neighborhoodId = result.data.neighborhoodId
                     this.model.family.observation = result.data.observation
-                    this.model.children = result.data.children
+                    this.model.children = result.data.children,
+                    this.model.family.leaderId = result.data.leaderId
                 })
                 .catch(function (error) {
                     if (error.response.status == 404) {
@@ -346,6 +363,9 @@ export default {
             }
             if (this.model.family.neighborhoodId == '') {
                 this.errorList.push('O bairro é obrigatório.');
+            }
+            if (this.model.family.leaderId == '') {
+                this.errorList.push('O líder é obrigatório.');
             }
             if (!this.errorList.length) {
                 this.editfamily();
@@ -428,7 +448,21 @@ export default {
                 console.error("Image load failed:", error);
             }
         },
+        getLeaders() {
+        var $this = this;
+        axios
+            .get("/api/leadership") // Endpoint para buscar os líderes
+            .then((response) => {
+            this.leaders = response.data;
+            })
+            .catch(function (error) {
+                    if (error.response && error.response.status == 500) {
+                        $this.errorList.push("Erro ao carregar os líderes. Tente novamente mais tarde.");
+                    } else {
+                        $this.errorList.push("Erro desconhecido ao carregar os líderes.");
+                    }
+            });
+        }
     }
-
 }
 </script>

@@ -12,11 +12,13 @@ import SponsorEditView from "@/views/inputs/SponsorEditView.vue";
 import FamilyView from "@/views/FamilyView.vue";
 import FamilyCreateView from "@/views/inputs/FamilyCreateView.vue";
 import FamilyEditView from "@/views/inputs/FamilyEditView.vue";
-import FoodContribution from "@/views/FoodContributionView.vue";
 import FoodContributionView from "@/views/FoodContributionView.vue";
 import FoodContributionCreateView from "@/views/inputs/FoodContributionCreateView.vue";
 import FoodContributionEditView from "@/views/inputs/FoodContributionEditView.vue";
 import FoodContributionReportView from "@/views/reports/FoodContributionReportView.vue";
+import LeadershipView from "@/views/LeadershipView.vue";
+import LeadershipCreateView from "@/views/inputs/LeadershipCreateView.vue";
+import LeadershipEditView from "@/views/inputs/LeadershipEditView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -87,7 +89,22 @@ const router = createRouter({
       component: FamilyEditView
     },
     {
-      path: "/food-contribution",
+      path: "/leader",
+      name: "leader",
+      component: LeadershipView,
+    },
+    {
+      path: "/leader/create",
+      name: "leader-create",
+      component: LeadershipCreateView,
+    },
+    {
+      path: "/leader/:id/edit",
+      name: "leader-edit",
+      component: LeadershipEditView,
+    },
+    {  
+    path: "/food-contribution",
       name: "food-contribution",
       component: FoodContributionView
     },
@@ -105,6 +122,7 @@ const router = createRouter({
       path: "/food-contribution/report",
       name: "food-contribution-report",
       component: FoodContributionReportView
+
     },
     {
       path: "/about",
