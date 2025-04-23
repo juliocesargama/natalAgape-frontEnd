@@ -18,7 +18,7 @@ import FoodContributionEditView from "@/views/inputs/FoodContributionEditView.vu
 import FoodContributionReportView from "@/views/reports/FoodContributionReportView.vue";
 import LeadershipView from "@/views/LeadershipView.vue";
 import LeadershipCreateView from "@/views/inputs/LeadershipCreateView.vue";
-import LeadershipEditView from "@/views/inputs/LeadershipEditView.vue";
+import LeadershipEditView from "@/views/inputs/LeaderShipEditView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
