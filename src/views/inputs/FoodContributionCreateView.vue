@@ -98,7 +98,7 @@
 <script lang="ts">
 import type { campaign } from '@/models/campaign';
 import type { family } from '@/models/family';
-import type { leadership } from '@/models/leadership';
+import type { Leader } from '@/models/leader';
 import type { sponsor } from '@/models/sponsor';
 import axios from 'axios';
 
@@ -109,7 +109,7 @@ export default {
             campaigns: [] as campaign[],
             sponsors: [] as sponsor[],
             families: [] as family[],
-            leaders: [] as leader[],
+            leaders: [] as Leader[],
             errorList: [] as string[],
             model: {
                 campaignId: 0,

@@ -21,20 +21,20 @@
                     <label for="leaderColor">Cor</label>
                         <select v-model="model.leader.leaderColor" class="form-select form-control">
                             <option disabled value="">Selecione...</option>
-                            <option value="RED">VERMELHO</option>
-                            <option value="BLUE">AZUL</option>
-                            <option value="GREEN">VERDE</option>
-                            <option value="YELLOW">AMARELO</option>
-                            <option value="ORANGE">LARANJA</option>
-                            <option value="PURPLE">ROXO</option>
-                            <option value="PINK">ROSA</option>
-                            <option value="BROWN">MARRON</option>
-                            <option value="BLACK">PRETO</option>
-                            <option value="WHITE">BRANCO</option>
+                            <option value="RED">Vermelho</option>
+                            <option value="BLUE">Azul</option>
+                            <option value="GREEN">Verde</option>
+                            <option value="YELLOW">Amarelo</option>
+                            <option value="ORANGE">Laranja</option>
+                            <option value="PURPLE">Roxo</option>
+                            <option value="PINK">Rosa</option>
+                            <option value="BROWN">Marrom</option>
+                            <option value="BLACK">Preto</option>
+                            <option value="WHITE">Branco</option>
                         </select>                    
                 </div>
                 <div class="float-end">
-                    <button type="button" @click="checkForm" class="btn btn-primary m-2" aria-describedby="Botão para alterar os novos dados do líder">Alterar</button>
+                    <button type="button" @click="checkForm" class="btn btn-success m-2" aria-describedby="Botão para alterar os novos dados do líder">Alterar</button>
                     <button type="reset" @click="cancelForm" class="btn btn-secondary" aria-describedby="Botão para cancelar o formulário">Cancelar</button>
                 </div>
             </div>

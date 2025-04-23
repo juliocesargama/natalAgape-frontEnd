@@ -3,7 +3,7 @@
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">Líderes
-                    <RouterLink to="/leader/create" class="btn btn-primary float-end" aria-describedby="Botão para incluir novo líder">Novo Líder</RouterLink>
+                    <RouterLink to="/leader/create" class="btn btn-success float-end" aria-describedby="Botão para incluir novo líder">Novo Líder</RouterLink>
                 </h3>
             </div>
             <div class="card-body">
@@ -19,7 +19,7 @@
                         <tr v-for="leader in leaders" :key="leader.leaderId">
                             <td>{{ leader.leaderName }}</td>
                             <td>{{ leader.leaderPhone }}</td>
-                            <td><RouterLink :to="{path: '/leader/'+leader.leaderId +'/edit'}" class="btn btn-primary" aria-describedby="Botão para alterar o líder">Alterar</RouterLink></td>
+                            <td><RouterLink :to="{path: '/leader/'+leader.leaderId +'/edit'}" class="btn btn-success" aria-describedby="Botão para alterar o líder">Alterar</RouterLink></td>
                         </tr>
                     </tbody>
                     <tbody v-else>
