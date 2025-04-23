@@ -109,7 +109,7 @@ export default {
             campaigns: [] as campaign[],
             sponsors: [] as sponsor[],
             families: [] as family[],
-            leaders: [] as leadership[],
+            leaders: [] as leader[],
             errorList: [] as string[],
             model: {
                 campaignId: 0,
