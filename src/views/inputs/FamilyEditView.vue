@@ -31,17 +31,17 @@
                             :value="neighborhood.neighborhoodId">
                             {{ neighborhood.neighborhoodName }} </option>
                     </select>
-                            <!-- Dropdown para Selecionar Líder -->
-        
-          <label for="leader">Líder</label>
-          <select v-model="model.family.leaderId" class="form-select form-control" aria-describedby="Campo de seleção do líder responsável
+                    <!-- Dropdown para Selecionar Líder -->
+
+                    <label for="leader">Líder</label>
+                    <select v-model="model.family.leaderId" class="form-select form-control" aria-describedby="Campo de seleção do líder responsável
           pela família">
-            <option disabled value="">Selecione um líder...</option>
-            <option v-for="leader in leaders" :key="leader.leaderId" :value="leader.leaderId">
-              {{ leader.leaderName }}
-            </option>
-          </select>
-         
+                        <option disabled value="">Selecione um líder...</option>
+                        <option v-for="leader in leaders" :key="leader.leaderId" :value="leader.leaderId">
+                            {{ leader.leaderName }}
+                        </option>
+                    </select>
+
                     <label aria-label="Observações">Observações</label>
                     <input type="text" v-model="model.family.observation" class="form-control"
                         aria-describedby="Campo de texto para observações">
@@ -71,10 +71,12 @@
                                         <td>{{ child.clothes }}</td>
                                         <td>{{ child.shoes }}</td>
                                         <td>
-                                            <button class="btn btn-success m-1"
+                                            <button class="btn btn-success me-2"
                                                 @click="getChild(child), enableEditChild = true, enableAddChild = false, enableEditFamily = false"
                                                 aria-describedby="Botão para alterar a criança">Alterar</button>
-
+                                            <button class="btn btn-danger" aria-describedby="Botão para excluir criança"
+                                                data-bs-toggle="modal" data-bs-target="#modalExcluir"
+                                                @click="childToBeDeleted = child.childId">Excluir</button>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -155,6 +157,29 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="modalExcluir" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="modalExcluiCrianca" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalExcluiCrianca">Excluir Criança</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Cancelar Exclusão"></button>
+                </div>
+                <div class="modal-body">
+                    Tem certeza que deseja excluir a criança?
+                    <br>
+                    <strong>Essa ação não poderá ser desfeita.</strong>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-success" @click="deleteChild(childToBeDeleted)"
+                        data-bs-dismiss="modal">Confirmar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script lang="ts">
@@ -172,7 +197,7 @@ export default {
             errorList: [] as string[],
             neighborhoods: [] as Neighborhood[],
             imageObjectUrl: null as string | null,
-            leaders: [] as Leader[], 
+            leaders: [] as Leader[],
             defaultImage: new URL('@/assets/profile.jpg', import.meta.url).href,
             model: {
                 family: {
@@ -199,6 +224,7 @@ export default {
             enableEditChild: false,
             enableEditFamily: true,
             enableAddChild: false,
+            childToBeDeleted: 0,
         }
 
     },
@@ -319,7 +345,7 @@ export default {
                     this.model.family.neighborhoodId = result.data.neighborhoodId
                     this.model.family.observation = result.data.observation
                     this.model.children = result.data.children,
-                    this.model.family.leaderId = result.data.leaderId
+                        this.model.family.leaderId = result.data.leaderId
                 })
                 .catch(function (error) {
                     if (error.response.status == 404) {
@@ -449,19 +475,27 @@ export default {
             }
         },
         getLeaders() {
-        var $this = this;
-        axios
-            .get("/api/leadership") // Endpoint para buscar os líderes
-            .then((response) => {
-            this.leaders = response.data;
-            })
-            .catch(function (error) {
+            var $this = this;
+            axios
+                .get("/api/leadership") // Endpoint para buscar os líderes
+                .then((response) => {
+                    this.leaders = response.data;
+                })
+                .catch(function (error) {
                     if (error.response && error.response.status == 500) {
                         $this.errorList.push("Erro ao carregar os líderes. Tente novamente mais tarde.");
                     } else {
                         $this.errorList.push("Erro desconhecido ao carregar os líderes.");
                     }
-            });
+                });
+        },
+        deleteChild(childId: number) {
+            var $this = this;
+            var url = '/api/child/' + childId
+            axios.delete(url)
+                .then(() => {
+                    this.getFamily();
+                })
         }
     }
 }
