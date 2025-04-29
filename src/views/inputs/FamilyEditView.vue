@@ -15,7 +15,7 @@
                 </ul>
                 <ul class="alert alert-success" v-if="showSuccessAlert">
                     <div class="mb-0 ms-3">
-                       <strong>Dados da família alterados com sucesso!</strong>
+                        <strong>Dados da família alterados com sucesso!</strong>
                     </div>
                 </ul>
                 <div class="mb-3">
@@ -159,7 +159,7 @@
                         aria-describedby="Botão para salvar a criança">Salvar
                         Criança</button>
                     <button type="reset"
-                        @click="enableAddChild = false, enableEditChild = false, enableEditFamily = true"
+                        @click="enableAddChild = false, enableEditChild = false, enableEditFamily = true, clearChildForm()"
                         class="btn btn-secondary" aria-describedby="Botão para cancelar o cadastro">Cancelar</button>
                 </div>
             </div>
@@ -264,7 +264,7 @@ export default {
                             this.showSuccessAlert = false;
                         }, 3000);
                     }
-                   
+
                 })
                 .catch(function (error) {
                     if (error.response.status == 404) {
