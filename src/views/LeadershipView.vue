@@ -3,7 +3,7 @@
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">Líderes
-                    <RouterLink to="/leader/create" class="btn btn-success float-end" aria-describedby="Botão para incluir novo líder">Novo Líder</RouterLink>
+                    <RouterLink to="/leader/create" class="btn btn-dark float-end" aria-describedby="Botão para incluir novo líder">Novo Líder</RouterLink>
                 </h3>
             </div>
             <div class="card-body">

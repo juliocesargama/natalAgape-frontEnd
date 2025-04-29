@@ -14,18 +14,27 @@
                     </div>
                 </ul>
                 <div class="mb-3">
-                    <label aria-label="Ano da Campanha">Ano</label>
-                    <input type="number" min="2025" max="2075" v-model="model.campaign.campaignYear" class="form-control" aria-describedby="Campo de texto para o ano da campanha">
-                    <label aria-label="Igreja da campanha">Nome da Igreja</label>
-                    <input type="text" v-model="model.campaign.campaignChurch" class="form-control" aria-describedby="Campo de texto para o nome da igreja">
-                    <label aria-label="Quantidade de alimentos por família">Quantidade de alimentos por família</label>
-                    <input type="number" min="1" v-model="model.campaign.foodDonationPerFamily" class="form-control" aria-describedby="Campo de texto para a quantidade de alimentos por família">
+                    <label aria-label="Ano da Campanha">Ano*</label>
+                    <input type="number" min="2025" max="2075" v-model="model.campaign.campaignYear"
+                        class="form-control" aria-describedby="Campo de texto para o ano da campanha">
+                    <label aria-label="Nome da igreja ou campanha">Nome da Igreja/Campanha*</label>
+                    <input type="text" v-model="model.campaign.campaignChurch" class="form-control"
+                        aria-describedby="Campo de texto para o nome da igreja">
+                    <label aria-label="Quantidade de cestas básicas por família">Quantidade de cestas básicas por
+                        família*</label>
+                    <input type="number" min="1" v-model="model.campaign.foodDonationPerFamily" class="form-control"
+                        aria-describedby="Campo de texto para a quantidade de alimentos por família">
                 </div>
                 <div class="float-end">
-                    <button type="button" @click="checkForm" class="btn btn-success m-2" aria-describedby="Botão para alterar os novos dados da campanha">Alterar</button>
-                    <button type="reset" @click="cancelForm" class="btn btn-secondary" aria-describedby="Botão para cancelar o formulário">Cancelar</button>
+                    <button type="button" @click="checkForm" class="btn btn-success m-2"
+                        aria-describedby="Botão para alterar os novos dados da campanha">Alterar</button>
+                    <button type="reset" @click="cancelForm" class="btn btn-secondary"
+                        aria-describedby="Botão para cancelar o formulário">Cancelar</button>
                 </div>
             </div>
+            <div class="card-footer">
+                <p class="text-muted">* Campos obrigatórios</p>
+                </div>
         </div>
     </div>
 </template>
@@ -109,7 +118,7 @@ export default {
             if (this.model.campaign.foodDonationPerFamily < 1) {
                 this.errorList.push('A quantidade de alimentos por família deve ser maior que 1.');
             }
-            if(!this.errorList.length){
+            if (!this.errorList.length) {
                 this.editCampaign();
             };
         }

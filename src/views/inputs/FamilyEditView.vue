@@ -13,17 +13,22 @@
                         </ul>
                     </div>
                 </ul>
+                <ul class="alert alert-success" v-if="showSuccessAlert">
+                    <div class="mb-0 ms-3">
+                       <strong>Dados da família alterados com sucesso!</strong>
+                    </div>
+                </ul>
                 <div class="mb-3">
-                    <label aria-label="Nome do Responsável">Nome do Responsável</label>
+                    <label aria-label="Nome do Responsável">Nome do Responsável*</label>
                     <input type="text" v-model="model.family.responsibleName" class="form-control"
                         aria-describedby="Campo de texto para o nome do doador">
-                    <label aria-label="Telefone do doador">Telefone</label>
+                    <label aria-label="Telefone do doador">Telefone*</label>
                     <input type="text" v-model="model.family.phoneNumber" class="form-control"
                         aria-describedby="Campo de texto para o telefone do responsável">
-                    <label aria-label="Endereço da família">Endereço</label>
+                    <label aria-label="Endereço da família">Endereço*</label>
                     <input type="text" v-model="model.family.address" class="form-control"
                         aria-describedby="Campo de texto para o endereço da família">
-                    <label aria-label="Bairro da família">Bairro</label>
+                    <label aria-label="Bairro da família">Bairro*</label>
                     <select v-model="model.family.neighborhoodId" class="form-select form-control"
                         aria-describedby="Campo de seleção para bairro da família">
                         <option disabled value="">Selecione...</option>
@@ -31,17 +36,17 @@
                             :value="neighborhood.neighborhoodId">
                             {{ neighborhood.neighborhoodName }} </option>
                     </select>
-                            <!-- Dropdown para Selecionar Líder -->
-        
-          <label for="leader">Líder</label>
-          <select v-model="model.family.leaderId" class="form-select form-control" aria-describedby="Campo de seleção do líder responsável
-          pela família">
-            <option disabled value="">Selecione um líder...</option>
-            <option v-for="leader in leaders" :key="leader.leaderId" :value="leader.leaderId">
-              {{ leader.leaderName }}
-            </option>
-          </select>
-         
+                    <!-- Dropdown para Selecionar Líder -->
+
+                    <label for="leader">Líder*</label>
+                    <select v-model="model.family.leaderId" class="form-select form-control"
+                        aria-describedby="Campo de seleção do líder responsável pela família">
+                        <option disabled value="">Selecione um líder...</option>
+                        <option v-for="leader in leaders" :key="leader.leaderId" :value="leader.leaderId">
+                            {{ leader.leaderName }}
+                        </option>
+                    </select>
+
                     <label aria-label="Observações">Observações</label>
                     <input type="text" v-model="model.family.observation" class="form-control"
                         aria-describedby="Campo de texto para observações">
@@ -71,10 +76,12 @@
                                         <td>{{ child.clothes }}</td>
                                         <td>{{ child.shoes }}</td>
                                         <td>
-                                            <button class="btn btn-success m-1"
+                                            <button class="btn btn-success me-2"
                                                 @click="getChild(child), enableEditChild = true, enableAddChild = false, enableEditFamily = false"
                                                 aria-describedby="Botão para alterar a criança">Alterar</button>
-
+                                            <button class="btn btn-danger" aria-describedby="Botão para excluir criança"
+                                                data-bs-toggle="modal" data-bs-target="#modalExcluir"
+                                                @click="childToBeDeleted = child.childId">Excluir</button>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -95,6 +102,9 @@
                             aria-describedby="Botão para cancelar o formulário">Finalizar Alterações</button>
                     </div>
                 </div>
+            </div>
+            <div class="card-footer">
+                <p class="text-muted">* Campos obrigatórios</p>
             </div>
         </div>
         <div class="card" v-show="enableEditChild || enableAddChild">
@@ -118,16 +128,16 @@
                             class="float-start img-fluid img-thumbnail" aria-describedby="Imagem da criança">
                     </div>
                     <div class="col">
-                        <label aria-label="Nome da Criança">Nome da Criança</label>
+                        <label aria-label="Nome da Criança">Nome da Criança*</label>
                         <input type="text" v-model="model.child.childName" class="form-control"
                             aria-describedby="Campo de texto para o nome da criança">
-                        <label aria-label="Sexo da Criança">Sexo</label>
+                        <label aria-label="Sexo da Criança">Sexo*</label>
                         <select v-model="model.child.gender" class="form-select form-control">
                             <option disabled value="">Selecione...</option>
                             <option value="MALE">Masculino</option>
                             <option value="FEMALE">Feminino</option>
                         </select>
-                        <label aria-label="Data de Nascimento da Criança">Data de Nascimento</label>
+                        <label aria-label="Data de Nascimento da Criança">Data de Nascimento*</label>
                         <input type="date" v-model="model.child.birthDate" class="form-control"
                             aria-describedby="Campo de texto para a data de nascimento da criança">
                         <label aria-label="Tamanho da Roupa">Tamanho da Roupa</label>
@@ -146,11 +156,37 @@
                 </div>
                 <div class="float-end">
                     <button type="button" @click="checkChildForm()" class="btn btn-success m-2"
-                        aria-describedby="Botão para salvar a criança">Salvar
+                        aria-describedby="Botão para salvar a criança">Alterar
                         Criança</button>
                     <button type="reset"
                         @click="enableAddChild = false, enableEditChild = false, enableEditFamily = true"
                         class="btn btn-secondary" aria-describedby="Botão para cancelar o cadastro">Cancelar</button>
+                </div>
+            </div>
+            <div class="card-footer">
+                <p class="text-muted">* Campos obrigatórios</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalExcluir" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="modalExcluiCrianca" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalExcluiCrianca">Excluir Criança</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Cancelar Exclusão"></button>
+                </div>
+                <div class="modal-body">
+                    Tem certeza que deseja excluir a criança?
+                    <br>
+                    <strong>Essa ação não poderá ser desfeita.</strong>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-success" @click="deleteChild(childToBeDeleted)"
+                        data-bs-dismiss="modal">Confirmar</button>
                 </div>
             </div>
         </div>
@@ -161,9 +197,8 @@
 import type { child } from '@/models/child';
 import type { Neighborhood } from '@/models/neighborhood';
 import axios from 'axios';
-import { onUnmounted } from 'vue';
+import { onUnmounted, ref } from 'vue';
 import type { Leader } from '@/models/leader';
-
 export default {
 
     name: 'familyEditView',
@@ -172,7 +207,7 @@ export default {
             errorList: [] as string[],
             neighborhoods: [] as Neighborhood[],
             imageObjectUrl: null as string | null,
-            leaders: [] as Leader[], 
+            leaders: [] as Leader[],
             defaultImage: new URL('@/assets/profile.jpg', import.meta.url).href,
             model: {
                 family: {
@@ -199,6 +234,8 @@ export default {
             enableEditChild: false,
             enableEditFamily: true,
             enableAddChild: false,
+            childToBeDeleted: 0,
+            showSuccessAlert: false,
         }
 
     },
@@ -220,8 +257,14 @@ export default {
                 observation: this.model.family.observation,
                 leaderId: this.model.family.leaderId
             })
-                .then(result => {
-                    alert('Família alterada com sucesso!');
+                .then((response) => {
+                    if (response.status == 200) {
+                        this.showSuccessAlert = true;
+                        setTimeout(() => {
+                            this.showSuccessAlert = false;
+                        }, 3000);
+                    }
+                   
                 })
                 .catch(function (error) {
                     if (error.response.status == 404) {
@@ -319,7 +362,7 @@ export default {
                     this.model.family.neighborhoodId = result.data.neighborhoodId
                     this.model.family.observation = result.data.observation
                     this.model.children = result.data.children,
-                    this.model.family.leaderId = result.data.leaderId
+                        this.model.family.leaderId = result.data.leaderId
                 })
                 .catch(function (error) {
                     if (error.response.status == 404) {
@@ -449,19 +492,27 @@ export default {
             }
         },
         getLeaders() {
-        var $this = this;
-        axios
-            .get("/api/leadership") // Endpoint para buscar os líderes
-            .then((response) => {
-            this.leaders = response.data;
-            })
-            .catch(function (error) {
+            var $this = this;
+            axios
+                .get("/api/leadership") // Endpoint para buscar os líderes
+                .then((response) => {
+                    this.leaders = response.data;
+                })
+                .catch(function (error) {
                     if (error.response && error.response.status == 500) {
                         $this.errorList.push("Erro ao carregar os líderes. Tente novamente mais tarde.");
                     } else {
                         $this.errorList.push("Erro desconhecido ao carregar os líderes.");
                     }
-            });
+                });
+        },
+        deleteChild(childId: number) {
+            var $this = this;
+            var url = '/api/child/' + childId
+            axios.delete(url)
+                .then(() => {
+                    this.getFamily();
+                })
         }
     }
 }

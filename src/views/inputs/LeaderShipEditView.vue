@@ -14,11 +14,11 @@
                     </div>
                 </ul>
                 <div class="mb-3">
-                   <label aria-label="Nome do Líder">Nome do líder</label>
+                   <label aria-label="Nome do Líder">Nome do líder*</label>
                     <input type="text" v-model="model.leader.leaderName" class="form-control" aria-describedby="Campo de texto para o nome do líder">
-                    <label aria-label="Telefone do líder">Telefone</label>
+                    <label aria-label="Telefone do líder">Telefone*</label>
                     <input type="text" v-model="model.leader.leaderPhone" class="form-control" aria-describedby="Campo de texto para o telefone do líder">
-                    <label for="leaderColor">Cor</label>
+                    <label for="leaderColor">Cor*</label>
                         <select v-model="model.leader.leaderColor" class="form-select form-control">
                             <option disabled value="">Selecione...</option>
                             <option value="RED">Vermelho</option>
@@ -38,6 +38,9 @@
                     <button type="reset" @click="cancelForm" class="btn btn-secondary" aria-describedby="Botão para cancelar o formulário">Cancelar</button>
                 </div>
             </div>
+            <div class="card-footer">
+        <p class="text-muted">* Campos obrigatórios</p>
+    </div>
         </div>
     </div>
 </template>
