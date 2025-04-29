@@ -13,26 +13,26 @@
                     </div>
                 </ul>
                 <div class="container">
-                    <label for="campaignId" class="form-label" aria-labelledby="Selecione a campanha">Campanha</label>
+                    <label for="campaignId" class="form-label" aria-labelledby="Selecione a campanha">Campanha*</label>
                     <select v-model="model.campaignId" class="form-control selectpicker show-tick" id="campaignId"
                         title="Selecione uma campanha...">
                         <option v-for="campaign in campaigns" :value="campaign.campaignId"> {{ campaign.campaignYear }}
                             |
                             {{ campaign.campaignChurch }}</option>
                     </select>
-                    <label for="sponsorId" class="form-label" aria-labelledby="Selecione o doador">Doador</label>
+                    <label for="sponsorId" class="form-label" aria-labelledby="Selecione o doador">Doador*</label>
                     <select v-model="model.sponsorId" data-live-search="true"
                         class="form-control selectpicker show-tick" id="sponsorId" title="Selecione um doador...">
                         <option v-for="sponsor in sponsors" :value="sponsor.sponsorId">{{ sponsor.sponsorName }}
                         </option>
                     </select>
-                    <label for="familyId" class="form-label" aria-labelledby="Selecione a família">Família</label>
+                    <label for="familyId" class="form-label" aria-labelledby="Selecione a família">Família*</label>
                     <select v-model="model.familyId" data-live-search="true" class="form-control selectpicker show-tick"
                         id="familyId" title="Selecione uma família...">
                         <option v-for="family in families" :value="family.familyId">{{ family.responsibleName }}
                         </option>
                     </select>
-                    <label for="leaderId" class="form-label" aria-labelledby="Selecione o lider">Líder</label>
+                    <label for="leaderId" class="form-label" aria-labelledby="Selecione o lider">Líder*</label>
                     <select v-model="model.leaderId" data-live-search="true" class="form-control selectpicker show-tick"
                         id="leaderId" title="Selecione um líder...">
                         <option v-for="leader in leaders" :value="leader.leaderId">{{ leader.leaderName }}
@@ -41,7 +41,7 @@
 
                     <div class="form-check mt-3">
                         <label for="paidInSpecies" class="form-label"
-                            aria-labelledby="Doação paga em dinheiro? Seleção">Foi/Será pago em dinheiro?</label>
+                            aria-labelledby="Doação paga em dinheiro? Seleção">Foi/Será pago em dinheiro?*</label>
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="paidInSpecies" id="paidInSpeciesYes"
                                 :value="true" v-model="model.paidInSpecies">
@@ -62,7 +62,7 @@
 
                     <div class="form-check mt-3">
                         <label for="wasDelivered" class="form-label"
-                            aria-labelledby="A doação já foi realizada? Selecione">A doação já foi realizada?</label>
+                            aria-labelledby="A doação já foi realizada? Selecione">A doação já foi realizada?*</label>
 
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="wasDeliveredYes" id="wasDeliveredYes"
@@ -99,6 +99,9 @@
                             aria-label="Cancelar o cadastro">Voltar</RouterLink>
                     </div>
                 </div>
+            </div>
+            <div class="card-footer">
+                <p class="text-muted">* Campos obrigatórios</p>
             </div>
         </div>
     </div>
@@ -229,7 +232,7 @@ export default {
             if (this.model.wasDelivered && this.model.donationDate === null) {
                 this.errorList.push("Preencha a data da doação");
             }
-        
+
             if (this.model.paidInSpecies === null) {
                 this.errorList.push("Selecione se a doação foi paga em dinheiro");
             }

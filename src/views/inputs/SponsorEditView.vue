@@ -14,15 +14,22 @@
                     </div>
                 </ul>
                 <div class="mb-3">
-                   <label aria-label="Nome do doador">Nome do doador</label>
-                    <input type="text" v-model="model.sponsor.sponsorName" class="form-control" aria-describedby="Campo de texto para o nome do doador">
-                    <label aria-label="Telefone do doador">Telefone</label>
-                    <input type="text" v-model="model.sponsor.sponsorPhone" class="form-control" aria-describedby="Campo de texto para o telefone do doador">
+                    <label aria-label="Nome do doador">Nome do doador*</label>
+                    <input type="text" v-model="model.sponsor.sponsorName" class="form-control"
+                        aria-describedby="Campo de texto para o nome do doador">
+                    <label aria-label="Telefone do doador">Telefone*</label>
+                    <input type="text" v-model="model.sponsor.sponsorPhone" class="form-control"
+                        aria-describedby="Campo de texto para o telefone do doador">
                 </div>
                 <div class="float-end">
-                    <button type="button" @click="checkForm" class="btn btn-success m-2" aria-describedby="Botão para alterar os novos dados do doador">Alterar</button>
-                    <button type="reset" @click="cancelForm" class="btn btn-secondary" aria-describedby="Botão para cancelar o formulário">Cancelar</button>
+                    <button type="button" @click="checkForm" class="btn btn-success m-2"
+                        aria-describedby="Botão para alterar os novos dados do doador">Alterar</button>
+                    <button type="reset" @click="cancelForm" class="btn btn-secondary"
+                        aria-describedby="Botão para cancelar o formulário">Cancelar</button>
                 </div>
+            </div>
+            <div class="card-footer">
+                <p class="text-muted">* Campos obrigatórios</p>
             </div>
         </div>
     </div>
@@ -58,7 +65,7 @@ export default {
                 sponsorName: this.model.sponsor.sponsorName,
                 sponsorPhone: this.model.sponsor.sponsorPhone,
             })
-            .then(result => {
+                .then(result => {
                     this.$router.push('/sponsor')
                 })
                 .catch(function (error) {
@@ -102,7 +109,7 @@ export default {
             if (this.model.sponsor.sponsorPhone == '') {
                 this.errorList.push('O telefone do doador é obrigatório.');
             }
-            if(!this.errorList.length){
+            if (!this.errorList.length) {
                 this.editSponsor();
             };
         }

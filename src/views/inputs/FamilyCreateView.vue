@@ -13,16 +13,16 @@
                     </div>
                 </ul>
                 <div class="container" v-show="enableFamily">
-                    <label aria-label="Nome do Responsável">Nome do Responsável</label>
+                    <label aria-label="Nome do Responsável">Nome do Responsável*</label>
                     <input type="text" v-model="model.family.responsibleName" class="form-control"
                         aria-describedby="Campo de texto para o nome do responsável">
-                    <label aria-label="Telefone do responsável">Telefone</label>
+                    <label aria-label="Telefone do responsável">Telefone*</label>
                     <input type="text" v-model="model.family.phoneNumber" class="form-control"
                         aria-describedby="Campo de texto para o telefone do responsável">
-                    <label aria-label="Endereço da família">Endereço</label>
+                    <label aria-label="Endereço da família">Endereço*</label>
                     <input type="text" v-model="model.family.address" class="form-control"
                         aria-describedby="Campo de texto para o endereço da família">
-                    <label aria-label="Bairro da família">Bairro</label>
+                    <label aria-label="Bairro da família">Bairro*</label>
                     <select v-model="model.family.neighborhoodId" class="form-select form-control"
                         aria-describedby="Campo de texto para bairro da família">
                         <option disabled value="">Selecione...</option>
@@ -30,20 +30,16 @@
                             :value="neighborhood.neighborhoodId">
                             {{ neighborhood.neighborhoodName }} </option>
                     </select>
-        <!-- Dropdown para Selecionar Líder -->
-        <div class="mb-3">
-          <label for="leader">Líder</label>
-          <select
-            id="leader"
-            v-model="model.family.leaderId"
-            class="form-select form-control"
-          >
-            <option disabled value="">Selecione um líder...</option>
-            <option v-for="leader in leaders" :key="leader.leaderId" :value="leader.leaderId">
-              {{ leader.leaderName }}
-            </option>
-          </select>
-        </div>                    
+                    <!-- Dropdown para Selecionar Líder -->
+                    <div class="mb-3">
+                        <label for="leader">Líder*</label>
+                        <select id="leader" v-model="model.family.leaderId" class="form-select form-control">
+                            <option disabled value="">Selecione um líder...</option>
+                            <option v-for="leader in leaders" :key="leader.leaderId" :value="leader.leaderId">
+                                {{ leader.leaderName }}
+                            </option>
+                        </select>
+                    </div>
                     <label aria-label="Observações">Observações</label>
                     <input type="text" v-model="model.family.observation" class="form-control"
                         aria-describedby="Campo de texto para observações">
@@ -56,7 +52,11 @@
                         </div>
                     </div>
                 </div>
+                
             </div>
+            <div class="card-footer">
+                    <p class="text-muted">* Campos obrigatórios</p>
+                </div>
         </div>
         <div class="card ms-3 me-3 mb-3" v-show="enableChild">
             <div class="card-header">
@@ -76,16 +76,16 @@
                             class="float-start img-fluid img-thumbnail" aria-describedby="Imagem da criança">
                     </div>
                     <div class="col">
-                        <label aria-label="Nome da Criança">Nome da Criança</label>
+                        <label aria-label="Nome da Criança">Nome da Criança*</label>
                         <input type="text" v-model="model.child.childName" class="form-control"
                             aria-describedby="Campo de texto para o nome da criança">
-                        <label aria-label="Sexo da Criança">Sexo</label>
+                        <label aria-label="Sexo da Criança">Sexo*</label>
                         <select v-model="model.child.gender" class="form-select form-control">
                             <option disabled value="">Selecione...</option>
                             <option value="MALE">Masculino</option>
                             <option value="FEMALE">Feminino</option>
                         </select>
-                        <label aria-label="Data de Nascimento da Criança">Data de Nascimento</label>
+                        <label aria-label="Data de Nascimento da Criança">Data de Nascimento*</label>
                         <input type="date" v-model="model.child.birthDate" class="form-control"
                             aria-describedby="Campo de texto para a data de nascimento da criança">
                         <label aria-label="Tamanho da Roupa">Tamanho da Roupa</label>
@@ -96,7 +96,8 @@
                             aria-describedby="Campo de texto para o tamanho do calçado">
                         <label aria-label="Foto da criança">Foto da Criança</label>
                         <div class="input-group mb-3">
-                            <input type="file" accept="image/*" ref="fileInput" class="form-control" id="inputGroupFile">
+                            <input type="file" accept="image/*" ref="fileInput" class="form-control"
+                                id="inputGroupFile">
                             <label class="input-group-text" @click="uploadPicture">Upload</label>
                         </div>
                     </div>
@@ -109,6 +110,9 @@
                         aria-describedby="Botão para cancelar o cadastro">Cancelar</button>
                 </div>
             </div>
+            <div class="card-footer">
+                    <p class="text-muted">* Campos obrigatórios</p>
+                </div>
         </div>
         <div class="card ms-3 me-3 mb-3" v-show="enableAddChild">
             <div class="card-header">
@@ -180,7 +184,7 @@ export default {
                     address: "",
                     neighborhoodId: 0,
                     observation: '',
-                    leaderId:  0,
+                    leaderId: 0,
                 },
                 child: {
                     childId: 0,
@@ -204,8 +208,8 @@ export default {
         this.getNeighborhoods();
     },
     created() {
-    this.fetchLeaders(); // Busca os líderes ao carregar a página
-  },    
+        this.fetchLeaders(); // Busca os líderes ao carregar a página
+    },
     methods: {
         saveFamily() {
             var $this = this;
@@ -225,7 +229,7 @@ export default {
                     this.model.family.address = result.data.address
                     this.model.family.neighborhoodId = result.data.neighborhoodId
                     this.model.family.observation = result.data.observation,
-                    this.model.family.leaderId = result.data.leaderId
+                        this.model.family.leaderId = result.data.leaderId
                 })
                 .catch(function (error) {
                     if (error.response.status == 400) {
@@ -238,15 +242,15 @@ export default {
                 })
         },
         fetchLeaders() {
-      axios
-        .get("/api/leadership") // Endpoint para buscar os líderes
-        .then((response) => {
-          this.leaders = response.data;
-        })
-        .catch(() => {
-          this.errorList.push("Erro ao carregar a lista de líderes.");
-        });
-    },       
+            axios
+                .get("/api/leadership") // Endpoint para buscar os líderes
+                .then((response) => {
+                    this.leaders = response.data;
+                })
+                .catch(() => {
+                    this.errorList.push("Erro ao carregar a lista de líderes.");
+                });
+        },
         saveChild() {
             var $this = this;
             var url = '/api/child'
@@ -291,7 +295,7 @@ export default {
                     this.model.family.neighborhoodId = result.data.neighborhoodId
                     this.model.family.observation = result.data.observation
                     this.model.children = result.data.children,
-                    this.model.family.leaderId = result.data.leaderId
+                        this.model.family.leaderId = result.data.leaderId
                 })
         },
         abortFormSubmission() {

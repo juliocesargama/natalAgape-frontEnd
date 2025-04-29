@@ -13,26 +13,26 @@
                     </div>
                 </ul>
                 <div class="container">
-                    <label for="campaignId" class="form-label">Campanha</label>
+                    <label for="campaignId" class="form-label">Campanha*</label>
                     <select v-model="model.campaignId" class="form-control selectpicker show-tick" id="campaignId"
                         title="Selecione uma campanha...">
                         <option v-for="campaign in campaigns" :value="campaign.campaignId"> {{ campaign.campaignYear }}
                             |
                             {{ campaign.campaignChurch }}</option>
                     </select>
-                    <label for="sponsorId" class="form-label">Doador</label>
+                    <label for="sponsorId" class="form-label">Doador*</label>
                     <select v-model="model.sponsorId" data-live-search="true"
                         class="form-control selectpicker show-tick" id="sponsorId" title="Selecione um doador...">
                         <option v-for="sponsor in sponsors" :value="sponsor.sponsorId">{{ sponsor.sponsorName }}
                         </option>
                     </select>
-                    <label for="familyId" class="form-label">Família</label>
+                    <label for="familyId" class="form-label">Família*</label>
                     <select v-model="model.familyId" data-live-search="true" class="form-control selectpicker show-tick"
                         id="familyId" title="Selecione uma família...">
                         <option v-for="family in families" :value="family.familyId">{{ family.responsibleName }}
                         </option>
                     </select>
-                    <label for="leaderId" class="form-label">Líder</label>
+                    <label for="leaderId" class="form-label">Líder*</label>
                     <select v-model="model.leaderId" data-live-search="true" class="form-control selectpicker show-tick"
                         id="leaderId" title="Selecione um líder...">
                         <option v-for="leader in leaders" :value="leader.leaderId">{{ leader.leaderName }}
@@ -40,7 +40,7 @@
                     </select>
 
                     <div class="form-check mt-3">
-                        <label for="paidInSpecies" class="form-label">Foi/Será pago em dinheiro?</label>
+                        <label for="paidInSpecies" class="form-label">Foi/Será pago em dinheiro?*</label>
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="paidInSpecies" id="paidInSpeciesYes"
                                 :value="true" v-model="model.paidInSpecies">
@@ -58,7 +58,7 @@
                     </div>
 
                     <div class="form-check mt-3">
-                        <label for="wasDelivered" class="form-label">A doação já foi realizada?</label>
+                        <label for="wasDelivered" class="form-label">A doação já foi realizada?*</label>
 
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="wasDeliveredYes" id="wasDeliveredYes"
@@ -90,6 +90,9 @@
                         <RouterLink to="/food-contribution" class="btn btn-secondary ms-2">Voltar</RouterLink>
                     </div>
                 </div>
+            </div>
+            <div class="card-footer">
+                <p class="text-muted">* Campos obrigatórios</p>
             </div>
         </div>
     </div>
@@ -223,7 +226,7 @@ export default {
             if (this.model.leaderId === 0) {
                 this.errorList.push("Selecione um líder");
             }
-            
+
             if (this.model.wasDelivered && this.model.donationDate !== null) {
                 const today = new Date();
                 const donationDate = new Date(this.model.donationDate);

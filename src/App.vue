@@ -49,7 +49,11 @@ const closeMobileMenu = () => {
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
                   aria-expanded="false"><b>Doações</b></a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <RouterLink class="dropdown-item" to="/sponsor" aria-current="Doadores">Doadores</RouterLink>
+                  <RouterLink class="dropdown-item" to="/sponsor" aria-current="Doadores">Cadastrar Doadores</RouterLink>
+                  <li>
+                    <hr class="drop-divider">
+                  </li>
+                  <a class="nav-link disabled text-muted" href="#" tabindex="-1" aria-disabled="true">Cadastrar Doações</a>
                   <RouterLink class="dropdown-item" to="/food-contribution" aria-current="Cestas Básicas">Cestas Básicas
                   </RouterLink>
                   <RouterLink class="dropdown-item" to="/child-contribution" aria-current="Roupas">Roupas e Calçados
@@ -61,7 +65,7 @@ const closeMobileMenu = () => {
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
                   aria-expanded="false"><b>Campanhas</b></a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <RouterLink class="dropdown-item" to="/campaign" aria-current="Campanhas">Nova Campanha</RouterLink>
+                  <RouterLink class="dropdown-item" to="/campaign" aria-current="Campanhas">Cadastrar Campanha</RouterLink>
                   <li>
                     <hr class="drop-divider">
                   </li>

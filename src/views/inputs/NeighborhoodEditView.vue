@@ -14,13 +14,19 @@
                     </div>
                 </ul>
                 <div class="mb-3">
-                    <label aria-label="Nome do bairro">Bairro</label>
-                    <input type="text" v-model="model.neighborhood.neighborhoodName" class="form-control" aria-describedby="Campo texto para inserir novo nome do bairro">
+                    <label aria-label="Nome do bairro">Bairro*</label>
+                    <input type="text" v-model="model.neighborhood.neighborhoodName" class="form-control"
+                        aria-describedby="Campo texto para inserir novo nome do bairro">
                 </div>
                 <div class="float-end">
-                    <button type="button" @click="checkForm" class="btn btn-success m-2" aria-describedby="Botão para alterar os novos dados do bairro">Alterar</button>
-                    <button type="reset" @click="cancelForm" class="btn btn-secondary" aria-describedby="Botão para cancelar o formulário">Cancelar</button>
+                    <button type="button" @click="checkForm" class="btn btn-success m-2"
+                        aria-describedby="Botão para alterar os novos dados do bairro">Alterar</button>
+                    <button type="reset" @click="cancelForm" class="btn btn-secondary"
+                        aria-describedby="Botão para cancelar o formulário">Cancelar</button>
                 </div>
+            </div>
+            <div class="card-footer">
+                <p class="text-muted">* Campo obrigatório</p>
             </div>
         </div>
     </div>
@@ -93,7 +99,7 @@ export default {
             if (this.model.neighborhood.neighborhoodName == '') {
                 this.errorList.push('O nome do bairro é obrigatório.');
             }
-            if(!this.errorList.length){
+            if (!this.errorList.length) {
                 this.editNeighborhood();
             };
         }
