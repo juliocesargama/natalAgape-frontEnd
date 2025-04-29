@@ -112,7 +112,7 @@
                 <h3 aria-label="Inclusão de Criança">Adicionar Criança</h3>
             </div>
             <div class="card-header" v-if="enableEditChild">
-                <h3 aria-label="Alteração de Criança">Salvar Criança</h3>
+                <h3 aria-label="Alteração de Criança">Alterar Criança</h3>
             </div>
             <div class="card-body">
                 <ul class="alert alert-danger" v-if="errorList.length > 0">
@@ -156,7 +156,7 @@
                 </div>
                 <div class="float-end">
                     <button type="button" @click="checkChildForm()" class="btn btn-success m-2"
-                        aria-describedby="Botão para salvar a criança">Alterar
+                        aria-describedby="Botão para salvar a criança">Salvar
                         Criança</button>
                     <button type="reset"
                         @click="enableAddChild = false, enableEditChild = false, enableEditFamily = true"
