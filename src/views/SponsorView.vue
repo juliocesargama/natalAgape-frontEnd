@@ -24,7 +24,7 @@
                     </tbody>
                     <tbody v-else>
                         <tr>
-                            <td colspan="3">Carregando Doadores...</td>
+                            <td colspan="3">{{ statusMessage }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -42,7 +42,8 @@ export default {
     name: 'sponsor-view',
     data() {
         return {
-            sponsors: [] as sponsor[]
+            sponsors: [] as sponsor[],
+            statusMessage: 'Carregando Doadores...'
         }
     },
     mounted() {
@@ -51,7 +52,16 @@ export default {
     methods: {
         getsponsors() {
             var url = 'api/sponsor';
-            return axios.get(url).then(result => this.sponsors = result.data);
+            return axios.get(url).then(result => {
+                if (result.data.length > 0) {
+                    this.sponsors = result.data;
+                    this.statusMessage = '';
+                } else {
+                    this.statusMessage = 'Nenhum doador encontrado.';
+                }
+            }).catch(() => {
+                this.statusMessage = 'Erro ao carregar doadores, tente novamente mais tarde.';
+            });
         }
     },
 }

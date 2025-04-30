@@ -22,7 +22,7 @@
                     </tbody>
                     <tbody v-else>
                         <tr>
-                            <td colspan="4">Carregando Bairros...</td>
+                            <td colspan="4">{{ statusMessage }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -40,7 +40,8 @@ export default {
     name: 'neighborhood-view',
     data() {
         return {
-            neighborhoods: [] as Neighborhood[]
+            neighborhoods: [] as Neighborhood[],
+            statusMessage: 'Carregando Bairros...'
         }
     },
     mounted() {
@@ -49,7 +50,16 @@ export default {
     methods: {
         getNeighborhoods() {
             var url = 'api/neighborhood';
-            return axios.get(url).then(result => this.neighborhoods = result.data);
+            return axios.get(url).then(result => {
+                if (result.data.length > 0) {
+                    this.neighborhoods = result.data;
+                    this.statusMessage = '';
+                } else {
+                    this.statusMessage = 'Nenhum bairro encontrado.';
+                }
+            }).catch(() => {
+                this.statusMessage = 'Erro ao carregar os bairros, tente novamente mais tarde.';
+            });
         }
     },
 }

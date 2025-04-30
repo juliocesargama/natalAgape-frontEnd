@@ -26,7 +26,7 @@
                     </tbody>
                     <tbody v-else>
                         <tr>
-                            <td colspan="4">Carregando Campanhas...</td>
+                            <td colspan="4">{{ statusMessage }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -44,7 +44,8 @@ export default {
     name: 'campaign-view',
     data() {
         return {
-            campaigns: [] as campaign[]
+            campaigns: [] as campaign[],
+            statusMessage: 'Carregando Campanhas...'
         }
     },
     mounted() {
@@ -53,7 +54,16 @@ export default {
     methods: {
         getcampaigns() {
             var url = 'api/campaign';
-            return axios.get(url).then(result => this.campaigns = result.data);
+            return axios.get(url).then(result => {
+                if (result.data.length > 0) {
+                    this.campaigns = result.data;
+                    this.statusMessage = '';
+                } else {
+                    this.statusMessage = 'Nenhuma campanha encontrada.';
+                }
+            }).catch(() => {
+                this.statusMessage = 'Erro ao carregar campanhas, tente novamente mais tarde.';
+            });
         }
     },
 }

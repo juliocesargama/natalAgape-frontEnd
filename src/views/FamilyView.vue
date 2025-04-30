@@ -34,7 +34,7 @@
                     </tbody>
                     <tbody v-else>
                         <tr>
-                            <td colspan="3">Carregando Famílias...</td>
+                            <td colspan="3">{{ statusMessage }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -77,6 +77,7 @@ export default {
     data() {
         return {
             families: [] as family[],
+            statusMessage: 'Carregando Famílias...',
             familyToDelete: 0 as number,
         }
     },
@@ -86,7 +87,16 @@ export default {
     methods: {
         getFamilies() {
             var url = 'api/family';
-            return axios.get(url).then(result => this.families = result.data);
+            return axios.get(url).then(result => {
+                if (result.data.length > 0) {
+                    this.families = result.data;
+                    this.statusMessage = '';
+                } else {
+                    this.statusMessage = 'Nenhuma família encontrada.';
+                }
+            }).catch(() => {
+                this.statusMessage = 'Erro ao carregar famílias, tente novamente mais tarde.';
+            });
         },
         deleteFamily(familyId: number) {
             var url = 'api/family/' + familyId;

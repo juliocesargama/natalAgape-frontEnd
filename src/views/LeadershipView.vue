@@ -3,7 +3,8 @@
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">Líderes
-                    <RouterLink to="/leader/create" class="btn btn-dark float-end" aria-describedby="Botão para incluir novo líder">Novo Líder</RouterLink>
+                    <RouterLink to="/leader/create" class="btn btn-dark float-end"
+                        aria-describedby="Botão para incluir novo líder">Novo Líder</RouterLink>
                 </h3>
             </div>
             <div class="card-body">
@@ -19,12 +20,15 @@
                         <tr v-for="leader in leaders" :key="leader.leaderId">
                             <td>{{ leader.leaderName }}</td>
                             <td>{{ leader.leaderPhone }}</td>
-                            <td><RouterLink :to="{path: '/leader/'+leader.leaderId +'/edit'}" class="btn btn-success" aria-describedby="Botão para alterar o líder">Alterar</RouterLink></td>
+                            <td>
+                                <RouterLink :to="{ path: '/leader/' + leader.leaderId + '/edit' }" class="btn btn-success"
+                                    aria-describedby="Botão para alterar o líder">Alterar</RouterLink>
+                            </td>
                         </tr>
                     </tbody>
                     <tbody v-else>
                         <tr>
-                            <td colspan="3">Carregando Líderes...</td>
+                            <td colspan="3">{{ statusMessage }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -42,7 +46,8 @@ export default {
     name: 'leader-view',
     data() {
         return {
-            leaders: [] as Leader[]
+            leaders: [] as Leader[],
+            statusMessage: 'Carregando Líderes...'
         }
     },
     mounted() {
@@ -51,9 +56,18 @@ export default {
     methods: {
         getLeaders() {
             var url = 'api/leadership';
-            return axios.get(url).then(result => this.leaders = result.data);
+            return axios.get(url).then(result => {
+            if (result.data.length > 0) {
+                this.leaders = result.data;
+                this.statusMessage = '';
+            } else {
+                this.statusMessage = 'Nenhum líder encontrado.';
+            }
+            })
+            .catch(() => {
+                this.statusMessage = 'Erro ao carregar líderes, tente novamente mais tarde.';
+            });
         }
     },
 }
 </script>
-

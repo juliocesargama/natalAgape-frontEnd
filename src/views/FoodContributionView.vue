@@ -19,7 +19,7 @@
                                 <th><b>Ações</b></th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody v-if="foodContributions.length > 0">
                             <tr v-for="foodContribution in foodContributions" :key="foodContribution.id">
                                 <td>{{ foodContribution.campaignYear}}</td>
                                 <td>{{ foodContribution.sponsorName }}</td>
@@ -28,6 +28,11 @@
                                 <td>
                                     <RouterLink :to="{path: '/food-contribution/'+foodContribution.id+'/edit'}" class="btn btn-success">Alterar</RouterLink>
                                 </td>
+                            </tr>
+                        </tbody>
+                        <tbody v-else>
+                            <tr>
+                                <td colspan="5">{{ statusMessage}}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -44,7 +49,8 @@ export default {
     name: 'FoodContributionView',
     data() {
         return {
-            foodContributions: [] as foodContribution[]
+            foodContributions: [] as foodContribution[],
+            statusMessage: 'Carregando Doações...'
         }
     },
     mounted() {
@@ -53,7 +59,16 @@ export default {
     methods: {
         getFoodContributions() {
             var url = 'api/food-contribution';
-            return axios.get(url).then(result => this.foodContributions = result.data);
+            return axios.get(url).then(result => {
+                if (result.data.length > 0) {
+                    this.foodContributions = result.data;
+                    this.statusMessage = '';
+                } else {
+                    this.statusMessage = 'Nenhuma doação encontrada.';
+                }
+            }).catch(() => {
+                this.statusMessage = 'Erro ao carregar doações, tente novamente mais tarde.';
+            });
         },
         setWasDelivered(wasDelivered: string | boolean) {
             switch (wasDelivered) {
