@@ -51,7 +51,7 @@
                         </div>
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="wasDeliveredNo" id="wasDeliveredNo"
-                                :value="false" v-model="model.wasDelivered" @change="clearDonationDate">
+                                :value="false" v-model="model.wasDelivered" @change="clearAcceptanceDate">
                             <label class="form-check-label" for="wasDelivered">
                                 Não
                             </label>
@@ -59,8 +59,8 @@
                     </div>
 
                     <div class="container" v-show="model.wasDelivered">
-                        <label for="donationDate" class="form-label">Data da doação</label>
-                        <input type="date" v-model="model.donationDate" class="form-control" id="donationDate">
+                        <label for="acceptanceDate" class="form-label">Data da doação</label>
+                        <input type="date" v-model="model.acceptance" class="form-control" id="acceptanceDate">
                         <div class="form-text">Ao preencher a data em que a doação foi realizada, será dada como
                             concluída.</div>
                     </div>
@@ -126,7 +126,7 @@ export default {
             if (!this.model.leaderId) {
                 this.errorList.push('Selecione um líder.');
             }
-            if (this.model.wasDelivered && !this.model.donationDate) {
+            if (this.model.wasDelivered && !this.model.acceptance) {
                 this.errorList.push('Preencha a data da doação.');
             }
             if (this.errorList.length === 0) {
@@ -204,8 +204,8 @@ export default {
                     $this.errorList.push("Erro ao salvar doação");
                 });
         },
-        clearDonationDate() {
-            this.model.donationDate = null;
+        clearAcceptanceDate() {
+            this.model.acceptance = null;
         }
     },
 };
