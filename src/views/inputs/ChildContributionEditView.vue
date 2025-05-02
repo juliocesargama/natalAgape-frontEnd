@@ -2,7 +2,7 @@
     <div class="container mt-5">
         <div class="card mb-3">
             <div class="card-header">
-                <h3 aria-label="Cadastro de nova doação de cestas básicas">Nova Doação de Cestas Básicas</h3>
+                <h3 aria-label="Alteração de doação de roupas e calçados existente">Alterar Doação de Roupas e Calçados</h3>
             </div>
             <div class="card-body mb-0">
                 <ul class="alert alert-danger" v-if="errorList.length > 0">
@@ -13,26 +13,26 @@
                     </div>
                 </ul>
                 <div class="container">
-                    <label for="campaignId" class="form-label">Campanha*</label>
+                    <label for="campaignId" class="form-label" aria-labelledby="Selecione a campanha">Campanha*</label>
                     <select v-model="model.campaignId" class="form-control selectpicker show-tick" id="campaignId"
                         title="Selecione uma campanha...">
                         <option v-for="campaign in campaigns" :value="campaign.campaignId"> {{ campaign.campaignYear }}
                             |
                             {{ campaign.campaignChurch }}</option>
                     </select>
-                    <label for="sponsorId" class="form-label">Doador*</label>
+                    <label for="sponsorId" class="form-label" aria-labelledby="Selecione o doador">Doador*</label>
                     <select v-model="model.sponsorId" data-live-search="true"
                         class="form-control selectpicker show-tick" id="sponsorId" title="Selecione um doador...">
                         <option v-for="sponsor in sponsors" :value="sponsor.sponsorId">{{ sponsor.sponsorName }}
                         </option>
                     </select>
-                    <label for="familyId" class="form-label">Família*</label>
-                    <select v-model="model.familyId" data-live-search="true" class="form-control selectpicker show-tick"
-                        id="familyId" title="Selecione uma família...">
-                        <option v-for="family in families" :value="family.familyId">{{ family.responsibleName }}
+                    <label for="childId" class="form-label" aria-labelledby="Selecione a criança">Criança*</label>
+                    <select v-model="model.childId" data-live-search="true" class="form-control selectpicker show-tick"
+                        id="childId" title="Selecione uma criança...">
+                        <option v-for="child in children" :value="child.childId">{{ child.childName }}
                         </option>
                     </select>
-                    <label for="leaderId" class="form-label">Líder*</label>
+                    <label for="leaderId" class="form-label" aria-labelledby="Selecione o lider">Líder*</label>
                     <select v-model="model.leaderId" data-live-search="true" class="form-control selectpicker show-tick"
                         id="leaderId" title="Selecione um líder...">
                         <option v-for="leader in leaders" :value="leader.leaderId">{{ leader.leaderName }}
@@ -40,54 +40,42 @@
                     </select>
 
                     <div class="form-check mt-3">
-                        <label for="paidInSpecies" class="form-label">Foi/Será pago em dinheiro?*</label>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="paidInSpecies" id="paidInSpeciesYes"
-                                :value="true" v-model="model.paidInSpecies">
-                            <label class="form-check-label" for="paidInSpeciesYes">
-                                Sim
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="paidInSpecies" id="paidInSpeciesNo"
-                                :value="false" v-model="model.paidInSpecies">
-                            <label class="form-check-label" for="paidInSpeciesNo">
-                                Não
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="form-check mt-3">
-                        <label for="wasDelivered" class="form-label">A doação já foi realizada?*</label>
+                        <label for="wasDelivered" class="form-label"
+                            aria-labelledby="A doação já foi realizada? Selecione">A doação já foi realizada?*</label>
 
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="wasDeliveredYes" id="wasDeliveredYes"
                                 :value="true" v-model="model.wasDelivered">
-                            <label class="form-check-label" for="wasDelivered">
+                            <label class="form-check-label" for="wasDelivered"
+                                aria-labelledby="A doação já foi realizada? Sim">
                                 Sim
                             </label>
                         </div>
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="wasDeliveredNo" id="wasDeliveredNo"
-                                :value="false" v-model="model.wasDelivered" @change="clearDonationDate">
-                            <label class="form-check-label" for="wasDelivered">
+                                :value="false" v-model="model.wasDelivered" @change="clearAcceptanceDate()">
+                            <label class="form-check-label" for="wasDelivered"
+                                aria-labelledby="A doação já foi realizada? Não">
                                 Não
                             </label>
                         </div>
                     </div>
 
                     <div class="container" v-show="model.wasDelivered">
-                        <label for="donationDate" class="form-label">Data da doação</label>
-                        <input type="date" v-model="model.donationDate" class="form-control" id="donationDate">
+                        <label for="acceptance" class="form-label" aria-labelledby="Data da doação">Data da
+                            doação</label>
+                        <input type="date" v-model="model.acceptance" class="form-control" id="acceptance">
                         <div class="form-text">Ao preencher a data em que a doação foi realizada, será dada como
                             concluída.</div>
                     </div>
 
-                    <label for="observation" class="form-label mt-3">Observação</label>
+                    <label for="observation" class="form-label mt-3" aria-labelledby="Observação">Observação</label>
                     <textarea v-model="model.observation" class="form-control" id="observation" rows="2"></textarea>
-                    <div class="mt-3">
-                        <button type="button" class="btn btn-success" @click="validateForm()">Salvar</button>
-                        <RouterLink to="/food-contribution" class="btn btn-secondary ms-2">Voltar</RouterLink>
+                    <div class="float-end mt-3">
+                        <button type="button" class="btn btn-success" @click="validateForm()"
+                            aria-label="Botão alterar a doação">Alterar</button>
+                        <RouterLink to="/child-contribution" class="btn btn-secondary ms-2"
+                            aria-label="Cancelar o cadastro">Voltar</RouterLink>
                     </div>
                 </div>
             </div>
@@ -100,28 +88,28 @@
 
 <script lang="ts">
 import type { campaign } from '@/models/campaign';
-import type { family } from '@/models/family';
+import type { child } from '@/models/child';
 import type { Leader } from '@/models/leader';
 import type { sponsor } from '@/models/sponsor';
 import axios from 'axios';
 
+
 export default {
-    name: 'FoodContributionCreateView',
+    name: 'ChildContributionEditView',
     data() {
         return {
             campaigns: [] as campaign[],
             sponsors: [] as sponsor[],
-            families: [] as family[],
+            children: [] as Child[],
             leaders: [] as Leader[],
             errorList: [] as string[],
             model: {
                 campaignId: 0,
                 sponsorId: 0,
-                familyId: 0,
                 leaderId: 0,
+                childId: 0,
                 wasDelivered: false,
-                paidInSpecies: false,
-                donationDate: null,
+                acceptance: null,
                 observation: "",
             }
         };
@@ -129,12 +117,24 @@ export default {
     mounted() {
         this.getCampaigns();
         this.getSponsors();
-        this.getFamilies();
+        this.getChildren();
         this.getLeaders();
+        this.getChildContribution();
     },
     methods: {
+        getChildContribution() {
+            var $this = this;
+            var url = "/api/child-contribution/" + this.$route.params.id;
+            axios.get(url)
+                .then((response) => {
+                    this.model = response.data;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    $this.errorList.push("Erro ao carregar doação");
+                });
+        },
         getCampaigns() {
-
             var $this = this;
             var url = "/api/campaign";
             axios.get(url)
@@ -158,16 +158,16 @@ export default {
                     $this.errorList.push("Erro ao carregar doadores");
                 });
         },
-        getFamilies() {
+        getChildren() {
             var $this = this;
-            var url = "/api/family";
+            var url = "/api/child";
             axios.get(url)
                 .then((response) => {
-                    this.families = response.data;
+                    this.children = response.data;
                 })
                 .catch(function (error) {
                     console.log(error);
-                    $this.errorList.push("Erro ao carregar famílias");
+                    $this.errorList.push("Erro ao carregar crianças");
                 });
         },
         getLeaders() {
@@ -182,35 +182,7 @@ export default {
                     $this.errorList.push("Erro ao carregar líderes");
                 });
         },
-        saveContribution() {
-
-            var $this = this;
-            var url = "/api/food-contribution";
-            axios.post(url, {
-                campaignId: this.model.campaignId,
-                sponsorId: this.model.sponsorId,
-                familyId: this.model.familyId,
-                leaderId: this.model.leaderId,
-                wasDelivered: this.model.wasDelivered,
-                paidInSpecies: this.model.paidInSpecies,
-                donationDate: this.model.donationDate,
-                observation: this.model.observation,
-            })
-                .then(() => {
-                    this.$router.push('/food-contribution');
-                })
-                .catch(function (error) {
-                    if (error.response.status === 403) {
-                        $this.errorList.push("A família já atingiu a quantidade de doações permitidas nesta campanha.");
-                    } else {
-                        $this.errorList.push("Erro ao salvar doação, verifique os dados e tente novamente.");
-                    }
-                });
-        },
         validateForm() {
-            console.log(this.model.donationDate);
-            console.log(this.model.wasDelivered);
-
             this.errorList = [];
             if (this.model.campaignId === 0) {
                 this.errorList.push("Selecione uma campanha");
@@ -218,39 +190,60 @@ export default {
             if (this.model.sponsorId === 0) {
                 this.errorList.push("Selecione um doador");
             }
-            if (this.model.familyId === 0) {
-                this.errorList.push("Selecione uma família");
+            if (this.model.childId === 0) {
+                this.errorList.push("Selecione uma criança");
             }
             if (this.model.leaderId === 0) {
                 this.errorList.push("Selecione um líder");
             }
-
-            if (this.model.wasDelivered && this.model.donationDate !== null) {
+            if (this.model.wasDelivered === false) {
+                this.model.acceptance = null;
+            }
+            if (this.model.wasDelivered && this.model.acceptance !== null) {
                 const today = new Date();
-                const donationDate = new Date(this.model.donationDate);
-                if (donationDate > today) {
+                const acceptance = new Date(this.model.acceptance);
+                if (acceptance > today) {
                     this.errorList.push("A data da doação não pode ser maior que a data atual");
                 }
             }
-            if (this.model.wasDelivered && this.model.donationDate === null) {
+
+            if (this.model.wasDelivered && this.model.acceptance === null) {
                 this.errorList.push("Preencha a data da doação");
             }
-            if (this.model.wasDelivered === false) {
-                this.model.donationDate = null;
-            }
+
             if (this.model.paidInSpecies === null) {
-                this.errorList.push("Selecione se a doação foi ou será paga em dinheiro");
+                this.errorList.push("Selecione se a doação foi paga em dinheiro");
             }
-            if (this.model.wasDelivered === null) {
-                this.errorList.push("Selecione se a doação já foi realizada");
-            }
-            if (!this.errorList.length) {
-                this.saveContribution();
+
+            console.log(this.errorList.length);
+
+            if (this.errorList.length === 0) {
+                this.editChildContribution();
             }
         },
-        clearDonationDate() {
-            this.model.donationDate = null;
+        editChildContribution() {
+            var $this = this;
+            var url = "/api/child-contribution/" + this.$route.params.id;
+            axios.put(url, {
+                campaignId: this.model.campaignId,
+                sponsorId: this.model.sponsorId,
+                childId: this.model.childId,
+                leaderId: this.model.leaderId,
+                wasDelivered: this.model.wasDelivered,
+                acceptance: this.model.acceptance,
+                observation: this.model.observation
+            })
+                .then(() => {
+                    this.$router.push('/child-contribution');
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    $this.errorList.push("Erro ao editar doação");
+                });
         },
-    },
-};
+        clearAcceptanceDate() {
+            this.model.acceptance = null;
+        }
+    }
+}
 </script>

@@ -19,6 +19,9 @@ import FoodContributionReportView from "@/views/reports/FoodContributionReportVi
 import LeadershipView from "@/views/LeadershipView.vue";
 import LeadershipCreateView from "@/views/inputs/LeadershipCreateView.vue";
 import LeadershipEditView from "@/views/inputs/LeaderShipEditView.vue";
+import ChildContributionView from "@/views/ChildContributionView.vue";
+import ChildContributionCreateView from "@/views/inputs/ChildContributionCreateView.vue";
+import ChildContributionEditView from "@/views/inputs/ChildContributionEditView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -122,14 +125,25 @@ const router = createRouter({
       path: "/food-contribution/report",
       name: "food-contribution-report",
       component: FoodContributionReportView
-
+    },
+    {
+      path: "/child-contribution",
+      name: "child-contribution",
+      component: ChildContributionView
+    },
+    {
+      path: "/child-contribution/create",
+      name: "child-contribution-create",
+      component: ChildContributionCreateView
+    },
+    {
+      path: "/child-contribution/:id/edit",
+      name: "child-contribution-edit",
+      component: ChildContributionEditView
     },
     {
       path: "/about",
       name: "about",
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: () => import("../views/AboutView.vue"),
     },
   ],
