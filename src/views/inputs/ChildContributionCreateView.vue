@@ -80,10 +80,10 @@
     </div>
 </template>
 <script lang="ts">
-import { child } from '@/models/child';
-import { Leader } from '@/models/Leader';
-import { campaign } from '@/models/Campaign';
-import { sponsor } from '@/models/Sponsor';
+import type { campaign } from '@/models/campaign';
+import type { child } from '@/models/child';
+import type { Leader } from '@/models/leader';
+import type { sponsor } from '@/models/sponsor';
 import axios from 'axios';
 export default {
     name: 'ChildContributionCreateView',
