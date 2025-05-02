@@ -100,7 +100,7 @@ export default {
         return {
             campaigns: [] as campaign[],
             sponsors: [] as sponsor[],
-            children: [] as Child[],
+            children: [] as child[],
             leaders: [] as Leader[],
             errorList: [] as string[],
             model: {
@@ -209,10 +209,6 @@ export default {
 
             if (this.model.wasDelivered && this.model.acceptance === null) {
                 this.errorList.push("Preencha a data da doação");
-            }
-
-            if (this.model.paidInSpecies === null) {
-                this.errorList.push("Selecione se a doação foi paga em dinheiro");
             }
 
             console.log(this.errorList.length);
