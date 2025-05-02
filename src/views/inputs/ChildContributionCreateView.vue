@@ -80,7 +80,7 @@
     </div>
 </template>
 <script lang="ts">
-import { child } from '@/models/Child';
+import { child } from '@/models/child';
 import { Leader } from '@/models/Leader';
 import { campaign } from '@/models/Campaign';
 import { sponsor } from '@/models/Sponsor';
