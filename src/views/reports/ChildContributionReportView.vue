@@ -126,9 +126,9 @@ import autoTable from 'jspdf-autotable';
 import jsPDF from 'jspdf';
 import PieChart from '@/components/PieChart.vue';
 
-import type { ChildWithContribution } from '@/models/ChildWithContribution';
-import type { ChildWithNoContribution } from '@/models/ChildWithNoContribution';
-import type { ChildWithPendingContribution } from '@/models/ChildWithPendingContribution';
+import type { ChildWithContribution } from '@/models/reports/child-contribution/child_with_contribution';
+import type { ChildWithNoContribution } from '@/modelss/reports/child-contribution/child_with_no_contribution';
+import type { ChildWithPendingContribution } from '@/modelss/reports/child-contribution/child_with_pending_contribution';
 
 export default {
     name: 'FoodContributionReportView',
