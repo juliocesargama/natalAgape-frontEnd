@@ -276,8 +276,11 @@ export default {
                     this.$router.push('/child-contribution');
                 })
                 .catch(function (error) {
-                    console.log(error);
-                    $this.errorList.push("Erro ao editar doação");
+                    if (error.response.status === 403) {
+                        $this.errorList.push("A criança já possui doação cadastrada nesta campanha.");
+                    } else {
+                        $this.errorList.push("Erro ao salvar doação, verifique os dados e tente novamente.");
+                    }
                 });
         },
         clearAcceptanceDate() {

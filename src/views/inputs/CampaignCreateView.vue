@@ -20,10 +20,6 @@
                     <label aria-label="Nome da igreja ou campanha">Nome da Igreja/Campanha*</label>
                     <input type="text" v-model="model.campaign.campaignChurch" class="form-control"
                         aria-describedby="Campo de texto para o nome da igreja">
-                    <label aria-label="Quantidade de cestas básicas por família">Quantidade de cestas básicas por
-                        família*</label>
-                    <input type="number" min="1" v-model="model.campaign.foodDonationPerFamily" class="form-control"
-                        aria-describedby="Campo de texto para a quantidade de alimentos por família">
                 </div>
                 <div class="float-end">
                     <button type="button" @click="checkForm" class="btn btn-success m-2"
@@ -52,8 +48,7 @@ export default {
                 campaign: {
                     campaignId: '',
                     campaignYear: new Date().getFullYear(),
-                    campaignChurch: '',
-                    foodDonationPerFamily: 1
+                    campaignChurch: ''
                 }
             }
         }
@@ -65,8 +60,7 @@ export default {
             var url = '/api/campaign'
             axios.post(url, {
                 campaignYear: this.model.campaign.campaignYear,
-                campaignChurch: this.model.campaign.campaignChurch,
-                foodDonationPerFamily: this.model.campaign.foodDonationPerFamily
+                campaignChurch: this.model.campaign.campaignChurch
             })
                 .then(result => {
                     this.$router.push('/campaign')
@@ -93,10 +87,6 @@ export default {
             if (this.model.campaign.campaignChurch == '') {
                 this.errorList.push('A igreja responsável pela campanha é obrigatória.');
             }
-            if (this.model.campaign.foodDonationPerFamily < 1) {
-                this.errorList.push('A quantidade de alimentos por família deve ser maior que 1.');
-            }
-
             if (!this.errorList.length) {
                 this.savecampaign();
             };

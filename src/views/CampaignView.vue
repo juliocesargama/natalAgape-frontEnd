@@ -12,7 +12,6 @@
                         <tr>
                             <th><b>Ano</b></th>
                             <th><b>Igreja</b></th>
-                            <th><b>Alimento por Família</b></th>
                             <th><b>Ações</b></th>
                         </tr>
                     </thead>
@@ -20,7 +19,6 @@
                         <tr v-for="campaign in campaigns" :key="campaign.campaignId">
                             <td>{{ campaign.campaignYear }}</td>
                             <td>{{ campaign.campaignChurch }}</td>
-                            <td>{{ campaign.foodDonationPerFamily }}</td>
                             <td><RouterLink :to="{path: '/campaign/'+campaign.campaignId +'/edit'}" class="btn btn-success" aria-describedby="Botão para alterar a campanha">Alterar</RouterLink></td>
                         </tr>
                     </tbody>
