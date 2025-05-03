@@ -22,6 +22,7 @@ import LeadershipEditView from "@/views/inputs/LeaderShipEditView.vue";
 import ChildContributionView from "@/views/ChildContributionView.vue";
 import ChildContributionCreateView from "@/views/inputs/ChildContributionCreateView.vue";
 import ChildContributionEditView from "@/views/inputs/ChildContributionEditView.vue";
+import ChildContributionReportView from "@/views/reports/ChildContributionReportView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -140,6 +141,11 @@ const router = createRouter({
       path: "/child-contribution/:id/edit",
       name: "child-contribution-edit",
       component: ChildContributionEditView
+    },
+    {
+      path: "/child-contribution/report",
+      name: "child-contribution-report",
+      component: ChildContributionReportView
     },
     {
       path: "/about",
