@@ -13,59 +13,59 @@
 					</div>
 				</ul>
 				<div class="container">
-				
-						<label for="campaignId" class="form-label">Campanha*</label>
-						<select v-model="model.campaignId" class="form-control selectpicker show-tick" id="campaignId"
-							title="Selecione uma campanha...">
-							<option v-for="campaign in campaigns" :value="campaign.campaignId"> {{ campaign.campaignYear
-							}}
-								|
-								{{ campaign.campaignChurch }}</option>
-						</select>
-						<label for="sponsorId" class="form-label">Doador*</label>
-						<select v-model="model.sponsorId" data-live-search="true" class="form-control selectpicker show-tick"
-							id="sponsorId" title="Selecione um doador...">
-							<option v-for="sponsor in sponsors" :value="sponsor.sponsorId">{{ sponsor.sponsorName }}
-							</option>
-						</select>
-						<label for="leaderId" class="form-label">Líder*</label>
-						<select v-model="model.leaderId" data-live-search="true" class="form-control selectpicker show-tick"
-							id="leaderId" title="Selecione um líder...">
-							<option v-for="leader in leaders" :value="leader.leaderId">{{ leader.leaderName }}
-							</option>
-						</select>
-						<label for="childId" class="form-label">Criança*</label>
-						<div class="row g-3">
-							<div class="col">
-								<select v-model="model.childId" data-live-search="true" class="form-control selectpicker show-tick"
-									id="childId" title="Selecione uma criança..." > 
-									<option v-for="child in children" :value="child.childId" :key="child.childId"
-										@click="selectedChild = child" @change="selectedChild = child">{{ child.childName }}
-									</option>
-								</select>
-							</div>
-							<div class="col-auto">
-								<button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalVerCriança" :disabled="!selectedChild.childId"
-									@click="loadImageFromApi">Ver
-									Criança</button>
-							</div>
+
+					<label for="campaignId" class="form-label">Campanha*</label>
+					<select v-model="model.campaignId" class="form-control selectpicker show-tick" id="campaignId"
+						title="Selecione uma campanha...">
+						<option v-for="campaign in campaigns" :value="campaign.campaignId"> {{ campaign.campaignYear
+						}}
+							|
+							{{ campaign.campaignChurch }}</option>
+					</select>
+					<label for="sponsorId" class="form-label">Doador*</label>
+					<select v-model="model.sponsorId" data-live-search="true" class="form-control selectpicker show-tick"
+						id="sponsorId" title="Selecione um doador...">
+						<option v-for="sponsor in sponsors" :value="sponsor.sponsorId">{{ sponsor.sponsorName }}
+						</option>
+					</select>
+					<label for="leaderId" class="form-label">Líder*</label>
+					<select v-model="model.leaderId" data-live-search="true" class="form-control selectpicker show-tick"
+						id="leaderId" title="Selecione um líder...">
+						<option v-for="leader in leaders" :value="leader.leaderId">{{ leader.leaderName }}
+						</option>
+					</select>
+					<label for="childId" class="form-label">Criança*</label>
+					<div class="row g-3">
+						<div class="col">
+							<select v-model="model.childId" data-live-search="true" class="form-control selectpicker show-tick"
+								id="childId" title="Selecione uma criança...">
+								<option v-for="child in children" :value="child.childId" :key="child.childId"
+									@click="selectedChild = child" @change="selectedChild = child">{{ child.childName }}
+								</option>
+							</select>
 						</div>
-						<label for="wasDelivered" class="form-label">A doação já foi realizada?*</label>
-						<div class="form-check">
-							<input class="form-check-input" type="radio" name="wasDeliveredYes" id="wasDeliveredYes" :value="true"
-								v-model="model.wasDelivered">
-							<label class="form-check-label" for="wasDelivered">
-								Sim
-							</label>
+						<div class="col-auto">
+							<button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalVerCriança"
+								:disabled="!selectedChild.childId" @click="loadImageFromApi">Ver
+								Criança</button>
 						</div>
-						<div class="form-check">
-							<input class="form-check-input" type="radio" name="wasDeliveredNo" id="wasDeliveredNo" :value="false"
-								v-model="model.wasDelivered" @change="clearAcceptanceDate">
-							<label class="form-check-label" for="wasDelivered">
-								Não
-							</label>
-						</div>
-					
+					</div>
+					<label for="wasDelivered" class="form-label">A doação já foi realizada?*</label>
+					<div class="form-check">
+						<input class="form-check-input" type="radio" name="wasDeliveredYes" id="wasDeliveredYes" :value="true"
+							v-model="model.wasDelivered">
+						<label class="form-check-label" for="wasDelivered">
+							Sim
+						</label>
+					</div>
+					<div class="form-check">
+						<input class="form-check-input" type="radio" name="wasDeliveredNo" id="wasDeliveredNo" :value="false"
+							v-model="model.wasDelivered" @change="clearAcceptanceDate">
+						<label class="form-check-label" for="wasDelivered">
+							Não
+						</label>
+					</div>
+
 
 					<div class="container" v-show="model.wasDelivered">
 						<label for="acceptanceDate" class="form-label">Data da doação</label>
@@ -87,13 +87,15 @@
 			</div>
 		</div>
 
-		<div class="modal fade modal-sm-down" id="modalVerCriança" tabindex="-1" aria-labelledby="modalVerCriançaLabel" 
+		<div class="modal fade modal-sm-down" id="modalVerCriança" tabindex="-1" aria-labelledby="modalVerCriançaLabel"
 			aria-hidden="true">
 			<div class="modal-dialog modal-dialog-centered">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h5 class="modal-title" id="modalVerCriançaLabel">{{ selectedChild.childName }}, {{ calculateAge(selectedChild.birthDate) }} ano(s) de idade</h5>
-						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @click="clearSelectedChild"></button>
+						<h5 class="modal-title" id="modalVerCriançaLabel">{{ selectedChild.childName }}, {{
+							calculateAge(selectedChild.birthDate) }} ano(s) de idade</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+							@click="clearSelectedChild"></button>
 					</div>
 					<div class="modal-body">
 						<div class="container">
@@ -108,7 +110,8 @@
 							<img :src="imageObjectUrl || defaultImage" class="img-fluid" alt="Foto da criança"></img>
 						</div>
 						<div class="modal-footer">
-							<button type="button" class="btn btn-success" data-bs-dismiss="modal" @click="clearSelectedChild">Fechar</button>
+							<button type="button" class="btn btn-success" data-bs-dismiss="modal"
+								@click="clearSelectedChild">Fechar</button>
 						</div>
 					</div>
 				</div>
@@ -249,22 +252,23 @@ export default {
 			this.model.acceptance = null;
 		},
 		async loadImageFromApi() {
-			try {
-				const response = await axios.get('/api/upload/open/' + this.selectedChild.pictureUrl, {
-					responseType: 'blob'
-				});
+			if (this.selectedChild.pictureUrl) {
+				try {
+					const response = await axios.get('/api/upload/open/' + this.selectedChild.pictureUrl, {
+						responseType: 'blob'
+					});
 
-				// Create object URL from blob
-				console.log(response.data);
-				const blobUrl = URL.createObjectURL(response.data);
-				this.imageObjectUrl = blobUrl;
+					// Create object URL from blob
+					const blobUrl = URL.createObjectURL(response.data);
+					this.imageObjectUrl = blobUrl;
 
-				// Clean up when component is destroyed
-				onUnmounted(() => {
-					URL.revokeObjectURL(blobUrl);
-				});
-			} catch (error) {
-				console.error("Image load failed:", error);
+					// Clean up when component is destroyed
+					onUnmounted(() => {
+						URL.revokeObjectURL(blobUrl);
+					});
+				} catch (error) {
+					console.error("Image load failed:", error);
+				}
 			}
 		},
 		calculateAge(birthDate: string) {
@@ -277,7 +281,7 @@ export default {
 			}
 			return age;
 		},
-		setClothesOrShoesValue(value: string) {
+		setClothesOrShoesValue(value: any) {
 			if (value !== null && value !== undefined && value !== '') {
 				return value;
 			} else {

@@ -27,16 +27,14 @@
                         <option v-for="sponsor in sponsors" :value="sponsor.sponsorId">{{ sponsor.sponsorName }}
                         </option>
                     </select>
-                    <label for="childId" class="form-label"
-                                aria-labelledby="Selecione a criança">Criança*</label>
+                    <label for="childId" class="form-label" aria-labelledby="Selecione a criança">Criança*</label>
                     <div class="row g-3">
                         <div class="col">
                             <select v-model="model.childId" data-live-search="true"
                                 class="form-control selectpicker show-tick" id="childId"
                                 title="Selecione uma criança...">
-                                <option v-for="child in children" :value="child.childId"
-                                @click="selectedChild = child" @change="selectedChild = child"
-                                >{{ child.childName }}
+                                <option v-for="child in children" :value="child.childId" @click="selectedChild = child"
+                                    @change="selectedChild = child">{{ child.childName }}
                                 </option>
                             </select>
                         </div>
@@ -157,8 +155,8 @@ export default {
                 observation: "",
             },
             selectedChild: {} as child,
-			imageObjectUrl: null as string | null,
-			defaultImage: new URL('@/assets/profile.jpg', import.meta.url).href
+            imageObjectUrl: null as string | null,
+            defaultImage: new URL('@/assets/profile.jpg', import.meta.url).href
         };
     },
     mounted() {
@@ -258,8 +256,6 @@ export default {
                 this.errorList.push("Preencha a data da doação");
             }
 
-            console.log(this.errorList.length);
-
             if (this.errorList.length === 0) {
                 this.editChildContribution();
             }
@@ -287,47 +283,48 @@ export default {
         clearAcceptanceDate() {
             this.model.acceptance = null;
         },
-		async loadImageFromApi() {
-			try {
-				const response = await axios.get('/api/upload/open/' + this.selectedChild.pictureUrl, {
-					responseType: 'blob'
-				});
+        async loadImageFromApi() {
+            if (this.selectedChild.pictureUrl) {
+                try {
+                    const response = await axios.get('/api/upload/open/' + this.selectedChild.pictureUrl, {
+                        responseType: 'blob'
+                    });
 
-				// Create object URL from blob
-				console.log(response.data);
-				const blobUrl = URL.createObjectURL(response.data);
-				this.imageObjectUrl = blobUrl;
+                    // Create object URL from blob
+                    const blobUrl = URL.createObjectURL(response.data);
+                    this.imageObjectUrl = blobUrl;
 
-				// Clean up when component is destroyed
-				onUnmounted(() => {
-					URL.revokeObjectURL(blobUrl);
-				});
-			} catch (error) {
-				console.error("Image load failed:", error);
-			}
-		},
-		calculateAge(birthDate: string) {
-			const today = new Date();
-			const birth = new Date(birthDate);
-			let age = today.getFullYear() - birth.getFullYear();
-			const monthDiff = today.getMonth() - birth.getMonth();
-			if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
-				age--;
-			}
-			return age;
-		},
-		setClothesOrShoesValue(value: string) {
-			if (value !== null && value !== undefined && value !== '') {
-				return value;
-			} else {
-				return 'Não informado';
-			}
-		},
-		clearSelectedChild() {
-			this.selectedChild = {} as child;
-			this.imageObjectUrl = null;
-			this.defaultImage = new URL('@/assets/profile.jpg', import.meta.url).href;
-		},
+                    // Clean up when component is destroyed
+                    onUnmounted(() => {
+                        URL.revokeObjectURL(blobUrl);
+                    });
+                } catch (error) {
+                    console.error("Image load failed:", error);
+                }
+            }
+        },
+        calculateAge(birthDate: string) {
+            const today = new Date();
+            const birth = new Date(birthDate);
+            let age = today.getFullYear() - birth.getFullYear();
+            const monthDiff = today.getMonth() - birth.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+                age--;
+            }
+            return age;
+        },
+        setClothesOrShoesValue(value: any) {
+            if (value !== null && value !== undefined && value !== '') {
+                return value;
+            } else {
+                return 'Não informado';
+            }
+        },
+        clearSelectedChild() {
+            this.selectedChild = {} as child;
+            this.imageObjectUrl = null;
+            this.defaultImage = new URL('@/assets/profile.jpg', import.meta.url).href;
+        },
     }
 }
 </script>
