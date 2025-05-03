@@ -2,7 +2,8 @@
     <div class="container mt-5">
         <div class="card mb-3">
             <div class="card-header">
-                <h3 aria-label="Alteração de doação de roupas e calçados existente">Alterar Doação de Roupas e Calçados</h3>
+                <h3 aria-label="Alteração de doação de roupas e calçados existente">Alterar Doação de Roupas e Calçados
+                </h3>
             </div>
             <div class="card-body mb-0">
                 <ul class="alert alert-danger" v-if="errorList.length > 0">
@@ -26,12 +27,25 @@
                         <option v-for="sponsor in sponsors" :value="sponsor.sponsorId">{{ sponsor.sponsorName }}
                         </option>
                     </select>
-                    <label for="childId" class="form-label" aria-labelledby="Selecione a criança">Criança*</label>
-                    <select v-model="model.childId" data-live-search="true" class="form-control selectpicker show-tick"
-                        id="childId" title="Selecione uma criança...">
-                        <option v-for="child in children" :value="child.childId">{{ child.childName }}
-                        </option>
-                    </select>
+                    <label for="childId" class="form-label"
+                                aria-labelledby="Selecione a criança">Criança*</label>
+                    <div class="row g-3">
+                        <div class="col">
+                            <select v-model="model.childId" data-live-search="true"
+                                class="form-control selectpicker show-tick" id="childId"
+                                title="Selecione uma criança...">
+                                <option v-for="child in children" :value="child.childId"
+                                @click="selectedChild = child" @change="selectedChild = child"
+                                >{{ child.childName }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-auto">
+                            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalVerCriança"
+                                :disabled="!selectedChild.childId" @click="loadImageFromApi">Ver
+                                Criança</button>
+                        </div>
+                    </div>
                     <label for="leaderId" class="form-label" aria-labelledby="Selecione o lider">Líder*</label>
                     <select v-model="model.leaderId" data-live-search="true" class="form-control selectpicker show-tick"
                         id="leaderId" title="Selecione um líder...">
@@ -83,6 +97,36 @@
                 <p class="text-muted">* Campos obrigatórios</p>
             </div>
         </div>
+        <div class="modal fade modal-sm-down" id="modalVerCriança" tabindex="-1" aria-labelledby="modalVerCriançaLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalVerCriançaLabel">{{ selectedChild.childName }}, {{
+                            calculateAge(selectedChild.birthDate) }} ano(s) de idade</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                            @click="clearSelectedChild"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-6">
+                                    <p><strong>Sapatos:</strong> {{ setClothesOrShoesValue(selectedChild.shoes) }}</p>
+                                </div>
+                                <div class="col-6">
+                                    <p><strong>Roupas:</strong> {{ setClothesOrShoesValue(selectedChild.clothes) }}</p>
+                                </div>
+                            </div>
+                            <img :src="imageObjectUrl || defaultImage" class="img-fluid" alt="Foto da criança"></img>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-success" data-bs-dismiss="modal"
+                                @click="clearSelectedChild">Fechar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -91,8 +135,8 @@ import type { campaign } from '@/models/campaign';
 import type { child } from '@/models/child';
 import type { Leader } from '@/models/leader';
 import type { sponsor } from '@/models/sponsor';
+import { onUnmounted } from 'vue';
 import axios from 'axios';
-
 
 export default {
     name: 'ChildContributionEditView',
@@ -111,7 +155,10 @@ export default {
                 wasDelivered: false,
                 acceptance: null,
                 observation: "",
-            }
+            },
+            selectedChild: {} as child,
+			imageObjectUrl: null as string | null,
+			defaultImage: new URL('@/assets/profile.jpg', import.meta.url).href
         };
     },
     mounted() {
@@ -239,7 +286,48 @@ export default {
         },
         clearAcceptanceDate() {
             this.model.acceptance = null;
-        }
+        },
+		async loadImageFromApi() {
+			try {
+				const response = await axios.get('/api/upload/open/' + this.selectedChild.pictureUrl, {
+					responseType: 'blob'
+				});
+
+				// Create object URL from blob
+				console.log(response.data);
+				const blobUrl = URL.createObjectURL(response.data);
+				this.imageObjectUrl = blobUrl;
+
+				// Clean up when component is destroyed
+				onUnmounted(() => {
+					URL.revokeObjectURL(blobUrl);
+				});
+			} catch (error) {
+				console.error("Image load failed:", error);
+			}
+		},
+		calculateAge(birthDate: string) {
+			const today = new Date();
+			const birth = new Date(birthDate);
+			let age = today.getFullYear() - birth.getFullYear();
+			const monthDiff = today.getMonth() - birth.getMonth();
+			if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+				age--;
+			}
+			return age;
+		},
+		setClothesOrShoesValue(value: string) {
+			if (value !== null && value !== undefined && value !== '') {
+				return value;
+			} else {
+				return 'Não informado';
+			}
+		},
+		clearSelectedChild() {
+			this.selectedChild = {} as child;
+			this.imageObjectUrl = null;
+			this.defaultImage = new URL('@/assets/profile.jpg', import.meta.url).href;
+		},
     }
 }
 </script>
