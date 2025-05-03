@@ -20,10 +20,6 @@
                     <label aria-label="Nome da igreja ou campanha">Nome da Igreja/Campanha*</label>
                     <input type="text" v-model="model.campaign.campaignChurch" class="form-control"
                         aria-describedby="Campo de texto para o nome da igreja">
-                    <label aria-label="Quantidade de cestas básicas por família">Quantidade de cestas básicas por
-                        família*</label>
-                    <input type="number" min="1" v-model="model.campaign.foodDonationPerFamily" class="form-control"
-                        aria-describedby="Campo de texto para a quantidade de alimentos por família">
                 </div>
                 <div class="float-end">
                     <button type="button" @click="checkForm" class="btn btn-success m-2"
@@ -34,7 +30,7 @@
             </div>
             <div class="card-footer">
                 <p class="text-muted">* Campos obrigatórios</p>
-                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -51,8 +47,7 @@ export default {
             model: {
                 campaign: {
                     campaignYear: 0,
-                    campaignChurch: '',
-                    foodDonationPerFamily: 0
+                    campaignChurch: ''
                 }
             }
         }
@@ -68,8 +63,7 @@ export default {
             axios.put(url, {
                 campaignId: this.$route.params.id,
                 campaignYear: this.model.campaign.campaignYear,
-                campaignChurch: this.model.campaign.campaignChurch,
-                foodDonationPerFamily: this.model.campaign.foodDonationPerFamily
+                campaignChurch: this.model.campaign.campaignChurch
             })
                 .then(result => {
                     this.$router.push('/campaign')
@@ -91,7 +85,6 @@ export default {
                 .then(result => {
                     this.model.campaign.campaignYear = result.data.campaignYear
                     this.model.campaign.campaignChurch = result.data.campaignChurch
-                    this.model.campaign.foodDonationPerFamily = result.data.foodDonationPerFamily
                 })
                 .catch(function (error) {
                     if (error.response.status == 404) {
@@ -114,9 +107,6 @@ export default {
             }
             if (this.model.campaign.campaignChurch == '') {
                 this.errorList.push('A igreja responsável pela campanha é obrigatória.');
-            }
-            if (this.model.campaign.foodDonationPerFamily < 1) {
-                this.errorList.push('A quantidade de alimentos por família deve ser maior que 1.');
             }
             if (!this.errorList.length) {
                 this.editCampaign();

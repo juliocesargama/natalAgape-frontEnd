@@ -70,8 +70,10 @@ const closeMobileMenu = () => {
                     <hr class="drop-divider">
                   </li>
                   <a class="nav-link disabled text-muted" href="#" tabindex="-1" aria-disabled="true">Relatórios</a>
-                  <RouterLink class="dropdown-item" to="/food-contribution/report" aria-current="Relatório de Doações">
+                  <RouterLink class="dropdown-item" to="/food-contribution/report" aria-current="Relatório de Doações de Cestas Básicas">
                     Cestas Básicas</RouterLink>
+                  <RouterLink class="dropdown-item" to="/child-contribution/report" aria-current="Relatório de Doações de Roupas e Calçados">
+                    Roupas e Calçados</RouterLink>
                 </ul>
               </li>
 

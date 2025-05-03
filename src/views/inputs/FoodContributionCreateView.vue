@@ -184,8 +184,6 @@ export default {
         },
         saveContribution() {
 
-            console.log(this.model);
-
             var $this = this;
             var url = "/api/food-contribution";
             axios.post(url, {
@@ -203,7 +201,7 @@ export default {
                 })
                 .catch(function (error) {
                     if (error.response.status === 403) {
-                        $this.errorList.push("A família já atingiu a quantidade de doações permitidas nesta campanha.");
+                        $this.errorList.push("A família já possui doação cadastrada nesta campanha.");
                     } else {
                         $this.errorList.push("Erro ao salvar doação, verifique os dados e tente novamente.");
                     }

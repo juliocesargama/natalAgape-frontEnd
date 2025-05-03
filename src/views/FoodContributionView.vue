@@ -32,7 +32,7 @@
                         </tbody>
                         <tbody v-else>
                             <tr>
-                                <td colspan="5">{{ statusMessage}}</td>
+                                <td colspan="5">{{ statusMessage }}</td>
                             </tr>
                         </tbody>
                     </table>
