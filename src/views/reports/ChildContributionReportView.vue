@@ -127,7 +127,7 @@ import jsPDF from 'jspdf';
 import PieChart from '@/components/PieChart.vue';
 
 import type { ChildWithContribution } from '@/models/reports/child-contribution/child_with_contribution';
-import type { ChildWithNoContribution } from '@/models/reports/child-contribution/child_with_no_contribution';
+import type { ChildWithNoContribution } from '@/models/reports/child-contribution/child_without_contribution.ts';
 import type { ChildWithPendingContribution } from '@/models/reports/child-contribution/child_with_pending_contribution';
 
 export default {
