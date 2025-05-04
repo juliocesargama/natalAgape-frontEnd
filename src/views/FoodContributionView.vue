@@ -12,7 +12,6 @@
                     <table class="table table-striped table-hover">
                         <thead>
                             <tr>
-                                <th><b>Ano</b></th>
                                 <th><b>Doador</b></th>
                                 <th><b>Família</b></th>
                                 <th><b>Entregue</b></th>
@@ -21,7 +20,6 @@
                         </thead>
                         <tbody v-if="foodContributions.length > 0">
                             <tr v-for="foodContribution in foodContributions" :key="foodContribution.id">
-                                <td>{{ foodContribution.campaignYear}}</td>
                                 <td>{{ foodContribution.sponsorName }}</td>
                                 <td>{{ foodContribution.responsibleName }}</td>
                                 <td>{{ setWasDelivered(foodContribution.wasDelivered) }}</td>

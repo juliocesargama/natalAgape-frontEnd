@@ -19,7 +19,9 @@
                         <tr v-for="campaign in campaigns" :key="campaign.campaignId">
                             <td>{{ campaign.campaignYear }}</td>
                             <td>{{ campaign.campaignChurch }}</td>
-                            <td><RouterLink :to="{path: '/campaign/'+campaign.campaignId +'/edit'}" class="btn btn-success" aria-describedby="Botão para alterar a campanha">Alterar</RouterLink></td>
+                            <td><RouterLink :to="{path: '/campaign/'+campaign.campaignId +'/edit'}" class="btn btn-success me-3" aria-describedby="Botão para alterar a campanha">Alterar</RouterLink>
+                            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalFecharCampanha" @click="campaignToClose = campaign.campaignId"
+                            aria-describedby="Botão para excluir a campanha">Fechar Campanha</button></td>
                         </tr>
                     </tbody>
                     <tbody v-else>
@@ -28,6 +30,29 @@
                         </tr>
                     </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalFecharCampanha" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="modalFecharCampanha" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalFecharCampanha">Fechar Campanha</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Cancelar Encerramento"></button>
+                </div>
+                <div class="modal-body">
+                    Tem certeza que deseja encerrar a campanha?
+                    <br><br>
+                    <strong>Essa ação não poderá ser desfeita e novas doações não poderão ser atribuídas nesta campanha.</strong>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-success" @click="closeCampaign(campaignToClose)"
+                        data-bs-dismiss="modal">Confirmar</button>
+                </div>
             </div>
         </div>
     </div>
@@ -43,7 +68,8 @@ export default {
     data() {
         return {
             campaigns: [] as campaign[],
-            statusMessage: 'Carregando Campanhas...'
+            statusMessage: 'Carregando Campanhas...',
+            campaignToClose: 0,
         }
     },
     mounted() {
@@ -61,6 +87,22 @@ export default {
                 }
             }).catch(() => {
                 this.statusMessage = 'Erro ao carregar campanhas, tente novamente mais tarde.';
+            });
+        },
+        closeCampaign(campaignId: number) {
+            var url = 'api/campaign/' + campaignId;
+            return axios.delete(url).then(result => {
+                if (result.status == 200) {
+                    this.getcampaigns();
+                    this.$router.push({ path: '/campaign' });
+
+                } else if (result.status == 204) {
+                    this.statusMessage = 'Nenhuma campanha encontrada.';
+                } else {
+                    this.statusMessage = 'Erro ao encerrar campanha, tente novamente mais tarde.';
+                }
+            }).catch(() => {
+                this.statusMessage = 'Erro ao encerrar campanha, tente novamente mais tarde.';
             });
         }
     },

@@ -168,7 +168,7 @@ export default {
     methods: {
         getCampaigns() {
             try {
-                axios.get('/api/campaign')
+                axios.get('/api/campaign/all')
                     .then((response) => {
                         this.campaigns = response.data;
                     });
