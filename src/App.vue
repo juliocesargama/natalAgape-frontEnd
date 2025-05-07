@@ -2,8 +2,11 @@
 import { RouterLink, RouterView } from 'vue-router'
 import { ref } from 'vue'
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'
+// @ts-ignore
+import { getUserRole } from '@/utils/auth.js';
 
 const navLinks = ref<NodeListOf<Element>>()
+const userRole = getUserRole(); // Obtém o papel do usuário
 
 const closeMobileMenu = () => {
   if (window.innerWidth < 992) { // Check if mobile view
@@ -38,7 +41,7 @@ const closeMobileMenu = () => {
                   aria-expanded="false"><b>Famílias</b></a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                   <RouterLink class="dropdown-item" to="/family" aria-current="Famílias">Cadastrar Famílias</RouterLink>
-                  <RouterLink class="dropdown-item" to="/neighborhood" aria-current="Bairros">Cadastrar Bairros
+                  <RouterLink v-if="userRole === 'ROLE_ADMIN'" class="dropdown-item" to="/neighborhood" aria-current="Bairros">Cadastrar Bairros
                   </RouterLink>
                 </ul>
               </li>

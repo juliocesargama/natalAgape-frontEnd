@@ -23,6 +23,7 @@ import ChildContributionView from "@/views/ChildContributionView.vue";
 import ChildContributionCreateView from "@/views/inputs/ChildContributionCreateView.vue";
 import ChildContributionEditView from "@/views/inputs/ChildContributionEditView.vue";
 import ChildContributionReportView from "@/views/reports/ChildContributionReportView.vue";
+import LoginView from "@/views/LoginView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -151,6 +152,11 @@ const router = createRouter({
       path: "/about",
       name: "about",
       component: () => import("../views/AboutView.vue"),
+    },
+    {
+      path: "/login",
+      name: "login",
+      component: LoginView,
     },
   ],
 });
