@@ -6,7 +6,9 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 import { getUserRole } from '@/utils/auth.js';
 
 const navLinks = ref<NodeListOf<Element>>()
-const userRole = getUserRole(); // Obtém o papel do usuário
+let userRole = getUserRole(); // Obtém o papel do usuário
+const isLoggedIn = ref(!!localStorage.getItem("jwtToken")); // Verifica se o token existe
+
 
 const closeMobileMenu = () => {
   if (window.innerWidth < 992) { // Check if mobile view
@@ -18,6 +20,14 @@ const closeMobileMenu = () => {
     }
   }
 }
+
+const logout = () => {
+  localStorage.removeItem("jwtToken"); // Remove o token JWT
+  localStorage.removeItem("loginRole"); // Remove o papel do usuário, se armazenado
+  isLoggedIn.value = false; // Atualiza o estado de login
+  userRole = null; // Limpa o papel do usuário""
+  window.location.href = "/"; // Redireciona para a página inicial
+};
 </script>
 
 <template>
@@ -46,7 +56,7 @@ const closeMobileMenu = () => {
                 </ul>
               </li>
 
-              <RouterLink class="nav-link" to="/leader" aria-current="Lideres"><b>Lideres</b></RouterLink>
+              <RouterLink v-if="userRole === 'ROLE_ADMIN'" class="nav-link" to="/leader" aria-current="Lideres"><b>Lideres</b></RouterLink>
 
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
@@ -64,7 +74,7 @@ const closeMobileMenu = () => {
                 </ul>
               </li>
 
-              <li class="nav-item dropdown">
+              <li v-if="userRole === 'ROLE_ADMIN'" class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
                   aria-expanded="false"><b>Campanhas</b></a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -81,6 +91,7 @@ const closeMobileMenu = () => {
               </li>
 
               <RouterLink class="nav-link" to="/about" aria-current="Sobre"><b>Sobre</b></RouterLink>
+              <RouterLink v-if="isLoggedIn===true" class="nav-link" to="/" @click.prevent="logout" aria-current="Sobre"><b>Sair</b></RouterLink>
             </div>
           </div>
         </div>

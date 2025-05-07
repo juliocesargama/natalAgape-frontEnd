@@ -40,8 +40,7 @@
           });
           const token = response.data.token; // Supondo que o token JWT seja retornado no campo `token`
           localStorage.setItem("jwtToken", token); // Armazena o token no localStorage
-         
-          this.$router.push("/"); // Redireciona para a página inicial
+          this.$router.push("/home"); // Redireciona para a página inicial
         } catch (error) {
           console.error("Erro ao fazer login:", error);
           alert("Credenciais inválidas.");

@@ -1,11 +1,16 @@
 import { jwtDecode } from "jwt-decode"; // Importação nomeada
 
+
 export function getUserRole() {
   const token = localStorage.getItem("jwtToken");
   if (!token) return null;
 
   try {
     const decoded = jwtDecode(token); // Use a função 'jwtDecode'
+    if (!decoded.sub) {
+      console.error("O campo 'sub' está ausente no token JWT.");
+      return null;
+    }
     const authoritiesMatch = decoded.sub.match(/Granted Authorities=\[(.*?)\]/);
     if (!authoritiesMatch) {
       console.error("Formato inesperado no campo 'sub' do token JWT.");
