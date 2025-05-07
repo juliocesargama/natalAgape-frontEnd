@@ -4,10 +4,11 @@ import { ref } from 'vue'
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 // @ts-ignore
 import { getUserRole } from '@/utils/auth.js';
+import { isLoggedIn, updateAuthState } from '@/utils/authstate.ts';
 
 const navLinks = ref<NodeListOf<Element>>()
 let userRole = getUserRole(); // Obtém o papel do usuário
-const isLoggedIn = ref(!!localStorage.getItem("jwtToken")); // Verifica se o token existe
+//const isLoggedIn = ref(!!localStorage.getItem("jwtToken")); // Verifica se o token existe
 
 
 const closeMobileMenu = () => {
@@ -24,7 +25,7 @@ const closeMobileMenu = () => {
 const logout = () => {
   localStorage.removeItem("jwtToken"); // Remove o token JWT
   localStorage.removeItem("loginRole"); // Remove o papel do usuário, se armazenado
-  isLoggedIn.value = false; // Atualiza o estado de login
+  updateAuthState(false); // Atualiza o estado de login global
   userRole = null; // Limpa o papel do usuário""
   window.location.href = "/"; // Redireciona para a página inicial
 };
@@ -91,7 +92,7 @@ const logout = () => {
               </li>
 
               <RouterLink class="nav-link" to="/about" aria-current="Sobre"><b>Sobre</b></RouterLink>
-              <RouterLink v-if="isLoggedIn===true" class="nav-link" to="/" @click.prevent="logout" aria-current="Sobre"><b>Sair</b></RouterLink>
+              <RouterLink v-if="isLoggedIn" class="nav-link" to="/" @click.prevent="logout" aria-current="Sobre"><b>Sair</b></RouterLink>
             </div>
           </div>
         </div>

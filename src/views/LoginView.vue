@@ -23,6 +23,7 @@
   
   <script>
   import axios from "axios";
+  import {  updateAuthState } from '@/utils/authstate.ts';
   
   export default {
     data() {
@@ -40,6 +41,7 @@
           });
           const token = response.data.token; // Supondo que o token JWT seja retornado no campo `token`
           localStorage.setItem("jwtToken", token); // Armazena o token no localStorage
+          updateAuthState(true); // Atualiza o estado de login global
           this.$router.push("/home"); // Redireciona para a página inicial
         } catch (error) {
           console.error("Erro ao fazer login:", error);
