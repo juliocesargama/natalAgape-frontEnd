@@ -14,7 +14,7 @@
               <label for="password" class="form-label">Senha</label>
               <input v-model="password" type="password" id="password" class="form-control" required />
             </div>
-            <button type="submit" class="btn btn-primary">Entrar</button>
+            <button type="submit" class="btn btn-success">Entrar</button>
           </form>
         </div>
       </div>
