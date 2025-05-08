@@ -35,7 +35,7 @@ const logout = () => {
   <header>
 
     <div class="wrapper">
-      <nav class="navbar navbar-expand-lg bg-success navbar-dark">
+      <nav class="navbar navbar-expand-lg bg-success navbar-dark" v-if="isLoggedIn">
         <div class="container">
           <RouterLink class="navbar-brand" to="/" aria-current="Página Inicial"><b>
               <h2>Ágape</h2>
@@ -97,6 +97,17 @@ const logout = () => {
           </div>
         </div>
       </nav>
+      <nav class="navbar navbar-expand-lg bg-success navbar-dark" v-else>
+        <div class="container">
+          <RouterLink class="navbar-brand" to="/" aria-current="Página Inicial"><b>
+              <h2>Ágape</h2>
+            </b></RouterLink>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+            aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+        </div>
+        </nav>
     </div>
   </header>
 
