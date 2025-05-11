@@ -40,43 +40,43 @@ const router = createRouter({
       path: "/campaign",
       name: "campaign",
       component: CampaignView,
-      meta: { requiresAuth: true}
+      meta: { requiresAuth: true, role: 'ROLE_ADMIN' }
     },
     {
         path: "/campaign/create",
         name: "campaign-create",
         component: CampaignCreateView, 
-        meta: { requiresAuth: true}
+        meta: { requiresAuth: true, role: 'ROLE_ADMIN' }
     },
     {
         path: "/campaign/:id/edit",
         name: "campaign-edit",
         component: CampaignEditView,
-        meta: { requiresAuth: true}
+        meta: { requiresAuth: true, role: 'ROLE_ADMIN' }
     },
     {
       path: "/neighborhood",
       name: "neighborhood",
       component: NeighborhoodView, 
-      meta: { requiresAuth: true}
+      meta: { requiresAuth: true, role: 'ROLE_ADMIN' }
     },
     {
         path: "/neighborhood/create",
         name: "neighborhood-create",
         component: NeighborhoodCreateView,
-        meta: { requiresAuth: true}
+        meta: { requiresAuth: true, role: 'ROLE_ADMIN' }
     },
     {
         path: "/neighborhood/:id/edit",
         name: "neighborhood-edit",
         component: NeighborhoodEditView,
-        meta: { requiresAuth: true}
+        meta: { requiresAuth: true, role: 'ROLE_ADMIN' }
     },
     {
       path: "/sponsor",
       name: "sponsor",
       component: SponsorView,
-      meta: { requiresAuth: true}
+      meta: { requiresAuth: true, role: 'ROLE_ADMIN' }
     },
     {
       path: "/sponsor/create",
@@ -112,19 +112,19 @@ const router = createRouter({
       path: "/leader",
       name: "leader",
       component: LeadershipView,
-      meta: { requiresAuth: true}
+      meta: { requiresAuth: true, role: 'ROLE_ADMIN' }
     },
     {
       path: "/leader/create",
       name: "leader-create",
       component: LeadershipCreateView,
-      meta: { requiresAuth: true}
+      meta: { requiresAuth: true, role: 'ROLE_ADMIN' }
     },
     {
       path: "/leader/:id/edit",
       name: "leader-edit",
       component: LeadershipEditView,
-      meta: { requiresAuth: true}
+      meta: { requiresAuth: true, role: 'ROLE_ADMIN' }
     },
     {  
     path: "/food-contribution",
@@ -148,7 +148,7 @@ const router = createRouter({
       path: "/food-contribution/report",
       name: "food-contribution-report",
       component: FoodContributionReportView,
-      meta: { requiresAuth: true}
+      meta: { requiresAuth: true, role: 'ROLE_ADMIN' }
     },
     {
       path: "/child-contribution",
@@ -172,7 +172,7 @@ const router = createRouter({
       path: "/child-contribution/report",
       name: "child-contribution-report",
       component: ChildContributionReportView,
-      meta: { requiresAuth: true}
+      meta: { requiresAuth: true, role: 'ROLE_ADMIN' }
     },
     {
       path: "/about",

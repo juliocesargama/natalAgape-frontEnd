@@ -23,15 +23,13 @@
                         aria-describedby="Campo de texto para o telefone do líder">
 
 
-                    <!-- Dropdown para leaderRole 
-<label for="leaderRole">Leader Role</label>
-<select id="leaderRole" v-model="model.leader.leaderRole" required>
-  <option v-for="role in leaderRoles" :key="role" :value="role">
-    {{ role }}
-  </option>
-</select>-->
-
-
+                    <!-- Dropdown para leaderRole </select>-->
+                    <label for="leaderRole">Perfil*</label>
+                    <select v-model="model.leader.leaderRole" class="form-select form-control">
+                        <option disabled value="">Selecione...</option>
+                        <option value="ADMIN">Administrador do Sitema</option>
+                        <option value="LEADER">Usuário</option>
+                    </select>
 
 
                     <label for="leaderColor">Cor*</label>
@@ -48,6 +46,13 @@
                         <option value="BLACK">Preto</option>
                         <option value="WHITE">Branco</option>
                     </select>
+
+                    <label aria-label="Usuário">Email(Login)*</label>
+                    <input type="text" v-model="model.leader.userName" class="form-control"
+                        aria-describedby="Campo de texto para o nome do usuário">
+                    <label aria-label="Senha">Senha*</label>
+                    <input type="password" v-model="model.leader.password" class="form-control"
+                        aria-describedby="Campo de texto para a senha do usuário">
 
                 </div>
                 <div class="float-end">
@@ -82,8 +87,10 @@ export default {
                     leaderId: '',
                     leaderName: '',
                     leaderPhone: '',
-                    leaderRole: 'LEADER',
-                    leaderColor: ''
+                    leaderRole: '',
+                    leaderColor: '',
+                    userName: '',   
+                    password: ''
                 }
             },
             leaderRoles: Object.values(LeaderRole)
@@ -98,7 +105,9 @@ export default {
                 leaderName: this.model.leader.leaderName,
                 leaderPhone: this.model.leader.leaderPhone,
                 leaderRole: this.model.leader.leaderRole,
-                leaderColor: this.model.leader.leaderColor
+                leaderColor: this.model.leader.leaderColor,
+                userName: this.model.leader.userName,
+                password: this.model.leader.password
             })
                 .then(result => {
                     this.$router.push('/leader')
@@ -127,15 +136,25 @@ export default {
             if (this.model.leader.leaderPhone == '') {
                 this.errorList.push('O telefone do líder é obrigatório.');
             }
+            if (this.model.leader.leaderRole == '') {
+                this.errorList.push('O perfil do líder é obrigatório.');
+            }
             if (this.model.leader.leaderColor == '') {
                 this.errorList.push('Seleciona uma cor para o líder.');
+            }
+            if (this.model.leader.userName == '') {
+                this.errorList.push('O email do usuário é obrigatório.');
+            } else {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(this.model.leader.userName)) {
+                    this.errorList.push('O email do usuário não é válido.');
+                }
             }
 
             if (!this.errorList.length) {
                 this.saveLeader();
             }
         },
-
     }
 };
 </script>

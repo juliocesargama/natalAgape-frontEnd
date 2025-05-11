@@ -18,6 +18,15 @@
                     <input type="text" v-model="model.leader.leaderName" class="form-control" aria-describedby="Campo de texto para o nome do líder">
                     <label aria-label="Telefone do líder">Telefone*</label>
                     <input type="text" v-model="model.leader.leaderPhone" class="form-control" aria-describedby="Campo de texto para o telefone do líder">
+
+                                        <!-- Dropdown para leaderRole </select>-->
+                                        <label for="leaderRole">Perfil*</label>
+                    <select v-model="model.leader.leaderRole" class="form-select form-control">
+                        <option disabled value="">Selecione...</option>
+                        <option value="ADMIN">Administrador do Sitema</option>
+                        <option value="LEADER">Usuário</option>
+                    </select>
+
                     <label for="leaderColor">Cor*</label>
                         <select v-model="model.leader.leaderColor" class="form-select form-control">
                             <option disabled value="">Selecione...</option>
@@ -31,7 +40,14 @@
                             <option value="BROWN">Marrom</option>
                             <option value="BLACK">Preto</option>
                             <option value="WHITE">Branco</option>
-                        </select>                    
+                        </select>    
+                        
+                        <label aria-label="Usuário">Email(Login)*</label>
+                    <input type="text" v-model="model.leader.userName" class="form-control"
+                        aria-describedby="Campo de texto para o nome do usuário">
+                    <label aria-label="Senha">Senha*</label>
+                    <input type="password" v-model="model.leader.password" class="form-control"
+                        aria-describedby="Campo de texto para a senha do usuário">                        
                 </div>
                 <div class="float-end">
                     <button type="button" @click="checkForm" class="btn btn-success m-2" aria-describedby="Botão para alterar os novos dados do líder">Alterar</button>
@@ -56,10 +72,13 @@ export default {
             errorList: [] as string[],
             model: {
                 leader: {
+                    leaderId: '',
                     leaderName: '',
                     leaderPhone: '',
+                    leaderRole: '',
                     leaderColor: '',
-                    leaderRole: 'LEADER'
+                    userName: '',   
+                    password: ''
                 }
             }
         }
@@ -70,27 +89,44 @@ export default {
     },
     methods: {
         editLeader() {
-            var $this = this;
-            var url = '/api/leadership/' + this.$route.params.id
-            axios.put(url, {
-                leaderId: this.$route.params.id,
-                leaderName: this.model.leader.leaderName,
-                leaderPhone: this.model.leader.leaderPhone,
-                leaderColor: this.model.leader.leaderColor,
-                leaderRole: this.model.leader.leaderRole
-            })
+        var $this = this;
+        var url = '/api/leadership/' + this.$route.params.id;
+
+        // Prepara o payload, omitindo a senha se ela não foi alterada
+        const payload: {
+            leaderId: string | string[];
+            leaderName: string;
+            leaderPhone: string;
+            leaderColor: string;
+            leaderRole: string;
+            userName: string;
+            password?: string;
+        } = {
+            leaderId: this.$route.params.id,
+            leaderName: this.model.leader.leaderName,
+            leaderPhone: this.model.leader.leaderPhone,
+            leaderColor: this.model.leader.leaderColor,
+            leaderRole: this.model.leader.leaderRole,
+            userName: this.model.leader.userName,
+        };
+
+        if (this.model.leader.password) {
+            payload.password = this.model.leader.password; // Inclui a senha apenas se foi alterada
+        }
+
+        axios.put(url, payload)
             .then(result => {
-                    this.$router.push('/leader')
-                })
-                .catch(function (error) {
-                    if (error.response.status == 404) {
-                        $this.errorList.push("Ocorreu um erro ao salvar o líder, verifique o preenchimento de todos os campos e tente novamente.")
-                    } else if (error.response.status == 500) {
-                        $this.errorList.push("Ocorreu um erro interno no servidor, tente novamente mais tarde.")
-                    } else {
-                        $this.errorList.push("Ocorreu um erro desconhecido, tente novamente mais tarde.")
-                    }
-                })
+                this.$router.push('/leader');
+            })
+            .catch(function (error) {
+                if (error.response.status == 404) {
+                    $this.errorList.push("Ocorreu um erro ao salvar o líder, verifique o preenchimento de todos os campos e tente novamente.");
+                } else if (error.response.status == 500) {
+                    $this.errorList.push("Ocorreu um erro interno no servidor, tente novamente mais tarde.");
+                } else {
+                    $this.errorList.push("Ocorreu um erro desconhecido, tente novamente mais tarde.");
+                }
+            })
         },
         getLeader() {
             var $this = this;
@@ -100,7 +136,8 @@ export default {
                     this.model.leader.leaderName = result.data.leaderName
                     this.model.leader.leaderPhone = result.data.leaderPhone
                     this.model.leader.leaderColor = result.data.leaderColor
-                    this.model.leader.leaderRole = result.data.leaderRole
+                    this.model.leader.leaderRole = result.data.leaderRole,
+                    this.model.leader.userName = result.data.userName
                 })
                 .catch(function (error) {
                     if (error.response.status == 404) {

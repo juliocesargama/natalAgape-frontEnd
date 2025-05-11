@@ -34,8 +34,8 @@ const logout = () => {
 <template>
   <header>
 
-    <div class="wrapper">
-      <nav class="navbar navbar-expand-lg bg-success navbar-dark">
+    <div  class="wrapper">
+      <nav  class="navbar navbar-expand-lg bg-success navbar-dark">
         <div class="container">
           <RouterLink class="navbar-brand" to="/" aria-current="Página Inicial"><b>
               <h2>Ágape</h2>
@@ -52,12 +52,12 @@ const logout = () => {
                   aria-expanded="false"><b>Famílias</b></a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                   <RouterLink class="dropdown-item" to="/family" aria-current="Famílias">Cadastrar Famílias</RouterLink>
-                  <RouterLink v-if="userRole === 'ROLE_ADMIN'" class="dropdown-item" to="/neighborhood" aria-current="Bairros">Cadastrar Bairros
+                  <RouterLink  class="dropdown-item" to="/neighborhood" aria-current="Bairros">Cadastrar Bairros
                   </RouterLink>
                 </ul>
               </li>
 
-              <RouterLink v-if="userRole === 'ROLE_ADMIN'" class="nav-link" to="/leader" aria-current="Lideres"><b>Lideres</b></RouterLink>
+              <RouterLink  class="nav-link" to="/leader" aria-current="Lideres"><b>Lideres</b></RouterLink>
 
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
@@ -75,7 +75,7 @@ const logout = () => {
                 </ul>
               </li>
 
-              <li v-if="userRole === 'ROLE_ADMIN'" class="nav-item dropdown">
+              <li  class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
                   aria-expanded="false"><b>Campanhas</b></a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
