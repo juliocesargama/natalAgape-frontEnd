@@ -14,13 +14,15 @@
                     </div>
                 </ul>
                 <div class="mb-3">
-                   <label aria-label="Nome do Líder">Nome do líder*</label>
-                    <input type="text" v-model="model.leader.leaderName" class="form-control" aria-describedby="Campo de texto para o nome do líder">
+                    <label aria-label="Nome do Líder">Nome do líder*</label>
+                    <input type="text" v-model="model.leader.leaderName" class="form-control"
+                        aria-describedby="Campo de texto para o nome do líder">
                     <label aria-label="Telefone do líder">Telefone*</label>
-                    <input type="text" v-model="model.leader.leaderPhone" class="form-control" aria-describedby="Campo de texto para o telefone do líder">
+                    <input type="text" v-model="model.leader.leaderPhone" class="form-control"
+                        aria-describedby="Campo de texto para o telefone do líder">
 
-                                        <!-- Dropdown para leaderRole </select>-->
-                                        <label for="leaderRole">Perfil*</label>
+                    <!-- Dropdown para leaderRole </select>-->
+                    <label for="leaderRole">Perfil*</label>
                     <select v-model="model.leader.leaderRole" class="form-select form-control">
                         <option disabled value="">Selecione...</option>
                         <option value="ADMIN">Administrador do Sistema</option>
@@ -28,35 +30,37 @@
                     </select>
 
                     <label for="leaderColor">Cor*</label>
-                        <select v-model="model.leader.leaderColor" class="form-select form-control">
-                            <option disabled value="">Selecione...</option>
-                            <option value="RED">Vermelho</option>
-                            <option value="BLUE">Azul</option>
-                            <option value="GREEN">Verde</option>
-                            <option value="YELLOW">Amarelo</option>
-                            <option value="ORANGE">Laranja</option>
-                            <option value="PURPLE">Roxo</option>
-                            <option value="PINK">Rosa</option>
-                            <option value="BROWN">Marrom</option>
-                            <option value="BLACK">Preto</option>
-                            <option value="WHITE">Branco</option>
-                        </select>    
-                        
-                        <label aria-label="Usuário">Email(Login)*</label>
+                    <select v-model="model.leader.leaderColor" class="form-select form-control">
+                        <option disabled value="">Selecione...</option>
+                        <option value="RED">Vermelho</option>
+                        <option value="BLUE">Azul</option>
+                        <option value="GREEN">Verde</option>
+                        <option value="YELLOW">Amarelo</option>
+                        <option value="ORANGE">Laranja</option>
+                        <option value="PURPLE">Roxo</option>
+                        <option value="PINK">Rosa</option>
+                        <option value="BROWN">Marrom</option>
+                        <option value="BLACK">Preto</option>
+                        <option value="WHITE">Branco</option>
+                    </select>
+
+                    <label aria-label="Usuário">Email para acesso*</label>
                     <input type="text" v-model="model.leader.userName" class="form-control"
                         aria-describedby="Campo de texto para o nome do usuário">
                     <label aria-label="Senha">Senha*</label>
                     <input type="password" v-model="model.leader.password" class="form-control"
-                        aria-describedby="Campo de texto para a senha do usuário">                        
+                        aria-describedby="Campo de texto para a senha do usuário">
                 </div>
                 <div class="float-end">
-                    <button type="button" @click="checkForm" class="btn btn-success m-2" aria-describedby="Botão para alterar os novos dados do líder">Alterar</button>
-                    <button type="reset" @click="cancelForm" class="btn btn-secondary" aria-describedby="Botão para cancelar o formulário">Cancelar</button>
+                    <button type="button" @click="checkForm" class="btn btn-success m-2"
+                        aria-describedby="Botão para alterar os novos dados do líder">Alterar</button>
+                    <button type="reset" @click="cancelForm" class="btn btn-secondary"
+                        aria-describedby="Botão para cancelar o formulário">Cancelar</button>
                 </div>
             </div>
             <div class="card-footer">
-        <p class="text-muted">* Campos obrigatórios</p>
-    </div>
+                <p class="text-muted">* Campos obrigatórios</p>
+            </div>
         </div>
     </div>
 </template>
@@ -77,10 +81,12 @@ export default {
                     leaderPhone: '',
                     leaderRole: '',
                     leaderColor: '',
-                    userName: '',   
+                    userName: '',
                     password: ''
                 }
-            }
+            },
+            confirmPassword: ''
+
         }
 
     },
@@ -89,44 +95,44 @@ export default {
     },
     methods: {
         editLeader() {
-        var $this = this;
-        var url = '/api/leadership/' + this.$route.params.id;
+            var $this = this;
+            var url = '/api/leadership/' + this.$route.params.id;
 
-        // Prepara o payload, omitindo a senha se ela não foi alterada
-        const payload: {
-            leaderId: string | string[];
-            leaderName: string;
-            leaderPhone: string;
-            leaderColor: string;
-            leaderRole: string;
-            userName: string;
-            password?: string;
-        } = {
-            leaderId: this.$route.params.id,
-            leaderName: this.model.leader.leaderName,
-            leaderPhone: this.model.leader.leaderPhone,
-            leaderColor: this.model.leader.leaderColor,
-            leaderRole: this.model.leader.leaderRole,
-            userName: this.model.leader.userName,
-        };
+            // Prepara o payload, omitindo a senha se ela não foi alterada
+            const payload: {
+                leaderId: string | string[];
+                leaderName: string;
+                leaderPhone: string;
+                leaderColor: string;
+                leaderRole: string;
+                userName: string;
+                password?: string;
+            } = {
+                leaderId: this.$route.params.id,
+                leaderName: this.model.leader.leaderName,
+                leaderPhone: this.model.leader.leaderPhone,
+                leaderColor: this.model.leader.leaderColor,
+                leaderRole: this.model.leader.leaderRole,
+                userName: this.model.leader.userName,
+            };
 
-        if (this.model.leader.password) {
-            payload.password = this.model.leader.password; // Inclui a senha apenas se foi alterada
-        }
+            if (this.model.leader.password) {
+                payload.password = this.model.leader.password; // Inclui a senha apenas se foi alterada
+            }
 
-        axios.put(url, payload)
-            .then(result => {
-                this.$router.push('/leader');
-            })
-            .catch(function (error) {
-                if (error.response.status == 404) {
-                    $this.errorList.push("Ocorreu um erro ao salvar o líder, verifique o preenchimento de todos os campos e tente novamente.");
-                } else if (error.response.status == 500) {
-                    $this.errorList.push("Ocorreu um erro interno no servidor, tente novamente mais tarde.");
-                } else {
-                    $this.errorList.push("Ocorreu um erro desconhecido, tente novamente mais tarde.");
-                }
-            })
+            axios.put(url, payload)
+                .then(result => {
+                    this.$router.push('/leader');
+                })
+                .catch(function (error) {
+                    if (error.response.status == 404) {
+                        $this.errorList.push("Ocorreu um erro ao salvar o líder, verifique o preenchimento de todos os campos e tente novamente.");
+                    } else if (error.response.status == 500) {
+                        $this.errorList.push("Ocorreu um erro interno no servidor, tente novamente mais tarde.");
+                    } else {
+                        $this.errorList.push("Ocorreu um erro desconhecido, tente novamente mais tarde.");
+                    }
+                })
         },
         getLeader() {
             var $this = this;
@@ -137,7 +143,7 @@ export default {
                     this.model.leader.leaderPhone = result.data.leaderPhone
                     this.model.leader.leaderColor = result.data.leaderColor
                     this.model.leader.leaderRole = result.data.leaderRole,
-                    this.model.leader.userName = result.data.userName
+                        this.model.leader.userName = result.data.userName
                 })
                 .catch(function (error) {
                     if (error.response.status == 404) {
@@ -165,7 +171,7 @@ export default {
             if (this.model.leader.leaderColor == '') {
                 this.errorList.push('Seleciona uma cor para o líder.');
             }
-            if(!this.errorList.length){
+            if (!this.errorList.length) {
                 this.editLeader();
             };
         }
