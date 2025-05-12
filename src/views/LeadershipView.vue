@@ -13,6 +13,7 @@
                         <tr>
                             <th><b>Nome</b></th>
                             <th><b>Telefone</b></th>
+                            <th><b>Perfil</b></th>
                             <th><b>Ações</b></th>
                         </tr>
                     </thead>
@@ -20,6 +21,10 @@
                         <tr v-for="leader in leaders" :key="leader.leaderId">
                             <td>{{ leader.leaderName }}</td>
                             <td>{{ leader.leaderPhone }}</td>
+                            <td>
+                                <span v-if="leader.leaderRole === 'ADMIN'">Administrador do Sistema</span>
+                                <span v-else-if="leader.leaderRole === 'LEADER'">Usuário</span>
+                            </td>
                             <td>
                                 <RouterLink :to="{ path: '/leader/' + leader.leaderId + '/edit' }" class="btn btn-success"
                                     aria-describedby="Botão para alterar o líder">Alterar</RouterLink>

@@ -23,136 +23,186 @@ import ChildContributionView from "@/views/ChildContributionView.vue";
 import ChildContributionCreateView from "@/views/inputs/ChildContributionCreateView.vue";
 import ChildContributionEditView from "@/views/inputs/ChildContributionEditView.vue";
 import ChildContributionReportView from "@/views/reports/ChildContributionReportView.vue";
+import LoginView from "@/views/LoginView.vue";
+import { getUserRole } from '@/utils/auth.ts'; // Função para obter o papel do usuário
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: "/",
+      path: "/home",
       name: "home",
       component: HomeView,
+      meta: { requiresAuth: true}
     },
     {
       path: "/campaign",
       name: "campaign",
-      component: CampaignView
+      component: CampaignView,
+      meta: { requiresAuth: true, role: 'ROLE_ADMIN' }
     },
     {
         path: "/campaign/create",
         name: "campaign-create",
-        component: CampaignCreateView
+        component: CampaignCreateView, 
+        meta: { requiresAuth: true, role: 'ROLE_ADMIN' }
     },
     {
         path: "/campaign/:id/edit",
         name: "campaign-edit",
-        component: CampaignEditView
+        component: CampaignEditView,
+        meta: { requiresAuth: true, role: 'ROLE_ADMIN' }
     },
     {
       path: "/neighborhood",
       name: "neighborhood",
-      component: NeighborhoodView,
+      component: NeighborhoodView, 
+      meta: { requiresAuth: true, role: 'ROLE_ADMIN' }
     },
     {
         path: "/neighborhood/create",
         name: "neighborhood-create",
         component: NeighborhoodCreateView,
+        meta: { requiresAuth: true, role: 'ROLE_ADMIN' }
     },
     {
         path: "/neighborhood/:id/edit",
         name: "neighborhood-edit",
         component: NeighborhoodEditView,
+        meta: { requiresAuth: true, role: 'ROLE_ADMIN' }
     },
     {
       path: "/sponsor",
       name: "sponsor",
       component: SponsorView,
+      meta: { requiresAuth: true, role: 'ROLE_ADMIN' }
     },
     {
       path: "/sponsor/create",
       name: "sponsor-create",
       component: SponsorCreateView,
+      meta: { requiresAuth: true}
     },
     {
       path: "/sponsor/:id/edit",
       name: "sponsor-edit",
       component: SponsorEditView,
+      meta: { requiresAuth: true}
     },
     {
       path: "/family",
       name: "family",
-      component: FamilyView
+      component: FamilyView,
+      meta: { requiresAuth: true}
     },
     {
       path: "/family/create",
       name: "family-create",
-      component: FamilyCreateView
+      component: FamilyCreateView,
+      meta: { requiresAuth: true}
     },
     {
       path: "/family/:id/edit",
       name: "family-edit",
-      component: FamilyEditView
+      component: FamilyEditView,
+      meta: { requiresAuth: true}
     },
     {
       path: "/leader",
       name: "leader",
       component: LeadershipView,
+      meta: { requiresAuth: true, role: 'ROLE_ADMIN' }
     },
     {
       path: "/leader/create",
       name: "leader-create",
       component: LeadershipCreateView,
+      meta: { requiresAuth: true, role: 'ROLE_ADMIN' }
     },
     {
       path: "/leader/:id/edit",
       name: "leader-edit",
       component: LeadershipEditView,
+      meta: { requiresAuth: true, role: 'ROLE_ADMIN' }
     },
     {  
     path: "/food-contribution",
       name: "food-contribution",
-      component: FoodContributionView
+      component: FoodContributionView,
+      meta: { requiresAuth: true}
     },
     {
       path: "/food-contribution/create",
       name: "food-contribution-create",
-      component: FoodContributionCreateView
+      component: FoodContributionCreateView,
+      meta: { requiresAuth: true}
     },
     {
       path: "/food-contribution/:id/edit",
       name: "food-contribution-edit",
-      component: FoodContributionEditView
+      component: FoodContributionEditView,
+      meta: { requiresAuth: true}
     },
     {
       path: "/food-contribution/report",
       name: "food-contribution-report",
-      component: FoodContributionReportView
+      component: FoodContributionReportView,
+      meta: { requiresAuth: true, role: 'ROLE_ADMIN' }
     },
     {
       path: "/child-contribution",
       name: "child-contribution",
-      component: ChildContributionView
+      component: ChildContributionView,
+      meta: { requiresAuth: true}
     },
     {
       path: "/child-contribution/create",
       name: "child-contribution-create",
-      component: ChildContributionCreateView
+      component: ChildContributionCreateView,
+      meta: { requiresAuth: true}
     },
     {
       path: "/child-contribution/:id/edit",
       name: "child-contribution-edit",
-      component: ChildContributionEditView
+      component: ChildContributionEditView,
+      meta: { requiresAuth: true}
     },
     {
       path: "/child-contribution/report",
       name: "child-contribution-report",
-      component: ChildContributionReportView
+      component: ChildContributionReportView,
+      meta: { requiresAuth: true, role: 'ROLE_ADMIN' }
     },
     {
       path: "/about",
       name: "about",
       component: () => import("../views/AboutView.vue"),
     },
+    {
+      path: "/",
+      name: "login",
+      component: LoginView,
+    },
   ],
+});
+
+// Guarda de rota global
+router.beforeEach((to, from, next) => {
+  const token = localStorage.getItem('jwtToken'); // Verifica se o token existe
+  const userRole = getUserRole(); // Obtém o papel do usuário
+
+  if (to.meta.requiresAuth && !token) {
+    // Se a rota exigir autenticação e o token não existir, redireciona para o login
+    return next('/');
+  }
+
+  if (to.meta.role && to.meta.role !== userRole) {
+    // Se a rota exigir um papel específico e o usuário não tiver permissão, redireciona
+    return next('/');
+  }
+
+  next(); // Permite o acesso à rota
 });
 
 export default router;
