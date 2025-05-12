@@ -1,4 +1,4 @@
-import jwtDecode from 'jwt-decode';
+import jwt_decode from 'jwt-decode';
 
 export function getUserRole() {
   const token = localStorage.getItem("jwtToken");
@@ -9,7 +9,7 @@ export function getUserRole() {
       sub?: string;
       [key: string]: any;
     }
-    const decoded = jwtDecode<DecodedToken>(token); // Use a função 'jwtDecode'
+    const decoded = jwt_decode<DecodedToken>(token); // Use a função 'jwtDecode'
     if (!decoded.sub) {
       console.error("O campo 'sub' está ausente no token JWT.");
       return null;
