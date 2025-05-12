@@ -23,7 +23,7 @@
                                         <label for="leaderRole">Perfil*</label>
                     <select v-model="model.leader.leaderRole" class="form-select form-control">
                         <option disabled value="">Selecione...</option>
-                        <option value="ADMIN">Administrador do Sitema</option>
+                        <option value="ADMIN">Administrador do Sistema</option>
                         <option value="LEADER">Usuário</option>
                     </select>
 

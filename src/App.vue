@@ -9,7 +9,6 @@ import { isLoggedIn, updateAuthState } from '@/utils/authstate.ts';
 const navLinks = ref<NodeListOf<Element>>()
 let userRole = getUserRole(); // Obtém o papel do usuário
 //const isLoggedIn = ref(!!localStorage.getItem("jwtToken")); // Verifica se o token existe
-alert(userRole)
 
 const closeMobileMenu = () => {
   if (window.innerWidth < 992) { // Check if mobile view
