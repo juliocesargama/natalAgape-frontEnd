@@ -1,4 +1,4 @@
-import { jwtDecode } from "jwt-decode"; // Importação nomeada
+import { jwtDecode } from "jwt-decode"; // Importação do pacote oficial
 
 
 export function getUserRole() {
