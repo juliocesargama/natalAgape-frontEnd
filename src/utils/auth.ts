@@ -1,11 +1,10 @@
-import { jwtDecode } from "jwt-decode"; // Importa a biblioteca jwt-decode
 
 export function getUserRole() {
   const token = localStorage.getItem("jwtToken");
   if (!token) return null;
 
  try {
-    const decoded = jwtDecode(token) // Use a função 'jwtDecode'
+    const decoded = decode(token) 
     if (!decoded.sub) {
       console.error("O campo 'sub' está ausente no token JWT.");
       return null;
@@ -23,4 +22,13 @@ export function getUserRole() {
     console.error("Erro ao decodificar o token JWT:", error);
     return null;
   }
+  
+}
+
+function decode(token: string) {
+    try {
+        return JSON.parse(window.atob(token.split(".")[1]));
+    } catch (e) {
+        console.warn("Error decoding token");
+    }
 }
