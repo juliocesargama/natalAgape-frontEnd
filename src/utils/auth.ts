@@ -1,4 +1,4 @@
-import { jwtDecode } from "jwt-decode";
+import { jwtDecode } from "jwt-decode"; // Importa a biblioteca jwt-decode
 
 export function getUserRole() {
   const token = localStorage.getItem("jwtToken");
