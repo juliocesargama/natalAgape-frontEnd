@@ -53,43 +53,52 @@ export default {
         this.getNeighborhood()
     },
     methods: {
-        editNeighborhood() {
-            var $this = this;
-            var url = '/api/neighborhood/' + this.$route.params.id
-            axios.put(url, {
-                neighborhoodId: this.$route.params.id,
-                neighborhoodName: this.model.neighborhood.neighborhoodName,
-            })
-                .then(result => {
-                    this.$router.push('/neighborhood')
-                })
-                .catch(function (error) {
-                    if (error.response.status == 404) {
-                        $this.errorList.push("Ocorreu um erro ao salvar o bairro, verifique o preenchimento de todos os campos e tente novamente.")
-                    } else if (error.response.status == 500) {
-                        $this.errorList.push("Ocorreu um erro interno no servidor, tente novamente mais tarde.")
-                    } else {
-                        $this.errorList.push("Ocorreu um erro desconhecido, tente novamente mais tarde.")
-                    }
-                })
-        },
-        getNeighborhood() {
-            var $this = this;
-            var url = '/api/neighborhood/' + this.$route.params.id
-            axios.get(url)
-                .then(result => {
-                    this.model.neighborhood.neighborhoodName = result.data.neighborhoodName
-                })
-                .catch(function (error) {
-                    if (error.response.status == 404) {
-                        $this.errorList.push("Ocorreu um erro ao buscar o bairro, verifique o preenchimento de todos os campos e tente novamente.")
-                    } else if (error.response.status == 500) {
-                        $this.errorList.push("Ocorreu um erro interno no servidor, tente novamente mais tarde.")
-                    } else {
-                        $this.errorList.push("Ocorreu um erro desconhecido, tente novamente mais tarde.")
-                    }
-                })
-        },
+    editNeighborhood() {
+        const token = localStorage.getItem("jwtToken"); // Obtém o token JWT do localStorage
+        const url = '/api/neighborhood/' + this.$route.params.id;
+
+        axios.put(url, {
+            neighborhoodId: this.$route.params.id,
+            neighborhoodName: this.model.neighborhood.neighborhoodName,
+        }, {
+            headers: {
+                Authorization: `Bearer ${token}` // Adiciona o token no cabeçalho
+            }
+        })
+        .then(() => {
+            this.$router.push('/neighborhood');
+        })
+        .catch(error => {
+            if (error.response && error.response.status === 404) {
+                this.errorList.push("Ocorreu um erro ao salvar o bairro, verifique o preenchimento de todos os campos e tente novamente.");
+            } else if (error.response && error.response.status === 500) {
+                this.errorList.push("Ocorreu um erro interno no servidor, tente novamente mais tarde.");
+            } else {
+                this.errorList.push("Ocorreu um erro desconhecido, tente novamente mais tarde.");
+            }
+        });
+    },
+    getNeighborhood() {
+        const token = localStorage.getItem("jwtToken"); // Obtém o token JWT do localStorage
+        const url = '/api/neighborhood/' + this.$route.params.id;
+        axios.get(url, {
+            headers: {
+                Authorization: `Bearer ${token}` // Adiciona o token no cabeçalho
+            }
+        })
+        .then(result => {
+            this.model.neighborhood.neighborhoodName = result.data.neighborhoodName;
+        })
+        .catch(error => {
+            if (error.response && error.response.status === 404) {
+                this.errorList.push("Ocorreu um erro ao buscar o bairro, verifique o preenchimento de todos os campos e tente novamente.");
+            } else if (error.response && error.response.status === 500) {
+                this.errorList.push("Ocorreu um erro interno no servidor, tente novamente mais tarde.");
+            } else {
+                this.errorList.push("Ocorreu um erro desconhecido, tente novamente mais tarde.");
+            }
+        });
+    },
         cancelForm() {
             this.$router.push('/neighborhood')
         },

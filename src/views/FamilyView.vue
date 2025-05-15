@@ -86,23 +86,41 @@ export default {
     },
     methods: {
         getFamilies() {
-            var url = 'api/family';
-            return axios.get(url).then(result => {
+            const token = localStorage.getItem("jwtToken"); // Obtém o token JWT do localStorage
+            const url = 'api/family';
+
+            return axios.get(url, {
+                headers: {
+                    Authorization: `Bearer ${token}` // Adiciona o token no cabeçalho
+                }
+            })
+            .then(result => {
                 if (result.data.length > 0) {
                     this.families = result.data;
                     this.statusMessage = '';
                 } else {
                     this.statusMessage = 'Nenhuma família encontrada.';
                 }
-            }).catch(() => {
+            })
+            .catch(() => {
                 this.statusMessage = 'Erro ao carregar famílias, tente novamente mais tarde.';
             });
         },
         deleteFamily(familyId: number) {
-            var url = 'api/family/' + familyId;
-            return axios.delete(url).then(() => {
+            const token = localStorage.getItem("jwtToken"); // Obtém o token JWT do localStorage
+            const url = 'api/family/' + familyId;
+
+            return axios.delete(url, {
+                headers: {
+                    Authorization: `Bearer ${token}` // Adiciona o token no cabeçalho
+                }
+            })
+            .then(() => {
                 this.getFamilies();
                 this.$router.push({ path: '/family' });
+            })
+            .catch(() => {
+                this.statusMessage = 'Erro ao excluir a família, tente novamente mais tarde.';
             });
         }
     },

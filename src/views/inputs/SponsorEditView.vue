@@ -56,46 +56,56 @@ export default {
     mounted() {
         this.getSponsor()
     },
-    methods: {
-        editSponsor() {
-            var $this = this;
-            var url = '/api/sponsor/' + this.$route.params.id
-            axios.put(url, {
-                sponsorId: this.$route.params.id,
-                sponsorName: this.model.sponsor.sponsorName,
-                sponsorPhone: this.model.sponsor.sponsorPhone,
-            })
-                .then(result => {
-                    this.$router.push('/sponsor')
-                })
-                .catch(function (error) {
-                    if (error.response.status == 404) {
-                        $this.errorList.push("Ocorreu um erro ao salvar o doador, verifique o preenchimento de todos os campos e tente novamente.")
-                    } else if (error.response.status == 500) {
-                        $this.errorList.push("Ocorreu um erro interno no servidor, tente novamente mais tarde.")
-                    } else {
-                        $this.errorList.push("Ocorreu um erro desconhecido, tente novamente mais tarde.")
-                    }
-                })
-        },
-        getSponsor() {
-            var $this = this;
-            var url = '/api/sponsor/' + this.$route.params.id
-            axios.get(url)
-                .then(result => {
-                    this.model.sponsor.sponsorName = result.data.sponsorName
-                    this.model.sponsor.sponsorPhone = result.data.sponsorPhone
-                })
-                .catch(function (error) {
-                    if (error.response.status == 404) {
-                        $this.errorList.push("Ocorreu um erro ao buscar o doador, verifique o preenchimento de todos os campos e tente novamente.")
-                    } else if (error.response.status == 500) {
-                        $this.errorList.push("Ocorreu um erro interno no servidor, tente novamente mais tarde.")
-                    } else {
-                        $this.errorList.push("Ocorreu um erro desconhecido, tente novamente mais tarde.")
-                    }
-                })
-        },
+methods: {
+    editSponsor() {
+        const token = localStorage.getItem("jwtToken"); // Obtém o token JWT do localStorage
+        const url = '/api/sponsor/' + this.$route.params.id;
+
+        axios.put(url, {
+            sponsorId: this.$route.params.id,
+            sponsorName: this.model.sponsor.sponsorName,
+            sponsorPhone: this.model.sponsor.sponsorPhone,
+        }, {
+            headers: {
+                Authorization: `Bearer ${token}` // Adiciona o token no cabeçalho
+            }
+        })
+        .then(() => {
+            this.$router.push('/sponsor');
+        })
+        .catch(error => {
+            if (error.response && error.response.status === 404) {
+                this.errorList.push("Ocorreu um erro ao salvar o doador, verifique o preenchimento de todos os campos e tente novamente.");
+            } else if (error.response && error.response.status === 500) {
+                this.errorList.push("Ocorreu um erro interno no servidor, tente novamente mais tarde.");
+            } else {
+                this.errorList.push("Ocorreu um erro desconhecido, tente novamente mais tarde.");
+            }
+        });
+    },
+    getSponsor() {
+        const token = localStorage.getItem("jwtToken"); // Obtém o token JWT do localStorage
+        const url = '/api/sponsor/' + this.$route.params.id;
+
+        axios.get(url, {
+            headers: {
+                Authorization: `Bearer ${token}` // Adiciona o token no cabeçalho
+            }
+        })
+        .then(result => {
+            this.model.sponsor.sponsorName = result.data.sponsorName;
+            this.model.sponsor.sponsorPhone = result.data.sponsorPhone;
+        })
+        .catch(error => {
+            if (error.response && error.response.status === 404) {
+                this.errorList.push("Ocorreu um erro ao buscar o doador, verifique o preenchimento de todos os campos e tente novamente.");
+            } else if (error.response && error.response.status === 500) {
+                this.errorList.push("Ocorreu um erro interno no servidor, tente novamente mais tarde.");
+            } else {
+                this.errorList.push("Ocorreu um erro desconhecido, tente novamente mais tarde.");
+            }
+        });
+    },
         cancelForm() {
             this.$router.push('/sponsor')
         },

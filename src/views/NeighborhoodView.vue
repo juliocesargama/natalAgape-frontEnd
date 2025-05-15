@@ -47,21 +47,26 @@ export default {
     mounted() {
         this.getNeighborhoods();
     },
-    methods: {
-        getNeighborhoods() {
-            var url = 'api/neighborhood';
-            return axios.get(url).then(result => {
-                if (result.data.length > 0) {
-                    this.neighborhoods = result.data;
-                    this.statusMessage = '';
-                } else {
-                    this.statusMessage = 'Nenhum bairro encontrado.';
-                }
-            }).catch(() => {
-                this.statusMessage = 'Erro ao carregar os bairros, tente novamente mais tarde.';
-            });
-        }
-    },
+methods: {
+    getNeighborhoods() {
+        const token = localStorage.getItem("jwtToken"); // Obtém o token JWT do localStorage
+        var url = 'api/neighborhood';
+        return axios.get(url, {
+            headers: {
+                Authorization: `Bearer ${token}` // Adiciona o token no cabeçalho
+            }
+        }).then(result => {
+            if (result.data.length > 0) {
+                this.neighborhoods = result.data;
+                this.statusMessage = '';
+            } else {
+                this.statusMessage = 'Nenhum bairro encontrado.';
+            }
+        }).catch(() => {
+            this.statusMessage = 'Erro ao carregar os bairros, tente novamente mais tarde.';
+        });
+    }
+},
 }
 </script>
 

@@ -245,9 +245,10 @@ export default {
         this.getLeaders()
     },
     methods: {
-        editfamily() {
-            var $this = this;
-            var url = '/api/family/' + this.$route.params.id
+        editFamily() {
+            const token = localStorage.getItem("jwtToken"); // Obtém o token JWT do localStorage
+            const url = '/api/family/' + this.$route.params.id;
+
             axios.put(url, {
                 familyId: this.$route.params.id,
                 responsibleName: this.model.family.responsibleName,
@@ -256,25 +257,28 @@ export default {
                 neighborhoodId: this.model.family.neighborhoodId,
                 observation: this.model.family.observation,
                 leaderId: this.model.family.leaderId
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}` // Adiciona o token no cabeçalho
+                }
             })
-                .then((response) => {
-                    if (response.status == 200) {
-                        this.showSuccessAlert = true;
-                        setTimeout(() => {
-                            this.showSuccessAlert = false;
-                        }, 3000);
-                    }
-
-                })
-                .catch(function (error) {
-                    if (error.response.status == 404) {
-                        $this.errorList.push("Ocorreu um erro ao salvar a família, verifique o preenchimento de todos os campos e tente novamente.")
-                    } else if (error.response.status == 500) {
-                        $this.errorList.push("Ocorreu um erro interno no servidor, tente novamente mais tarde.")
-                    } else {
-                        $this.errorList.push("Ocorreu um erro desconhecido, tente novamente mais tarde.")
-                    }
-                })
+            .then((response) => {
+                if (response.status === 200) {
+                    this.showSuccessAlert = true;
+                    setTimeout(() => {
+                        this.showSuccessAlert = false;
+                    }, 3000);
+                }
+            })
+            .catch((error) => {
+                if (error.response && error.response.status === 404) {
+                    this.errorList.push("Ocorreu um erro ao salvar a família, verifique o preenchimento de todos os campos e tente novamente.");
+                } else if (error.response && error.response.status === 500) {
+                    this.errorList.push("Ocorreu um erro interno no servidor, tente novamente mais tarde.");
+                } else {
+                    this.errorList.push("Ocorreu um erro desconhecido, tente novamente mais tarde.");
+                }
+            })
         },
         getChild(child: child) {
             this.model.child.childId = child.childId;
@@ -352,42 +356,52 @@ export default {
                 })
         },
         getFamily() {
-            var $this = this;
-            var url = '/api/family/' + this.$route.params.id
-            axios.get(url)
-                .then(result => {
-                    this.model.family.responsibleName = result.data.responsibleName
-                    this.model.family.phoneNumber = result.data.phoneNumber
-                    this.model.family.address = result.data.address
-                    this.model.family.neighborhoodId = result.data.neighborhoodId
-                    this.model.family.observation = result.data.observation
-                    this.model.children = result.data.children,
-                        this.model.family.leaderId = result.data.leaderId
-                })
-                .catch(function (error) {
-                    if (error.response.status == 404) {
-                        $this.errorList.push("Ocorreu um erro ao buscar a família, verifique o preenchimento de todos os campos e tente novamente.")
-                    } else if (error.response.status == 500) {
-                        $this.errorList.push("Ocorreu um erro interno no servidor, tente novamente mais tarde.")
-                    } else {
-                        $this.errorList.push("Ocorreu um erro desconhecido, tente novamente mais tarde.")
-                    }
-                })
+            const token = localStorage.getItem("jwtToken");
+            const url = '/api/family/' + this.$route.params.id;
+
+            axios.get(url, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            .then(result => {
+                this.model.family.responsibleName = result.data.responsibleName;
+                this.model.family.phoneNumber = result.data.phoneNumber;
+                this.model.family.address = result.data.address;
+                this.model.family.neighborhoodId = result.data.neighborhoodId;
+                this.model.family.observation = result.data.observation;
+                this.model.children = result.data.children;
+                this.model.family.leaderId = result.data.leaderId;
+            })
+            .catch((error) => {
+                if (error.response && error.response.status === 404) {
+                    this.errorList.push("Ocorreu um erro ao buscar a família, verifique o preenchimento de todos os campos e tente novamente.");
+                } else if (error.response && error.response.status === 500) {
+                    this.errorList.push("Ocorreu um erro interno no servidor, tente novamente mais tarde.");
+                } else {
+                    this.errorList.push("Ocorreu um erro desconhecido, tente novamente mais tarde.");
+                }
+            });
         },
         getNeighborhoods() {
-            var $this = this;
-            var url = '/api/neighborhood'
-            axios.get(url)
-                .then(result => {
-                    this.neighborhoods = result.data;
-                })
-                .catch(function (error) {
-                    if (error.response && error.response.status == 500) {
-                        $this.errorList.push("Erro ao carregar os bairros. Tente novamente mais tarde.");
-                    } else {
-                        $this.errorList.push("Erro desconhecido ao carregar os bairros.");
-                    }
-                });
+            const token = localStorage.getItem("jwtToken");
+            const url = '/api/neighborhood';
+
+            axios.get(url, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            .then(result => {
+                this.neighborhoods = result.data;
+            })
+            .catch((error) => {
+                if (error.response && error.response.status === 500) {
+                    this.errorList.push("Erro ao carregar os bairros. Tente novamente mais tarde.");
+                } else {
+                    this.errorList.push("Erro desconhecido ao carregar os bairros.");
+                }
+            });
         },
         cancelForm() {
             this.$router.push('/family')
@@ -411,7 +425,7 @@ export default {
                 this.errorList.push('O líder é obrigatório.');
             }
             if (!this.errorList.length) {
-                this.editfamily();
+                this.editFamily();
             };
         },
         checkChildForm: function () {
@@ -457,11 +471,14 @@ export default {
                 const formData = new FormData();
                 formData.append('file', file);
 
-                axios.post('/api/upload', formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                })
+        const token = localStorage.getItem("jwtToken"); // Obtém o token JWT do localStorage
+
+        axios.post('/api/upload', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                Authorization: `Bearer ${token}` // Adiciona o token no cabeçalho
+            }
+        })
                     .then(response => {
                         this.model.child.pictureUrl = response.data;
                         this.loadImageFromApi();
@@ -475,9 +492,12 @@ export default {
         },
         async loadImageFromApi() {
             try {
-                const response = await axios.get('/api/upload/open/' + this.model.child.pictureUrl, {
-                    responseType: 'blob'
-                });
+                    const response = await axios.get('/api/upload/open/' + this.model.child.pictureUrl, {
+                        responseType: 'blob',
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("jwtToken")}`
+                        }
+                    });
 
                 // Create object URL from blob
                 const blobUrl = URL.createObjectURL(response.data);
@@ -491,28 +511,41 @@ export default {
                 console.error("Image load failed:", error);
             }
         },
-        getLeaders() {
-            var $this = this;
-            axios
-                .get("/api/leadership") // Endpoint para buscar os líderes
-                .then((response) => {
-                    this.leaders = response.data;
-                })
-                .catch(function (error) {
-                    if (error.response && error.response.status == 500) {
-                        $this.errorList.push("Erro ao carregar os líderes. Tente novamente mais tarde.");
-                    } else {
-                        $this.errorList.push("Erro desconhecido ao carregar os líderes.");
-                    }
-                });
+       getLeaders() {
+            const token = localStorage.getItem("jwtToken");
+            const url = '/api/leadership';
+
+            axios.get(url, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            .then((response) => {
+                this.leaders = response.data;
+            })
+            .catch((error) => {
+                if (error.response && error.response.status === 500) {
+                    this.errorList.push("Erro ao carregar os líderes. Tente novamente mais tarde.");
+                } else {
+                    this.errorList.push("Erro desconhecido ao carregar os líderes.");
+                }
+            });
         },
         deleteChild(childId: number) {
-            var $this = this;
-            var url = '/api/child/' + childId
-            axios.delete(url)
-                .then(() => {
-                    this.getFamily();
-                })
+            const token = localStorage.getItem("jwtToken");
+            const url = '/api/child/' + childId;
+
+            axios.delete(url, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            .then(() => {
+                this.getFamily();
+            })
+            .catch(() => {
+                this.errorList.push("Erro ao excluir a criança. Tente novamente mais tarde.");
+            });
         }
     }
 }

@@ -54,47 +54,57 @@ export default {
 
     },
     mounted() {
-        this.getcampaign()
+        this.getCampaign()
     },
     methods: {
         editCampaign() {
-            var $this = this;
-            var url = '/api/campaign/' + this.$route.params.id
+            const token = localStorage.getItem("jwtToken"); // Obtém o token JWT do localStorage
+            const url = '/api/campaign/' + this.$route.params.id;
+
             axios.put(url, {
                 campaignId: this.$route.params.id,
                 campaignYear: this.model.campaign.campaignYear,
                 campaignChurch: this.model.campaign.campaignChurch
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}` // Adiciona o token no cabeçalho
+                }
             })
-                .then(result => {
-                    this.$router.push('/campaign')
-                })
-                .catch(function (error) {
-                    if (error.response.status == 404) {
-                        $this.errorList.push("Ocorreu um erro ao salvar a campanha, verifique o preenchimento de todos os campos e tente novamente.")
-                    } else if (error.response.status == 500) {
-                        $this.errorList.push("Ocorreu um erro interno no servidor, tente novamente mais tarde.")
-                    } else {
-                        $this.errorList.push("Ocorreu um erro desconhecido, tente novamente mais tarde.")
-                    }
-                })
+            .then(() => {
+                this.$router.push('/campaign');
+            })
+            .catch(error => {
+                if (error.response && error.response.status === 404) {
+                    this.errorList.push("Ocorreu um erro ao salvar a campanha, verifique o preenchimento de todos os campos e tente novamente.");
+                } else if (error.response && error.response.status === 500) {
+                    this.errorList.push("Ocorreu um erro interno no servidor, tente novamente mais tarde.");
+                } else {
+                    this.errorList.push("Ocorreu um erro desconhecido, tente novamente mais tarde.");
+                }
+            });
         },
-        getcampaign() {
-            var $this = this;
-            var url = '/api/campaign/' + this.$route.params.id
-            axios.get(url)
-                .then(result => {
-                    this.model.campaign.campaignYear = result.data.campaignYear
-                    this.model.campaign.campaignChurch = result.data.campaignChurch
-                })
-                .catch(function (error) {
-                    if (error.response.status == 404) {
-                        $this.errorList.push("Ocorreu um erro ao buscar a campanha, verifique o preenchimento de todos os campos e tente novamente.")
-                    } else if (error.response.status == 500) {
-                        $this.errorList.push("Ocorreu um erro interno no servidor, tente novamente mais tarde.")
-                    } else {
-                        $this.errorList.push("Ocorreu um erro desconhecido, tente novamente mais tarde.")
-                    }
-                })
+        getCampaign() {
+            const token = localStorage.getItem("jwtToken"); // Obtém o token JWT do localStorage
+            const url = '/api/campaign/' + this.$route.params.id;
+
+            axios.get(url, {
+                headers: {
+                    Authorization: `Bearer ${token}` // Adiciona o token no cabeçalho
+                }
+            })
+            .then(result => {
+                this.model.campaign.campaignYear = result.data.campaignYear;
+                this.model.campaign.campaignChurch = result.data.campaignChurch;
+            })
+            .catch(error => {
+                if (error.response && error.response.status === 404) {
+                    this.errorList.push("Ocorreu um erro ao buscar a campanha, verifique o preenchimento de todos os campos e tente novamente.");
+                } else if (error.response && error.response.status === 500) {
+                    this.errorList.push("Ocorreu um erro interno no servidor, tente novamente mais tarde.");
+                } else {
+                    this.errorList.push("Ocorreu um erro desconhecido, tente novamente mais tarde.");
+                }
+            });
         },
         cancelForm() {
             this.$router.push('/campaign')
