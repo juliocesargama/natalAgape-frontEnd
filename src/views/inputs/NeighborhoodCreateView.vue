@@ -50,25 +50,30 @@ export default {
 
     },
     methods: {
-        saveNeighborhood() {
-            var $this = this;
-            var url = '/api/neighborhood'
-            axios.post(url, {
-                neighborhoodName: this.model.neighborhood.neighborhoodName
-            })
-                .then(result => {
-                    this.$router.push('/neighborhood')
-                })
-                .catch(function (error) {
-                    if (error.response.status == 400) {
-                        $this.errorList.push("Ocorreu um erro ao salvar o bairro, verifique o preenchimento de todos os campos e tente novamente.")
-                    } else if (error.response.status == 500) {
-                        $this.errorList.push("Ocorreu um erro interno no servidor, tente novamente mais tarde.")
-                    } else {
-                        $this.errorList.push("Ocorreu um erro desconhecido, tente novamente mais tarde.")
-                    }
-                })
-        },
+    saveNeighborhood() {
+        const token = localStorage.getItem("jwtToken"); // Obtém o token JWT do localStorage
+        const url = '/api/neighborhood';
+
+        axios.post(url, {
+            neighborhoodName: this.model.neighborhood.neighborhoodName
+        }, {
+            headers: {
+                Authorization: `Bearer ${token}` // Adiciona o token no cabeçalho
+            }
+        })
+        .then(result => {
+            this.$router.push('/neighborhood');
+        })
+        .catch(error => {
+            if (error.response && error.response.status === 400) {
+                this.errorList.push("Ocorreu um erro ao salvar o bairro, verifique o preenchimento de todos os campos e tente novamente.");
+            } else if (error.response && error.response.status === 500) {
+                this.errorList.push("Ocorreu um erro interno no servidor, tente novamente mais tarde.");
+            } else {
+                this.errorList.push("Ocorreu um erro desconhecido, tente novamente mais tarde.");
+            }
+        });
+    },
         cancelForm() {
             this.$router.push('/neighborhood')
         },

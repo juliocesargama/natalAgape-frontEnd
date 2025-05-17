@@ -73,35 +73,50 @@ export default {
         }
     },
     mounted() {
-        this.getcampaigns();
+        this.getCampaigns();
     },
     methods: {
-        getcampaigns() {
-            var url = 'api/campaign';
-            return axios.get(url).then(result => {
+        getCampaigns() {
+            const token = localStorage.getItem("jwtToken"); // Obtém o token JWT do localStorage
+            const url = 'api/campaign';
+
+            axios.get(url, {
+                headers: {
+                    Authorization: `Bearer ${token}` // Adiciona o token no cabeçalho
+                }
+            })
+            .then(result => {
                 if (result.data.length > 0) {
                     this.campaigns = result.data;
                     this.statusMessage = '';
                 } else {
                     this.statusMessage = 'Nenhuma campanha encontrada.';
                 }
-            }).catch(() => {
+            })
+            .catch(() => {
                 this.statusMessage = 'Erro ao carregar campanhas, tente novamente mais tarde.';
             });
         },
         closeCampaign(campaignId: number) {
-            var url = 'api/campaign/' + campaignId;
-            return axios.delete(url).then(result => {
-                if (result.status == 200) {
-                    this.getcampaigns();
-                    this.$router.push({ path: '/campaign' });
+            const token = localStorage.getItem("jwtToken"); // Obtém o token JWT do localStorage
+            const url = 'api/campaign/' + campaignId;
 
-                } else if (result.status == 204) {
+            axios.delete(url, {
+                headers: {
+                    Authorization: `Bearer ${token}` // Adiciona o token no cabeçalho
+                }
+            })
+            .then(result => {
+                if (result.status === 200) {
+                    this.getCampaigns();
+                    this.$router.push({ path: '/campaign' });
+                } else if (result.status === 204) {
                     this.statusMessage = 'Nenhuma campanha encontrada.';
                 } else {
                     this.statusMessage = 'Erro ao encerrar campanha, tente novamente mais tarde.';
                 }
-            }).catch(() => {
+            })
+            .catch(() => {
                 this.statusMessage = 'Erro ao encerrar campanha, tente novamente mais tarde.';
             });
         }

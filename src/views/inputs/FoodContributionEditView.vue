@@ -145,64 +145,89 @@ export default {
     },
     methods: {
         getFoodContribution() {
-            var $this = this;
-            var url = "/api/food-contribution/" + this.$route.params.id;
-            axios.get(url)
-                .then((response) => {
-                    this.model = response.data;
-                })
-                .catch(function (error) {
-                    console.log(error);
-                    $this.errorList.push("Erro ao carregar doação");
-                });
+            const token = localStorage.getItem("jwtToken"); // Obtém o token JWT do localStorage
+            const url = "/api/food-contribution/" + this.$route.params.id;
+
+            axios.get(url, {
+                headers: {
+                    Authorization: `Bearer ${token}` // Adiciona o token no cabeçalho
+                }
+            })
+            .then((response) => {
+                this.model = response.data;
+            })
+            .catch((error) => {
+                console.log(error);
+                this.errorList.push("Erro ao carregar doação");
+            });
         },
         getCampaigns() {
-            var $this = this;
-            var url = "/api/campaign";
-            axios.get(url)
-                .then((response) => {
-                    this.campaigns = response.data;
-                })
-                .catch(function (error) {
-                    console.log(error);
-                    $this.errorList.push("Erro ao carregar campanhas");
-                });
+            const token = localStorage.getItem("jwtToken");
+            const url = "/api/campaign";
+
+            axios.get(url, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            .then((response) => {
+                this.campaigns = response.data;
+            })
+            .catch((error) => {
+                console.log(error);
+                this.errorList.push("Erro ao carregar campanhas");
+            });
         },
         getSponsors() {
-            var $this = this;
-            var url = "/api/sponsor";
-            axios.get(url)
-                .then((response) => {
-                    this.sponsors = response.data;
-                })
-                .catch(function (error) {
-                    console.log(error);
-                    $this.errorList.push("Erro ao carregar doadores");
-                });
+            const token = localStorage.getItem("jwtToken");
+            const url = "/api/sponsor";
+
+            axios.get(url, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            .then((response) => {
+                this.sponsors = response.data;
+            })
+            .catch((error) => {
+                console.log(error);
+                this.errorList.push("Erro ao carregar doadores");
+            });
         },
         getFamilies() {
-            var $this = this;
-            var url = "/api/family";
-            axios.get(url)
-                .then((response) => {
-                    this.families = response.data;
-                })
-                .catch(function (error) {
-                    console.log(error);
-                    $this.errorList.push("Erro ao carregar famílias");
-                });
+            const token = localStorage.getItem("jwtToken");
+            const url = "/api/family";
+
+            axios.get(url, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            .then((response) => {
+                this.families = response.data;
+            })
+            .catch((error) => {
+                console.log(error);
+                this.errorList.push("Erro ao carregar famílias");
+            });
         },
         getLeaders() {
-            var $this = this;
-            var url = "/api/leadership";
-            axios.get(url)
-                .then((response) => {
-                    this.leaders = response.data;
-                })
-                .catch(function (error) {
-                    console.log(error);
-                    $this.errorList.push("Erro ao carregar líderes");
-                });
+            const token = localStorage.getItem("jwtToken");
+            const url = "/api/leadership";
+
+            axios.get(url, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            .then((response) => {
+                this.leaders = response.data;
+            })
+            .catch((error) => {
+                console.log(error);
+                this.errorList.push("Erro ao carregar líderes");
+            });
         },
         validateForm() {
             this.errorList = [];
@@ -241,8 +266,9 @@ export default {
             }
         },
         editFoodContribution() {
-            var $this = this;
-            var url = "/api/food-contribution/" + this.$route.params.id;
+            const token = localStorage.getItem("jwtToken");
+            const url = "/api/food-contribution/" + this.$route.params.id;
+
             axios.put(url, {
                 campaignId: this.model.campaignId,
                 sponsorId: this.model.sponsorId,
@@ -252,17 +278,21 @@ export default {
                 paidInSpecies: this.model.paidInSpecies,
                 donationDate: this.model.donationDate,
                 observation: this.model.observation
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
             })
-                .then(() => {
-                    this.$router.push('/food-contribution');
-                })
-                .catch(function (error) {
-                    if (error.response.status === 403) {
-                        $this.errorList.push("A família já possui doação cadastrada nesta campanha.");
-                    } else {
-                        $this.errorList.push("Erro ao salvar doação, verifique os dados e tente novamente.");
-                    }
-                });
+            .then(() => {
+                this.$router.push('/food-contribution');
+            })
+            .catch((error) => {
+                if (error.response && error.response.status === 403) {
+                    this.errorList.push("A família já possui doação cadastrada nesta campanha.");
+                } else {
+                    this.errorList.push("Erro ao salvar doação, verifique os dados e tente novamente.");
+                }
+            });
         },
         clearDonationDate() {
             this.model.donationDate = null;

@@ -45,6 +45,7 @@
 <script lang="ts">
 import axios from "axios";
 import { type Leader } from "../models/leader";
+import { formatPhone } from "@/utils/format";
 
 export default {
 
@@ -58,21 +59,32 @@ export default {
     mounted() {
         this.getLeaders();
     },
-    methods: {
-        getLeaders() {
-            var url = 'api/leadership';
-            return axios.get(url).then(result => {
+methods: {
+    getLeaders() {
+        const token = localStorage.getItem("jwtToken"); // Obtém o token JWT do localStorage
+        const url = 'api/leadership';
+
+        return axios.get(url, {
+            headers: {
+                Authorization: `Bearer ${token}` // Adiciona o token no cabeçalho
+            }
+        })
+        .then(result => {
             if (result.data.length > 0) {
-                this.leaders = result.data;
+                this.leaders = result.data.map((leader: Leader) => {
+                    leader.leaderPhone = formatPhone(leader.leaderPhone);
+                    return leader;
+                });
                 this.statusMessage = '';
             } else {
                 this.statusMessage = 'Nenhum líder encontrado.';
             }
-            })
-            .catch(() => {
-                this.statusMessage = 'Erro ao carregar líderes, tente novamente mais tarde.';
-            });
-        }
+        })
+        .catch(() => {
+            this.statusMessage = 'Erro ao carregar líderes, tente novamente mais tarde.';
+        });
     },
+
+}
 }
 </script>

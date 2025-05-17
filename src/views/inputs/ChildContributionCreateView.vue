@@ -177,89 +177,115 @@ export default {
 				this.saveContribution();
 			}
 		},
-		getCampaigns() {
+        getCampaigns() {
+            const token = localStorage.getItem("jwtToken"); // Obtém o token JWT do localStorage
+            const url = "/api/campaign";
 
-			var $this = this;
-			var url = "/api/campaign";
-			axios.get(url)
-				.then((response) => {
-					this.campaigns = response.data;
-				})
-				.catch(function (error) {
-					console.log(error);
-					$this.errorList.push("Erro ao carregar campanhas");
-				});
-		},
-		getSponsors() {
-			var $this = this;
-			var url = "/api/sponsor";
-			axios.get(url)
-				.then((response) => {
-					this.sponsors = response.data;
-				})
-				.catch(function (error) {
-					console.log(error);
-					$this.errorList.push("Erro ao carregar doadores");
-				});
-		},
-		getLeaders() {
-			var $this = this;
-			var url = "/api/leadership";
-			axios.get(url)
-				.then((response) => {
-					this.leaders = response.data;
-				})
-				.catch(function (error) {
-					console.log(error);
-					$this.errorList.push("Erro ao carregar líderes");
-				});
-		},
-		getChildren() {
-			var $this = this;
-			var url = "/api/child";
-			axios.get(url)
-				.then((response) => {
-					this.children = response.data;
-				})
-				.catch(function (error) {
-					console.log(error);
-					$this.errorList.push("Erro ao carregar crianças");
-				});
-		},
-		saveContribution() {
-			var $this = this;
-			var url = "/api/child-contribution";
-			axios.post(url, {
-				campaignId: this.model.campaignId,
-				sponsorId: this.model.sponsorId,
-				leaderId: this.model.leaderId,
-				childId: this.model.childId,
-				wasDelivered: this.model.wasDelivered,
-				acceptance: this.model.acceptance,
-				observation: this.model.observation,
-			})
-				.then((response) => {
-					if (response.status === 200) {
-						this.$router.push('/child-contribution');
-					}
-				})
-				.catch(function (error) {
-                    if (error.response.status === 403) {
-                        $this.errorList.push("A criança já possui doação cadastrada nesta campanha.");
-                    } else {
-                        $this.errorList.push("Erro ao salvar doação, verifique os dados e tente novamente.");
-                    }
-                });
-		},
+            axios.get(url, {
+                headers: {
+                    Authorization: `Bearer ${token}` // Adiciona o token no cabeçalho
+                }
+            })
+            .then((response) => {
+                this.campaigns = response.data;
+            })
+            .catch((error) => {
+                console.error(error);
+                this.errorList.push("Erro ao carregar campanhas.");
+            });
+        },
+        getSponsors() {
+            const token = localStorage.getItem("jwtToken");
+            const url = "/api/sponsor";
+
+            axios.get(url, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            .then((response) => {
+                this.sponsors = response.data;
+            })
+            .catch((error) => {
+                console.error(error);
+                this.errorList.push("Erro ao carregar doadores.");
+            });
+        },
+        getLeaders() {
+            const token = localStorage.getItem("jwtToken");
+            const url = "/api/leadership";
+
+            axios.get(url, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            .then((response) => {
+                this.leaders = response.data;
+            })
+            .catch((error) => {
+                console.error(error);
+                this.errorList.push("Erro ao carregar líderes.");
+            });
+        },
+        getChildren() {
+            const token = localStorage.getItem("jwtToken");
+            const url = "/api/child";
+
+            axios.get(url, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            .then((response) => {
+                this.children = response.data;
+            })
+            .catch((error) => {
+                console.error(error);
+                this.errorList.push("Erro ao carregar crianças.");
+            });
+        },
+        saveContribution() {
+            const token = localStorage.getItem("jwtToken");
+            const url = "/api/child-contribution";
+
+            axios.post(url, {
+                campaignId: this.model.campaignId,
+                sponsorId: this.model.sponsorId,
+                leaderId: this.model.leaderId,
+                childId: this.model.childId,
+                wasDelivered: this.model.wasDelivered,
+                acceptance: this.model.acceptance,
+                observation: this.model.observation,
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            .then(() => {
+                this.$router.push('/child-contribution');
+            })
+            .catch((error) => {
+                if (error.response && error.response.status === 403) {
+                    this.errorList.push("A criança já possui doação cadastrada nesta campanha.");
+                } else {
+                    this.errorList.push("Erro ao salvar doação, verifique os dados e tente novamente.");
+                }
+            });
+        },
 		clearAcceptanceDate() {
 			this.model.acceptance = null;
 		},
 		async loadImageFromApi() {
 			if (this.selectedChild.pictureUrl) {
 				try {
-					const response = await axios.get('/api/upload/open/' + this.selectedChild.pictureUrl, {
-						responseType: 'blob'
-					});
+                    const token = localStorage.getItem("jwtToken");
+                    const response = await axios.get('/api/upload/open/' + this.selectedChild.pictureUrl, {
+                        responseType: 'blob',
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    });
 
 					// Create object URL from blob
 					const blobUrl = URL.createObjectURL(response.data);

@@ -9,15 +9,15 @@ export function getUserRole() {
       console.error("O campo 'sub' está ausente no token JWT.");
       return null;
     }
-    const authoritiesMatch = decoded.sub.match(/Granted Authorities=\[(.*?)\]/);
-    if (!authoritiesMatch) {
-      console.error("Formato inesperado no campo 'sub' do token JWT.");
+    const authoritiesMatch = decoded.authorities;
+    if (!authoritiesMatch || !authoritiesMatch.startsWith("ROLE_")) {
+      console.error("Formato inesperado no campo 'authorities' do token JWT.");
       return null;
     }
-    const authorities = authoritiesMatch[1];
-    localStorage.setItem("loginRole", authorities);
-    console.log("Login Role:", authorities); // Exibe o valor no console
-    return authorities; // Exemplo: "ROLE_ADMIN"
+    
+    localStorage.setItem("loginRole", authoritiesMatch);
+    console.log("Login Role:", authoritiesMatch); // Exibe o valor no console
+    return authoritiesMatch; // Exemplo: "ROLE_ADMIN"
   } catch (error) {
     console.error("Erro ao decodificar o token JWT:", error);
     return null;

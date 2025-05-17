@@ -164,51 +164,60 @@ export default {
         this.getCampaigns();
     },
     methods: {
-        getCampaigns() {
-            try {
-                axios.get('/api/campaign/all')
-                    .then((response) => {
-                        this.campaigns = response.data;
-                    });
-            } catch (error) {
-                console.error('Erro ao carregar campanhas', error);
+    getCampaigns() {
+        const token = localStorage.getItem("jwtToken");
+        axios.get('/api/campaign/all', {
+            headers: {
+                Authorization: `Bearer ${token}`
             }
-        },
-        getReport() {
-            if (this.selectedCampaign) {
-                axios.get(`/api/food-contribution/report/${this.selectedCampaign}`)
-                    .then((response) => {
-                        this.familiesWithContribution = response.data.familiesWithContribution;
-                        this.familiesWithNoContribution = response.data.familiesWithNoContribution;
-                        this.familiesWithPendingContribution = response.data.familiesWithPendingContribution;
-                        this.totalActiveFamilies = response.data.totalActiveFamilies;
+        })
+        .then((response) => {
+            this.campaigns = response.data;
+        })
+        .catch((error) => {
+            console.error('Erro ao carregar campanhas', error);
+        });
+    },
+    getReport() {
+        if (this.selectedCampaign) {
+            const token = localStorage.getItem("jwtToken");
+            axios.get(`/api/food-contribution/report/${this.selectedCampaign}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            .then((response) => {
+                this.familiesWithContribution = response.data.familiesWithContribution;
+                this.familiesWithNoContribution = response.data.familiesWithNoContribution;
+                this.familiesWithPendingContribution = response.data.familiesWithPendingContribution;
+                this.totalActiveFamilies = response.data.totalActiveFamilies;
 
-                        this.familiesWithContributionList = response.data.familiesWithContributionList;
-                        this.familiesWithNoContributionList = response.data.familiesWithNoContributionList;
-                        this.familiesWithPendingContributionList = response.data.familiesWithPendingContributionList;
+                this.familiesWithContributionList = response.data.familiesWithContributionList;
+                this.familiesWithNoContributionList = response.data.familiesWithNoContributionList;
+                this.familiesWithPendingContributionList = response.data.familiesWithPendingContributionList;
 
-                        this.chartData = {
-                            labels: ['Famílias com doações', 'Famílias sem doações', 'Famílias com doações pendentes'],
-                            datasets: [{
-                                data: [
-                                    this.familiesWithContribution,
-                                    this.familiesWithNoContribution,
-                                    this.familiesWithPendingContribution
-                                ],
-                                backgroundColor: [
-                                    '#198754',
-                                    '#dc3545',
-                                    '#ffc107',
-                                ],
-                            }]
-                        };
-                        this.loadChart = true;
-                    })
-                    .catch((error) => {
-                        console.error('Erro ao carregar relatório', error);
-                    });
-            }
-        },
+                this.chartData = {
+                    labels: ['Famílias com doações', 'Famílias sem doações', 'Famílias com doações pendentes'],
+                    datasets: [{
+                        data: [
+                            this.familiesWithContribution,
+                            this.familiesWithNoContribution,
+                            this.familiesWithPendingContribution
+                        ],
+                        backgroundColor: [
+                            '#198754',
+                            '#dc3545',
+                            '#ffc107',
+                        ],
+                    }]
+                };
+                this.loadChart = true;
+            })
+            .catch((error) => {
+                console.error('Erro ao carregar relatório', error);
+            });
+        }
+    },
         onCampaignChange() {
             this.getReport();
             this.loadChart = false;

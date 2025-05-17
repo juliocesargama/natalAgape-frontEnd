@@ -57,19 +57,26 @@ export default {
     },
     methods: {
         getChildContributions() {
-            axios.get('/api/child-contribution')
-                .then(response => {
-                    if (response.data.length > 0) {
-                        this.childContributions = response.data;
-                        this.statusMessage = '';
-                    } else {
-                        this.statusMessage = 'Nenhuma doação encontrada.';
-                    }
-                })
-                .catch(error => {
-                    console.error(error);
-                    this.statusMessage = 'Erro ao carregar doações, tente novamente mais tarde.';
-                });
+            const token = localStorage.getItem("jwtToken"); // Obtém o token JWT do localStorage
+            const url = '/api/child-contribution';
+
+            axios.get(url, {
+                headers: {
+                    Authorization: `Bearer ${token}` // Adiciona o token no cabeçalho
+                }
+            })
+            .then(response => {
+                if (response.data.length > 0) {
+                    this.childContributions = response.data;
+                    this.statusMessage = '';
+                } else {
+                    this.statusMessage = 'Nenhuma doação encontrada.';
+                }
+            })
+            .catch(error => {
+                console.error(error);
+                this.statusMessage = 'Erro ao carregar doações, tente novamente mais tarde.';
+            });
         },
         setWasDelivered(wasDelivered: string | boolean) {
             switch (wasDelivered) {

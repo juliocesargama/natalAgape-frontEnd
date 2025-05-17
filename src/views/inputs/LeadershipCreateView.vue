@@ -95,34 +95,39 @@ export default {
             leaderRoles: Object.values(LeaderRole)
         };
     },
-    methods: {
-        saveLeader() {
-            var $this = this;
-            var url = '/api/leadership'
-            axios.post(url, {
-                leaderId: this.model.leader.leaderId,
-                leaderName: this.model.leader.leaderName,
-                leaderPhone: this.model.leader.leaderPhone,
-                leaderRole: this.model.leader.leaderRole,
-                leaderColor: this.model.leader.leaderColor,
-                userName: this.model.leader.userName,
-                password: this.model.leader.password
-            })
-                .then(result => {
-                    this.$router.push('/leader')
-                })
-                .catch(function (error) {
-                    if (!error.response) {
-                        $this.errorList.push("Erro de conexão com o servidor. Verifique sua conexão com a internet.");
-                    } else if (error.response.status == 400) {
-                        $this.errorList.push("Ocorreu um erro ao salvar o líder, verifique o preenchimento de todos os campos e tente novamente.");
-                    } else if (error.response.status == 500) {
-                        $this.errorList.push("Ocorreu um erro interno no servidor, tente novamente mais tarde.");
-                    } else {
-                        $this.errorList.push("Ocorreu um erro desconhecido, tente novamente mais tarde.");
-                    }
-                });
-        },
+methods: {
+    saveLeader() {
+        const token = localStorage.getItem("jwtToken"); // Obtém o token JWT do localStorage
+        const url = '/api/leadership';
+
+        axios.post(url, {
+            leaderId: this.model.leader.leaderId,
+            leaderName: this.model.leader.leaderName,
+            leaderPhone: this.model.leader.leaderPhone,
+            leaderRole: this.model.leader.leaderRole,
+            leaderColor: this.model.leader.leaderColor,
+            userName: this.model.leader.userName,
+            password: this.model.leader.password
+        }, {
+            headers: {
+                Authorization: `Bearer ${token}` // Adiciona o token no cabeçalho
+            }
+        })
+        .then(() => {
+            this.$router.push('/leader');
+        })
+        .catch(error => {
+            if (!error.response) {
+                this.errorList.push("Erro de conexão com o servidor. Verifique sua conexão com a internet.");
+            } else if (error.response.status === 400) {
+                this.errorList.push("Ocorreu um erro ao salvar o líder, verifique o preenchimento de todos os campos e tente novamente.");
+            } else if (error.response.status === 500) {
+                this.errorList.push("Ocorreu um erro interno no servidor, tente novamente mais tarde.");
+            } else {
+                this.errorList.push("Ocorreu um erro desconhecido, tente novamente mais tarde.");
+            }
+        });
+    },
         cancelForm() {
             this.$router.push('/leadership')
         },

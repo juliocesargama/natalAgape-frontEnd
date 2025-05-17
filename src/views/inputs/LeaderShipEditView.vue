@@ -67,6 +67,7 @@
 
 <script lang="ts">
 import axios from 'axios';
+import { formatPhone } from "@/utils/format";
 
 export default {
 
@@ -93,10 +94,11 @@ export default {
     mounted() {
         this.getLeader()
     },
-    methods: {
-        editLeader() {
+methods: {
+    editLeader() {
             var $this = this;
-            var url = '/api/leadership/' + this.$route.params.id;
+            const token = localStorage.getItem("jwtToken"); // Obtém o token JWT do localStorage
+            const url = '/api/leadership/' + this.$route.params.id;
 
             // Prepara o payload, omitindo a senha se ela não foi alterada
             const payload: {
@@ -120,62 +122,69 @@ export default {
                 payload.password = this.model.leader.password; // Inclui a senha apenas se foi alterada
             }
 
-            axios.put(url, payload)
-                .then(result => {
-                    this.$router.push('/leader');
-                })
-                .catch(function (error) {
-                    if (error.response.status == 404) {
-                        $this.errorList.push("Ocorreu um erro ao salvar o líder, verifique o preenchimento de todos os campos e tente novamente.");
-                    } else if (error.response.status == 500) {
-                        $this.errorList.push("Ocorreu um erro interno no servidor, tente novamente mais tarde.");
-                    } else {
-                        $this.errorList.push("Ocorreu um erro desconhecido, tente novamente mais tarde.");
-                    }
-                })
-        },
-        getLeader() {
-            var $this = this;
-            var url = '/api/leadership/' + this.$route.params.id
-            axios.get(url)
-                .then(result => {
-                    this.model.leader.leaderName = result.data.leaderName
-                    this.model.leader.leaderPhone = result.data.leaderPhone
-                    this.model.leader.leaderColor = result.data.leaderColor
-                    this.model.leader.leaderRole = result.data.leaderRole,
-                        this.model.leader.userName = result.data.userName
-                })
-                .catch(function (error) {
-                    if (error.response.status == 404) {
-                        $this.errorList.push("Ocorreu um erro ao buscar o líder, verifique o preenchimento de todos os campos e tente novamente.")
-                    } else if (error.response.status == 500) {
-                        $this.errorList.push("Ocorreu um erro interno no servidor, tente novamente mais tarde.")
-                    } else {
-                        $this.errorList.push("Ocorreu um erro desconhecido, tente novamente mais tarde.")
-                    }
-                })
-        },
-        cancelForm() {
-            this.$router.push('/leader')
-        },
-        checkForm: function (e: any) {
-            this.errorList = [];
+        axios.put(url, payload, {
+            headers: {
+                Authorization: `Bearer ${token}` // Adiciona o token no cabeçalho
+            }
+        })
+        .then(() => {
+            this.$router.push('/leader');
+        })
+        .catch(error => {
+            if (error.response && error.response.status === 404) {
+                this.errorList.push("Ocorreu um erro ao salvar o líder, verifique o preenchimento de todos os campos e tente novamente.");
+            } else if (error.response && error.response.status === 500) {
+                this.errorList.push("Ocorreu um erro interno no servidor, tente novamente mais tarde.");
+            } else {
+                this.errorList.push("Ocorreu um erro desconhecido, tente novamente mais tarde.");
+            }
+        });
+    },
+    getLeader() {
+        const token = localStorage.getItem("jwtToken"); // Obtém o token JWT do localStorage
+        const url = '/api/leadership/' + this.$route.params.id;
 
+        axios.get(url, {
+            headers: {
+                Authorization: `Bearer ${token}` // Adiciona o token no cabeçalho
+            }
+        })
+        .then(result => {
+            this.model.leader.leaderName = result.data.leaderName;
+            this.model.leader.leaderPhone = formatPhone(result.data.leaderPhone);
+            this.model.leader.leaderColor = result.data.leaderColor;
+            this.model.leader.leaderRole = result.data.leaderRole;
+            this.model.leader.userName = result.data.userName;
+        })
+        .catch(error => {
+            if (error.response && error.response.status === 404) {
+                this.errorList.push("Ocorreu um erro ao buscar o líder, verifique o preenchimento de todos os campos e tente novamente.");
+            } else if (error.response && error.response.status === 500) {
+                this.errorList.push("Ocorreu um erro interno no servidor, tente novamente mais tarde.");
+            } else {
+                this.errorList.push("Ocorreu um erro desconhecido, tente novamente mais tarde.");
+            }
+        });
+    },
+    cancelForm() {
+        this.$router.push('/leader');
+    },
+    checkForm: function (e: any) {
+        this.errorList = [];
 
-            if (this.model.leader.leaderName == '') {
-                this.errorList.push('O nome do líder é obrigatório.');
-            }
-            if (this.model.leader.leaderPhone == '') {
-                this.errorList.push('O telefone do líder é obrigatório.');
-            }
-            if (this.model.leader.leaderColor == '') {
-                this.errorList.push('Seleciona uma cor para o líder.');
-            }
-            if (!this.errorList.length) {
-                this.editLeader();
-            };
+        if (this.model.leader.leaderName === '') {
+            this.errorList.push('O nome do líder é obrigatório.');
+        }
+        if (this.model.leader.leaderPhone === '') {
+            this.errorList.push('O telefone do líder é obrigatório.');
+        }
+        if (this.model.leader.leaderColor === '') {
+            this.errorList.push('Selecione uma cor para o líder.');
+        }
+        if (!this.errorList.length) {
+            this.editLeader();
         }
     }
-
+}
 }
 </script>

@@ -36,6 +36,7 @@
 <script lang="ts">
 import axios from "axios";
 import { type sponsor } from "../models/sponsor";
+import { formatPhone } from "@/utils/format";
 
 export default {
 
@@ -49,21 +50,32 @@ export default {
     mounted() {
         this.getsponsors();
     },
-    methods: {
-        getsponsors() {
-            var url = 'api/sponsor';
-            return axios.get(url).then(result => {
-                if (result.data.length > 0) {
-                    this.sponsors = result.data;
-                    this.statusMessage = '';
-                } else {
-                    this.statusMessage = 'Nenhum doador encontrado.';
-                }
-            }).catch(() => {
-                this.statusMessage = 'Erro ao carregar doadores, tente novamente mais tarde.';
-            });
-        }
-    },
+methods: {
+    getsponsors() {
+        const token = localStorage.getItem("jwtToken"); // Obtém o token JWT do localStorage
+        const url = 'api/sponsor';
+
+        return axios.get(url, {
+            headers: {
+                Authorization: `Bearer ${token}` // Adiciona o token no cabeçalho
+            }
+        })
+        .then(result => {
+            if (result.data.length > 0) {
+                this.sponsors = result.data.map((sponsor: sponsor) => {
+                    sponsor.sponsorPhone = formatPhone(sponsor.sponsorPhone);
+                    return sponsor;
+                });
+                this.statusMessage = '';
+            } else {
+                this.statusMessage = 'Nenhum doador encontrado.';
+            }
+        })
+        .catch(() => {
+            this.statusMessage = 'Erro ao carregar doadores, tente novamente mais tarde.';
+        });
+    }
+},
 }
 </script>
 

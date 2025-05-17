@@ -1,3 +1,49 @@
+<script lang="ts">
+import { RouterLink, RouterView } from 'vue-router'
+import 'bootstrap/dist/js/bootstrap.bundle.min.js'
+import { getUserRole } from '@/utils/auth.js';
+import { isLoggedIn, updateAuthState } from '@/utils/authstate.ts';
+
+export default {
+  name: 'App',
+  data() {
+    return {
+      isLoggedIn: isLoggedIn,
+      userRole: getUserRole(),
+    }
+  },
+  watch: {
+    isLoggedIn(loginValue) {
+      this.isLoggedIn = loginValue;
+      this.getUserRole();
+    }
+  },
+  methods: {
+    getUserRole() {
+      this.userRole = getUserRole();
+    },
+    closeMobileMenu() {
+      if (window.innerWidth < 992) { // Check if mobile view
+        const navbarToggler = document.querySelector('.navbar-toggler')
+        const navbarCollapse = document.querySelector('.navbar-collapse')
+
+        if (navbarCollapse?.classList.contains('show')) {
+          navbarToggler?.dispatchEvent(new Event('click'))
+        }
+      }
+    },
+    logout() {
+      var $this = this;
+      localStorage.removeItem("jwtToken"); // Remove o token JWT
+      localStorage.removeItem("loginRole"); // Remove o papel do usuário, se armazenado
+      updateAuthState(false); // Atualiza o estado de login global
+      this.userRole = null; // Limpa o papel do usuário""
+      $this.$router.push('/'); // Redireciona para a página inicial
+    }
+  }
+}
+</script>
+
 <template>
   <header>
     <div class="wrapper">
@@ -87,11 +133,11 @@
 </template>
 
 
-<script lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
+<!-- <script lang="ts">
+//import { RouterLink, RouterView } from 'vue-router'
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'
-import { getUserRole } from '@/utils/auth.js';
-import { isLoggedIn, updateAuthState } from '@/utils/authstate.ts';
+//import { getUserRole } from '@/utils/auth.js';
+//import { isLoggedIn, updateAuthState } from '@/utils/authstate.ts';
 
 export default {
   name: 'App',
@@ -132,4 +178,4 @@ export default {
   }
 }
 </script>
-
+ -->
