@@ -167,48 +167,57 @@ export default {
     },
     methods: {
         getCampaigns() {
-            try {
-                axios.get('/api/campaign/all')
-                    .then((response) => {
-                        this.campaigns = response.data;
-                    });
-            } catch (error) {
+            const token = localStorage.getItem("jwtToken");
+            axios.get('/api/campaign/all', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            .then((response) => {
+                this.campaigns = response.data;
+            })
+            .catch((error) => {
                 console.error('Erro ao carregar campanhas', error);
-            }
+            });
         },
         getReport() {
             if (this.selectedCampaign) {
-                axios.get(`/api/child-contribution/report/${this.selectedCampaign}`)
-                    .then((response) => {
-                        this.childWithContribution = response.data.childWithContribution;
-                        this.childWithNoContribution = response.data.childWithNoContribution;
-                        this.childWithPendingContribution = response.data.childWithPendingContribution;
-                        this.totalChildren = response.data.totalChildren;
+                const token = localStorage.getItem("jwtToken");
+                axios.get(`/api/child-contribution/report/${this.selectedCampaign}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                })
+                .then((response) => {
+                    this.childWithContribution = response.data.childWithContribution;
+                    this.childWithNoContribution = response.data.childWithNoContribution;
+                    this.childWithPendingContribution = response.data.childWithPendingContribution;
+                    this.totalChildren = response.data.totalChildren;
 
-                        this.childrenWithContributionList = response.data.childrenWithContributionList;
-                        this.childrenWithNoContributionList = response.data.childrenWithNoContributionList;
-                        this.childrenWithPendingContributionList = response.data.childrenWithPendingContributionList;
+                    this.childrenWithContributionList = response.data.childrenWithContributionList;
+                    this.childrenWithNoContributionList = response.data.childrenWithNoContributionList;
+                    this.childrenWithPendingContributionList = response.data.childrenWithPendingContributionList;
 
-                        this.chartData = {
-                            labels: ['Crianças com doações', 'Crianças sem doações', 'Crianças com doações pendentes'],
-                            datasets: [{
-                                data: [
-                                    this.childWithContribution,
-                                    this.childWithNoContribution,
-                                    this.childWithPendingContribution
-                                ],
-                                backgroundColor: [
-                                    '#198754',
-                                    '#dc3545',
-                                    '#ffc107',
-                                ],
-                            }]
-                        };
-                        this.loadChart = true;
-                    })
-                    .catch((error) => {
-                        console.error('Erro ao carregar relatório', error);
-                    });
+                    this.chartData = {
+                        labels: ['Crianças com doações', 'Crianças sem doações', 'Crianças com doações pendentes'],
+                        datasets: [{
+                            data: [
+                                this.childWithContribution,
+                                this.childWithNoContribution,
+                                this.childWithPendingContribution
+                            ],
+                            backgroundColor: [
+                                '#198754',
+                                '#dc3545',
+                                '#ffc107',
+                            ],
+                        }]
+                    };
+                    this.loadChart = true;
+                })
+                .catch((error) => {
+                    console.error('Erro ao carregar relatório', error);
+                });
             }
         },
         onCampaignChange() {

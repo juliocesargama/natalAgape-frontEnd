@@ -67,6 +67,7 @@
 
 <script lang="ts">
 import axios from 'axios';
+import { formatPhone } from "@/utils/format";
 
 export default {
 
@@ -150,7 +151,7 @@ methods: {
         })
         .then(result => {
             this.model.leader.leaderName = result.data.leaderName;
-            this.model.leader.leaderPhone = result.data.leaderPhone;
+            this.model.leader.leaderPhone = formatPhone(result.data.leaderPhone);
             this.model.leader.leaderColor = result.data.leaderColor;
             this.model.leader.leaderRole = result.data.leaderRole;
             this.model.leader.userName = result.data.userName;

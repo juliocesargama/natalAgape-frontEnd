@@ -199,6 +199,7 @@ import type { Neighborhood } from '@/models/neighborhood';
 import axios from 'axios';
 import { onUnmounted, ref } from 'vue';
 import type { Leader } from '@/models/leader';
+import { formatPhone } from "@/utils/format";
 export default {
 
     name: 'familyEditView',
@@ -301,7 +302,8 @@ export default {
         },
         saveChild() {
             var $this = this;
-            var url = '/api/child'
+            var url = '/api/child';
+            const token = localStorage.getItem("jwtToken");
             axios.post(url, {
                 childName: this.model.child.childName,
                 gender: this.model.child.gender,
@@ -310,7 +312,12 @@ export default {
                 shoes: this.model.child.shoes,
                 pictureUrl: this.model.child.pictureUrl,
                 familyId: this.$route.params.id
-            }).catch(function (error) {
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            .catch(function (error) {
                 if (error.response.status == 400) {
                     $this.errorList.push("Ocorreu um erro ao salvar a criança, verifique o preenchimento de todos os campos e tente novamente.")
                 } else if (error.response.status == 500) {
@@ -327,7 +334,8 @@ export default {
         },
         editChild() {
             var $this = this;
-            var url = '/api/child/' + this.model.child.childId
+            var url = '/api/child/' + this.model.child.childId;
+            const token = localStorage.getItem("jwtToken");
             axios.put(url, {
                 childId: this.model.child.childId,
                 childName: this.model.child.childName,
@@ -337,6 +345,10 @@ export default {
                 shoes: this.model.child.shoes,
                 pictureUrl: this.model.child.pictureUrl,
                 familyId: this.model.child.familyId
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
             })
                 .then(result => {
                     this.enableEditChild = false;
@@ -366,7 +378,7 @@ export default {
             })
             .then(result => {
                 this.model.family.responsibleName = result.data.responsibleName;
-                this.model.family.phoneNumber = result.data.phoneNumber;
+                this.model.family.phoneNumber = formatPhone(result.data.phoneNumber);
                 this.model.family.address = result.data.address;
                 this.model.family.neighborhoodId = result.data.neighborhoodId;
                 this.model.family.observation = result.data.observation;

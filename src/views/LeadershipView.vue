@@ -45,6 +45,7 @@
 <script lang="ts">
 import axios from "axios";
 import { type Leader } from "../models/leader";
+import { formatPhone } from "@/utils/format";
 
 export default {
 
@@ -71,7 +72,7 @@ methods: {
         .then(result => {
             if (result.data.length > 0) {
                 this.leaders = result.data.map((leader: Leader) => {
-                    leader.leaderPhone = this.formatPhone(leader.leaderPhone);
+                    leader.leaderPhone = formatPhone(leader.leaderPhone);
                     return leader;
                 });
                 this.statusMessage = '';
@@ -83,11 +84,7 @@ methods: {
             this.statusMessage = 'Erro ao carregar líderes, tente novamente mais tarde.';
         });
     },
-    formatPhone(phone: string): string {
-        if (!phone) return '';
-        // Exemplo de máscara: (XX) XXXXX-XXXX
-        return phone.replace(/^(\d{2})(\d{5})(\d{4})$/, '($1) $2-$3');
-    }
+
 }
 }
 </script>

@@ -20,6 +20,9 @@
                     <label aria-label="Telefone do doador">Telefone*</label>
                     <input type="text" v-model="model.sponsor.sponsorPhone" class="form-control"
                         aria-describedby="Campo de texto para o telefone do doador">
+                    <label aria-label="Endereço do doador">Endereço*</label>
+                    <input type="text" v-model="model.sponsor.sponsorAddress" class="form-control"
+                        aria-describedby="Campo de texto para o endereço do doador">                        
                 </div>
                 <div class="float-end">
                     <button type="button" @click="checkForm" class="btn btn-success m-2"
@@ -37,6 +40,7 @@
 
 <script lang="ts">
 import axios from 'axios';
+import { formatPhone } from "@/utils/format";
 
 export default {
 
@@ -47,7 +51,8 @@ export default {
             model: {
                 sponsor: {
                     sponsorName: '',
-                    sponsorPhone: ''
+                    sponsorPhone: '',
+                    sponsorAddress: ''
                 }
             }
         }
@@ -65,6 +70,7 @@ methods: {
             sponsorId: this.$route.params.id,
             sponsorName: this.model.sponsor.sponsorName,
             sponsorPhone: this.model.sponsor.sponsorPhone,
+            sponsorAddress: this.model.sponsor.sponsorAddress
         }, {
             headers: {
                 Authorization: `Bearer ${token}` // Adiciona o token no cabeçalho
@@ -94,7 +100,8 @@ methods: {
         })
         .then(result => {
             this.model.sponsor.sponsorName = result.data.sponsorName;
-            this.model.sponsor.sponsorPhone = result.data.sponsorPhone;
+            this.model.sponsor.sponsorPhone = formatPhone(result.data.sponsorPhone);
+            this.model.sponsor.sponsorAddress = result.data.sponsorAddress;
         })
         .catch(error => {
             if (error.response && error.response.status === 404) {
@@ -118,6 +125,9 @@ methods: {
             }
             if (this.model.sponsor.sponsorPhone == '') {
                 this.errorList.push('O telefone do doador é obrigatório.');
+            }
+            if (this.model.sponsor.sponsorAddress == '') {
+                this.errorList.push('O endereço do doador é obrigatório.');
             }
             if (!this.errorList.length) {
                 this.editSponsor();

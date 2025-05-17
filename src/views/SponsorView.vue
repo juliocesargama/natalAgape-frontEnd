@@ -36,6 +36,7 @@
 <script lang="ts">
 import axios from "axios";
 import { type sponsor } from "../models/sponsor";
+import { formatPhone } from "@/utils/format";
 
 export default {
 
@@ -61,7 +62,10 @@ methods: {
         })
         .then(result => {
             if (result.data.length > 0) {
-                this.sponsors = result.data;
+                this.sponsors = result.data.map((sponsor: sponsor) => {
+                    sponsor.sponsorPhone = formatPhone(sponsor.sponsorPhone);
+                    return sponsor;
+                });
                 this.statusMessage = '';
             } else {
                 this.statusMessage = 'Nenhum doador encontrado.';

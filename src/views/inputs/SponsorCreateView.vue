@@ -21,6 +21,9 @@
                     <label aria-label="Telefone do doador">Telefone*</label>
                     <input type="text" v-model="model.sponsor.sponsorPhone" class="form-control"
                         aria-describedby="Campo de texto para o telefone do doador">
+                    <label aria-label="Endereço do doador">Endereço*</label>
+                    <input type="text" v-model="model.sponsor.sponsorAddress" class="form-control"
+                        aria-describedby="Campo de texto para o endereço do doador">
                 </div>
                 <div class="float-end">
                     <button type="button" @click="checkForm" class="btn btn-success m-2"
@@ -50,6 +53,7 @@ export default {
                     sponsorId: '',
                     sponsorName: '',
                     sponsorPhone: '',
+                    sponsorAddress: ''
                 }
             }
         }
@@ -63,7 +67,8 @@ methods: {
         axios.post(url, {
             sponsorId: this.model.sponsor.sponsorId,
             sponsorName: this.model.sponsor.sponsorName,
-            sponsorPhone: this.model.sponsor.sponsorPhone
+            sponsorPhone: this.model.sponsor.sponsorPhone,
+            sponsorAddress: this.model.sponsor.sponsorAddress
         }, {
             headers: {
                 Authorization: `Bearer ${token}` // Adiciona o token no cabeçalho
@@ -93,6 +98,9 @@ methods: {
             }
             if (this.model.sponsor.sponsorPhone == '') {
                 this.errorList.push('O telefone do doador é obrigatório.');
+            }
+            if (this.model.sponsor.sponsorAddress == '') {
+                this.errorList.push('O endereço do doador é obrigatório.');
             }
 
             if (!this.errorList.length) {
