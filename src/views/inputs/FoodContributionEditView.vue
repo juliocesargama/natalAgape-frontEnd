@@ -32,8 +32,8 @@
                         <option v-for="family in families" :value="family.familyId">{{ family.responsibleName }}
                         </option>
                     </select>
-                    <label for="leaderId" class="form-label" aria-labelledby="Selecione o lider">Líder*</label>
-                    <select v-model="model.leaderId" data-live-search="true" class="form-control selectpicker show-tick"
+                    <label for="leaderId" class="form-label" aria-labelledby="Selecione o lider">Líder</label>
+                    <select disabled v-model="model.leaderId" data-live-search="true" class="form-control selectpicker show-tick"
                         id="leaderId" title="Selecione um líder...">
                         <option v-for="leader in leaders" :value="leader.leaderId">{{ leader.leaderName }}
                         </option>
@@ -239,9 +239,6 @@ export default {
             }
             if (this.model.familyId === 0) {
                 this.errorList.push("Selecione uma família");
-            }
-            if (this.model.leaderId === 0) {
-                this.errorList.push("Selecione um líder");
             }
             if (this.model.wasDelivered === false) {
                 this.model.donationDate = null;

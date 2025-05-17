@@ -27,15 +27,17 @@
                         </option>
                     </select>
                     <label for="familyId" class="form-label">Família*</label>
-                    <select v-model="model.familyId" data-live-search="true" class="form-control selectpicker show-tick"
-                        id="familyId" title="Selecione uma família...">
+                    <select v-model="model.selectedFamily.familyId" data-live-search="true"
+                        @change="updateLeaderSelection" class="form-control selectpicker show-tick" id="familyId"
+                        title="Selecione uma família...">
                         <option v-for="family in families" :value="family.familyId">{{ family.responsibleName }}
                         </option>
                     </select>
-                    <label for="leaderId" class="form-label">Líder*</label>
-                    <select v-model="model.leaderId" data-live-search="true" class="form-control selectpicker show-tick"
-                        id="leaderId" title="Selecione um líder...">
-                        <option v-for="leader in leaders" :value="leader.leaderId">{{ leader.leaderName }}
+                    <label for="leaderId" class="form-label">Líder</label>
+                    <select disabled v-model="model.leaderId" data-live-search="true"
+                        class="form-control selectpicker show-tick" id="leaderId" title="Selecione um líder...">
+                        <option v-for="leader in leaders" :value="leader.leaderId">
+                            {{ leader.leaderName }}
                         </option>
                     </select>
 
@@ -117,14 +119,14 @@ export default {
             model: {
                 campaignId: 0,
                 sponsorId: 0,
-                familyId: 0,
+                selectedFamily: {} as family,
                 leaderId: 0,
                 wasDelivered: false,
                 paidInSpecies: false,
                 donationDate: null,
                 observation: "",
-            }
-        };
+            },
+        }
     },
     mounted() {
         this.getCampaigns();
@@ -132,6 +134,13 @@ export default {
         this.getFamilies();
         this.getLeaders();
     },
+
+    computed: {
+        selectedFamily() {
+            return this.families.find(f => f.familyId === this.model.selectedFamily.familyId);
+        }
+    }
+    ,
     methods: {
         getCampaigns() {
             const token = localStorage.getItem("jwtToken"); // Obtém o token JWT do localStorage
@@ -208,7 +217,7 @@ export default {
             axios.post(url, {
                 campaignId: this.model.campaignId,
                 sponsorId: this.model.sponsorId,
-                familyId: this.model.familyId,
+                familyId: this.model.selectedFamily.familyId,
                 leaderId: this.model.leaderId,
                 wasDelivered: this.model.wasDelivered,
                 paidInSpecies: this.model.paidInSpecies,
@@ -231,8 +240,6 @@ export default {
             });
         },
         validateForm() {
-            console.log(this.model.donationDate);
-            console.log(this.model.wasDelivered);
 
             this.errorList = [];
             if (this.model.campaignId === 0) {
@@ -241,11 +248,8 @@ export default {
             if (this.model.sponsorId === 0) {
                 this.errorList.push("Selecione um doador");
             }
-            if (this.model.familyId === 0) {
+            if (this.model.selectedFamily.familyId === 0) {
                 this.errorList.push("Selecione uma família");
-            }
-            if (this.model.leaderId === 0) {
-                this.errorList.push("Selecione um líder");
             }
 
             if (this.model.wasDelivered && this.model.donationDate !== null) {
@@ -274,6 +278,10 @@ export default {
         clearDonationDate() {
             this.model.donationDate = null;
         },
+        updateLeaderSelection() {
+            const selectedFamily = this.families.find(f => f.familyId === this.model.selectedFamily.familyId);
+            this.model.leaderId = selectedFamily!!.leaderId;
+        }
     },
 };
 </script>

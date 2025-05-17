@@ -47,13 +47,12 @@
                         <option value="WHITE">Branco</option>
                     </select>
 
-                    <label aria-label="Usuário">Email(Login)*</label>
+                    <label aria-label="Usuário">Email para acesso*</label>
                     <input type="text" v-model="model.leader.userName" class="form-control"
                         aria-describedby="Campo de texto para o nome do usuário">
                     <label aria-label="Senha">Senha*</label>
                     <input type="password" v-model="model.leader.password" class="form-control"
                         aria-describedby="Campo de texto para a senha do usuário">
-
                 </div>
                 <div class="float-end">
                     <button type="button" @click="checkForm" class="btn btn-success m-2"
