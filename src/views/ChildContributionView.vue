@@ -14,7 +14,8 @@
                             <tr>
                                 <th><b>Doador</b></th>
                                 <th><b>Criança</b></th>
-                                <th><b>Entregue</b></th>
+                                <th><b>Roupa/Calçado Entregue?</b></th>
+                                <th><b>Brinquedo Entregue?</b></th>
                                 <th><b>Ações</b></th>
                             </tr>
                         </thead>
@@ -23,6 +24,7 @@
                                 <td>{{ childContribution.sponsorName }}</td>
                                 <td>{{ childContribution.childName }}</td>
                                 <td>{{ setWasDelivered(childContribution.wasDelivered) }}</td>
+                                <td>{{ setIsToyDelivered(childContribution.toyDelivered) }}</td>
                                 <td>
                                     <RouterLink :to="{ path: '/child-contribution/' + childContribution.id + '/edit' }"
                                         class="btn btn-success">Alterar</RouterLink>
@@ -88,6 +90,16 @@ export default {
                     return "Não Informado";
             }
         },
+        setIsToyDelivered(toyDelivered: string | boolean) {
+            switch (toyDelivered) {
+                case true:
+                    return "Sim";
+                case false:
+                    return "Não";
+                default:
+                    return "Não Informado";
+            }
+        },        
     }
 }
 </script>

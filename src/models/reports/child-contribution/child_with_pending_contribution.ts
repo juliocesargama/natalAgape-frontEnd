@@ -4,4 +4,6 @@ export interface ChildWithPendingContribution {
     sponsorName: string;
     sponsorPhone: string;
     leaderName: string;
+    clothesDelivered: boolean;
+    toyDelivered: boolean;
 }

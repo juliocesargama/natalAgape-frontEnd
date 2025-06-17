@@ -51,7 +51,7 @@ export default {
 
         <div class="container">
           <RouterLink class="navbar-brand" to="/home" aria-current="Página Inicial"><b>
-              <h2>Ágape</h2>
+              <h2>Natal Ágape - Controle de Doações</h2>
             </b></RouterLink>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
             aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -79,7 +79,7 @@ export default {
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
                   aria-expanded="false"><b>Doações</b></a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <RouterLink v-if="userRole === 'ROLE_ADMIN'" class="dropdown-item" to="/sponsor"
+                  <RouterLink class="dropdown-item" to="/sponsor"
                     aria-current="Doadores">Cadastrar Doadores</RouterLink>
                   <li>
                     <hr class="drop-divider">

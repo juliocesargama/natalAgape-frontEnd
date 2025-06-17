@@ -20,6 +20,19 @@
                     <label aria-label="Nome da igreja ou campanha">Nome da Igreja/Campanha*</label>
                     <input type="text" v-model="model.campaign.campaignChurch" class="form-control"
                         aria-describedby="Campo de texto para o nome da igreja">
+                    <!-- Novo campo para valor da doação -->
+                    <label aria-label="Valor definido para doação">Valor definido para doação*</label>
+                    <div class="input-group">
+                        <span class="input-group-text">R$</span>
+                        <input
+                            type="text"
+                            v-model="formattedValueDonation"
+                            @input="onValueDonationInput"
+                            class="form-control text-end"
+                            aria-describedby="Campo de texto para o valor da doação"
+                            placeholder="0,00"
+                        >
+                    </div>
                 </div>
                 <div class="float-end">
                     <button type="button" @click="checkForm" class="btn btn-success m-2"
@@ -38,6 +51,11 @@
 <script lang="ts">
 import axios from 'axios';
 
+function formatCurrencyBRL(value: string | number): string {
+    let num = typeof value === 'number' ? value : Number(value.replace(/\D/g, '')) / 100;
+    return num.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
 export default {
 
     name: 'campaignEditView',
@@ -47,16 +65,32 @@ export default {
             model: {
                 campaign: {
                     campaignYear: 0,
-                    campaignChurch: ''
+                    campaignChurch: '',
+                    valueDonation: 0
                 }
+            },
+            formattedValueDonation: ''
+        }
+    },
+    watch: {
+        'model.campaign.valueDonation': {
+            immediate: true,
+            handler(newVal) {
+                this.formattedValueDonation = formatCurrencyBRL(newVal);
             }
         }
-
     },
     mounted() {
         this.getCampaign()
     },
     methods: {
+        onValueDonationInput(e: Event) {
+            let value = (e.target as HTMLInputElement).value;
+            value = value.replace(/\D/g, '');
+            let num = Number(value) / 100;
+            this.model.campaign.valueDonation = num;
+            this.formattedValueDonation = formatCurrencyBRL(num);
+        },
         editCampaign() {
             const token = localStorage.getItem("jwtToken"); // Obtém o token JWT do localStorage
             const url = '/api/campaign/' + this.$route.params.id;
@@ -64,7 +98,8 @@ export default {
             axios.put(url, {
                 campaignId: this.$route.params.id,
                 campaignYear: this.model.campaign.campaignYear,
-                campaignChurch: this.model.campaign.campaignChurch
+                campaignChurch: this.model.campaign.campaignChurch,
+                valueDonation: this.model.campaign.valueDonation
             }, {
                 headers: {
                     Authorization: `Bearer ${token}` // Adiciona o token no cabeçalho
@@ -95,6 +130,8 @@ export default {
             .then(result => {
                 this.model.campaign.campaignYear = result.data.campaignYear;
                 this.model.campaign.campaignChurch = result.data.campaignChurch;
+                this.model.campaign.valueDonation = result.data.valueDonation ?? 0;
+                this.formattedValueDonation = formatCurrencyBRL(this.model.campaign.valueDonation);
             })
             .catch(error => {
                 if (error.response && error.response.status === 404) {
@@ -117,6 +154,9 @@ export default {
             }
             if (this.model.campaign.campaignChurch == '') {
                 this.errorList.push('A igreja responsável pela campanha é obrigatória.');
+            }
+            if (!this.model.campaign.valueDonation || this.model.campaign.valueDonation <= 0) {
+                this.errorList.push('O valor da doação é obrigatório e deve ser maior que zero.');
             }
             if (!this.errorList.length) {
                 this.editCampaign();
