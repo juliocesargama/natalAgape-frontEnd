@@ -10,4 +10,6 @@ export interface family {
     }>;
     leaderId: number;
     leaderName: string;
+    pictureUrl: string;
+    pictureSubscription: string;
 }

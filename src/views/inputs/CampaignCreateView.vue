@@ -20,6 +20,19 @@
                     <label aria-label="Nome da igreja ou campanha">Nome da Igreja/Campanha*</label>
                     <input type="text" v-model="model.campaign.campaignChurch" class="form-control"
                         aria-describedby="Campo de texto para o nome da igreja">
+                    <!-- Novo campo para valor da cesta básica -->
+                    <label aria-label="Valor definido para cesta básica">Valor definido para cesta básica*</label>
+                    <div class="input-group">
+                        <span class="input-group-text">R$</span>
+                        <input
+                            type="text"
+                            v-model="formattedFoodBasketValue"
+                            @input="onFoodBasketValueInput"
+                            class="form-control text-end"
+                            aria-describedby="Campo de texto para o valor da cesta básica"
+                            placeholder="0,00"
+                        >
+                    </div>
                 </div>
                 <div class="float-end">
                     <button type="button" @click="checkForm" class="btn btn-success m-2"
@@ -30,7 +43,7 @@
             </div>
             <div class="card-footer">
                 <p class="text-muted">* Campos obrigatórios</p>
-                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -38,8 +51,12 @@
 <script lang="ts">
 import axios from 'axios';
 
-export default {
+function formatCurrencyBRL(value: string | number): string {
+    let num = typeof value === 'number' ? value : Number(value.replace(/\D/g, '')) / 100;
+    return num.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
 
+export default {
     name: 'campaignCreateView',
     data() {
         return {
@@ -48,20 +65,40 @@ export default {
                 campaign: {
                     campaignId: '',
                     campaignYear: new Date().getFullYear(),
-                    campaignChurch: ''
+                    campaignChurch: '',
+                    foodBasketValue: 0
                 }
+            },
+            formattedFoodBasketValue: ''
+        }
+    },
+    watch: {
+        // Atualiza o campo formatado ao carregar valor inicial
+        'model.campaign.foodBasketValue': {
+            immediate: true,
+            handler(newVal) {
+                this.formattedFoodBasketValue = formatCurrencyBRL(newVal);
             }
         }
-
     },
     methods: {
+        onFoodBasketValueInput(e: Event) {
+            let value = (e.target as HTMLInputElement).value;
+            // Remove tudo que não for número
+            value = value.replace(/\D/g, '');
+            // Converte para centavos e formata
+            let num = Number(value) / 100;
+            this.model.campaign.foodBasketValue = num;
+            this.formattedFoodBasketValue = formatCurrencyBRL(num);
+        },
         saveCampaign() {
             const token = localStorage.getItem("jwtToken"); // Obtém o token JWT do localStorage
             const url = '/api/campaign';
 
             axios.post(url, {
                 campaignYear: this.model.campaign.campaignYear,
-                campaignChurch: this.model.campaign.campaignChurch
+                campaignChurch: this.model.campaign.campaignChurch,
+                valueDonation: this.model.campaign.foodBasketValue
             }, {
                 headers: {
                     Authorization: `Bearer ${token}` // Adiciona o token no cabeçalho
@@ -91,6 +128,9 @@ export default {
             }
             if (this.model.campaign.campaignChurch == '') {
                 this.errorList.push('A igreja responsável pela campanha é obrigatória.');
+            }
+            if (!this.model.campaign.foodBasketValue || this.model.campaign.foodBasketValue <= 0) {
+                this.errorList.push('O valor da cesta básica é obrigatório e deve ser maior que zero.');
             }
             if (!this.errorList.length) {
                 this.saveCampaign();

@@ -76,7 +76,7 @@ const router = createRouter({
       path: "/sponsor",
       name: "sponsor",
       component: SponsorView,
-      meta: { requiresAuth: true, role: 'ROLE_ADMIN' }
+      meta: { requiresAuth: true }
     },
     {
       path: "/sponsor/create",

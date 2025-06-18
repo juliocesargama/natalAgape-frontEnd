@@ -65,6 +65,8 @@
                                     <th><b>Doador</b></th>
                                     <th><b>Telefone do Doador</b></th>
                                     <th><b>Líder</b></th>
+                                    <th><b>Doação Roupa OK?</b></th>
+                                    <th><b>Doação Brinquedo OK?</b></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -74,6 +76,8 @@
                                     <td>{{ child.sponsorName }}</td>
                                     <td>{{ child.sponsorPhone }}</td>
                                     <td>{{ child.leaderName }}</td>
+                                    <td>{{ setWasDelivered(child.clothesDelivered) }}</td>
+                                    <td>{{ setIsToyDelivered(child.toyDelivered) }}</td>
 
                                 </tr>
                             </tbody>
@@ -384,11 +388,13 @@ export default {
                 item.sponsorName,
                 item.sponsorPhone,
                 item.leaderName,
+                item.toyDelivered,
+                item.clothesDelivered
             ]);
 
             // AutoTable
             autoTable(doc, {
-                head: [['Responsável','Criança', 'Doador', 'Telefone do Doador', 'Líder']],
+                head: [['Responsável','Criança', 'Doador', 'Telefone do Doador', 'Líder', 'Brinquedo', 'Roupa/Calçado']],
                 body: tableData,
                 startY: 80,
                 styles: {
@@ -412,6 +418,7 @@ export default {
                     3: { cellWidth: 'auto' },
                     4: { cellWidth: 'auto' },
                     5: { cellWidth: 'auto' },
+                    6: { cellWidth: 'auto' },
                 }
             });
 
@@ -426,6 +433,26 @@ export default {
             doc.save('criancas-com-contribuição-pendente.pdf');
 
         },
+        setWasDelivered(wasDelivered: string | boolean) {
+            switch (wasDelivered) {
+                case true:
+                    return "Sim";
+                case false:
+                    return "Não";
+                default:
+                    return "Não Informado";
+            }
+        },
+        setIsToyDelivered(toyDelivered: string | boolean) {
+            switch (toyDelivered) {
+                case true:
+                    return "Sim";
+                case false:
+                    return "Não";
+                default:
+                    return "Não Informado";
+            }
+        },           
     },
 }
 </script>

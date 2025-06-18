@@ -40,7 +40,6 @@
                                     <td>{{ family.responsibleName }}</td>
                                     <td>{{ family.leaderName }}</td>
                                     <td>{{ translateColor(family.leaderColor) }}</td>
-
                                 </tr>
                             </tbody>
                         </table>
@@ -74,10 +73,14 @@
                                     <td>{{ family.sponsorPhone }}</td>
                                     <td>{{ translatePaidInSpecies(family.paidInSpecies) }}</td>
                                     <td>{{ family.leaderName }}</td>
-
                                 </tr>
                             </tbody>
                         </table>
+                        <!-- Valor monetário de contribuições pendentes -->
+                        <div class="alert alert-warning fw-bold mt-2 mb-2" role="alert">
+                            Valor de Contribuições Pendentes:
+                            <span class="valor-pendente-contribuicao">R$ {{ valuePendingContribution }}</span>
+                        </div>
                         <div class="text-end">
                             <button class="btn btn-success"
                                 @click="exportfamiliesWithPendingContributionReport">Exportar
@@ -103,10 +106,14 @@
                                     <td>{{ family.responsibleName }}</td>
                                     <td>{{ family.neighborhoodName }}</td>
                                     <td>{{ family.totalChildren }}</td>
-
                                 </tr>
                             </tbody>
                         </table>
+                        <!-- Valor monetário de contribuições não realizadas -->
+                        <div class="alert alert-danger fw-bold mt-2 mb-2" role="alert">
+                            Valor de Contribuições Não Realizadas:
+                            <span class="valor-no-contribuicao">R$ {{ valueNoContribution }}</span>
+                        </div>
                         <div class="text-end">
                             <button class="btn btn-success" @click="exportfamiliesWithNoContributionReport">Exportar
                                 Relatório</button>
@@ -117,6 +124,7 @@
         </div>
     </div>
 </template>
+
 <script lang="ts">
 import type { campaign } from '@/models/campaign';
 import axios from 'axios';
@@ -143,6 +151,8 @@ export default {
             familiesWithContributionList: [] as FamilyWithContribution[],
             familiesWithNoContributionList: [] as FamilyWithNoContribution[],
             familiesWithPendingContributionList: [] as FamilyWithPendingContribution[],
+            valueNoContribution: 0,
+            valuePendingContribution: 0,
 
             loadChart: false,
             chartData: null as { labels: string[]; datasets: {data: number[]; backgroundColor: string[]; }[] } | null,
@@ -195,6 +205,8 @@ export default {
                 this.familiesWithContributionList = response.data.familiesWithContributionList;
                 this.familiesWithNoContributionList = response.data.familiesWithNoContributionList;
                 this.familiesWithPendingContributionList = response.data.familiesWithPendingContributionList;
+                this.valueNoContribution = response.data.valueNoContribution;
+                this.valuePendingContribution = response.data.valuePendingContribution;
 
                 this.chartData = {
                     labels: ['Famílias com doações', 'Famílias sem doações', 'Famílias com doações pendentes'],

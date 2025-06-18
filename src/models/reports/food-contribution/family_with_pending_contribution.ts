@@ -5,4 +5,5 @@ export interface FamilyWithPendingContribution {
         sponsorPhone: '',
         paidInSpecies: false,
         leaderName: '',
+        valuePendingContribution: 0
 }

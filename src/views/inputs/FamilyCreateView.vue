@@ -12,6 +12,11 @@
                         </ul>
                     </div>
                 </ul>
+            <div class="row g-12">                                    
+                <div class="col-4">
+                    <img name="profile-picture" :src="imageResponsibleObjectUrl || defaultImage" alt="Imagem de Responsável"
+                        class="float-start img-fluid img-thumbnail" aria-describedby="Imagem do Responsável">
+                </div>
                 <div class="container" v-show="enableFamily">
                     <label aria-label="Nome do Responsável">Nome do Responsável*</label>
                     <input type="text" v-model="model.family.responsibleName" class="form-control"
@@ -43,6 +48,18 @@
                     <label aria-label="Observações">Observações</label>
                     <input type="text" v-model="model.family.observation" class="form-control"
                         aria-describedby="Campo de texto para observações">
+                    <label aria-label="Foto do responsável">Foto do Responsável</label>     
+                    <div class="input-group mb-3">
+                        <input type="file" accept="image/*" ref="fileInput" class="form-control"
+                            id="inputGroupFileResponsible" aria-describedby="Campo de texto para foto do responsável">
+                        <label class="input-group-text" @click="uploadResponsiblePicture">Upload</label>    
+                    </div>  
+                     <label aria-label="Consentimento Digitalizado">Consentimento Digitalizado</label>
+                    <div class="input-group mb-3">  
+                        <input type="file" accept="image/*" ref="fileInput" class="form-control"
+                            id="inputGroupFileConsent" aria-describedby="TermoConsentimento">
+                        <label class="input-group-text" @click="uploadConsentPicture">Upload</label>    
+                    </div>                                     
                     <div class="container mt-3">
                         <div class="row">
                             <div class="d-grid col-6 mx-auto">
@@ -52,7 +69,7 @@
                         </div>
                     </div>
                 </div>
-                
+                </div>
             </div>
             <div class="card-footer">
                     <p class="text-muted">* Campos obrigatórios</p>
@@ -72,7 +89,7 @@
                 </ul>
                 <div class="row g-12">
                     <div class="col-4">
-                        <img name="profile-picture" :src="imageObjectUrl || defaultImage" alt="Imagem de Criança"
+                        <img name="profile-picture" :src="imageChildObjectUrl || defaultImage" alt="Imagem de Criança"
                             class="float-start img-fluid img-thumbnail" aria-describedby="Imagem da criança">
                     </div>
                     <div class="col">
@@ -97,8 +114,8 @@
                         <label aria-label="Foto da criança">Foto da Criança</label>
                         <div class="input-group mb-3">
                             <input type="file" accept="image/*" ref="fileInput" class="form-control"
-                                id="inputGroupFile">
-                            <label class="input-group-text" @click="uploadPicture">Upload</label>
+                                id="inputGroupFileChild">
+                            <label class="input-group-text" @click="uploadChildPicture">Upload</label>
                         </div>
                     </div>
                 </div>
@@ -173,7 +190,9 @@ export default {
         return {
             errorList: [] as string[],
             neighborhoods: [] as Neighborhood[],
-            imageObjectUrl: null as string | null,
+            imageChildObjectUrl: null as string | null,
+            imageResponsibleObjectUrl: null as string | null,
+            imageConsentObjectUrl: null as string | null,
             leaders: [] as any[], // Lista de líderes disponíveis
             defaultImage: new URL('@/assets/profile.jpg', import.meta.url).href,
             model: {
@@ -185,6 +204,9 @@ export default {
                     neighborhoodId: 0,
                     observation: '',
                     leaderId: 0,
+                    pictureUrl: '' as string | undefined,
+                    pictureSubscription: '' as string | undefined,
+
                 },
                 child: {
                     childId: 0,
@@ -221,7 +243,9 @@ export default {
                 address: this.model.family.address,
                 neighborhoodId: this.model.family.neighborhoodId,
                 observation: this.model.family.observation,
-                leaderId: this.model.family.leaderId
+                leaderId: this.model.family.leaderId,
+                pictureUrl: this.model.family.pictureUrl,
+                pictureSubscription: this.model.family.pictureSubscription
             }, {
                 headers: {
                     Authorization: `Bearer ${token}` // Adiciona o token no cabeçalho
@@ -322,6 +346,8 @@ export default {
                 this.model.family.observation = result.data.observation;
                 this.model.children = result.data.children;
                 this.model.family.leaderId = result.data.leaderId;
+                this.model.family.pictureUrl = result.data.pictureUrl;
+                this.model.family.pictureSubscription = result.data.pictureSubscription;
             })
             .catch(() => {
                 this.errorList.push("Erro ao carregar a família.");
@@ -384,11 +410,109 @@ export default {
             this.model.child.familyId = 0;
 
             (this.$refs.fileInput as HTMLInputElement).value = '';
-            this.imageObjectUrl = this.defaultImage;
+            this.imageChildObjectUrl = this.defaultImage;
 
         },
-        uploadPicture() {
-            const input = document.getElementById('inputGroupFile') as HTMLInputElement;
+        uploadResponsiblePicture() {
+            const input = document.getElementById('inputGroupFileResponsible') as HTMLInputElement;
+
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                const formData = new FormData();
+                formData.append('file', file);
+
+                const token = localStorage.getItem("jwtToken");
+
+                axios.post('/api/upload', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        Authorization: `Bearer ${token}`
+                    }
+                })
+                .then(response => {
+                    this.model.family.pictureUrl = response.data;
+                    this.loadResponsibleImageFromApi();
+                })
+                .catch(() => {
+                    this.errorList.push("Erro ao fazer upload da imagem.");
+                });
+            } else {
+                this.errorList.push("Nenhum arquivo selecionado.");
+            }
+        },
+        async loadResponsibleImageFromApi() {
+            try {
+                const token = localStorage.getItem("jwtToken");
+                const response = await axios.get('/api/upload/open/' + this.model.family.pictureUrl, {
+                    responseType: 'blob',
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+
+                // Create object URL from blob
+                const blobUrl = URL.createObjectURL(response.data);
+                this.imageResponsibleObjectUrl = blobUrl;
+
+                // Clean up when component is destroyed
+                onUnmounted(() => {
+                    URL.revokeObjectURL(blobUrl);
+                });
+            } catch (error) {
+                console.error("Image load failed:", error);
+            }
+        },
+        uploadConsentPicture() {
+            const input = document.getElementById('inputGroupFileConsent') as HTMLInputElement;
+
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                const formData = new FormData();
+                formData.append('file', file);
+
+                const token = localStorage.getItem("jwtToken");
+
+                axios.post('/api/upload', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        Authorization: `Bearer ${token}`
+                    }
+                })
+                .then(response => {
+                    this.model.family.pictureSubscription = response.data;
+                    this.loadConsentImageFromApi();
+                })
+                .catch(() => {
+                    this.errorList.push("Erro ao fazer upload da imagem.");
+                });
+            } else {
+                this.errorList.push("Nenhum arquivo selecionado.");
+            }
+        },
+        async loadConsentImageFromApi() {
+            try {
+                const token = localStorage.getItem("jwtToken");
+                const response = await axios.get('/api/upload/open/' + this.model.family.pictureSubscription, {
+                    responseType: 'blob',
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+
+                // Create object URL from blob
+                const blobUrl = URL.createObjectURL(response.data);
+                this.imageConsentObjectUrl = blobUrl;
+
+                // Clean up when component is destroyed
+                onUnmounted(() => {
+                    URL.revokeObjectURL(blobUrl);
+                });
+            } catch (error) {
+                console.error("Image load failed:", error);
+            }
+        },
+        uploadChildPicture() {
+            const input = document.getElementById('inputGroupFileChild') as HTMLInputElement;
 
             if (input.files && input.files[0]) {
                 const file = input.files[0];
@@ -405,7 +529,7 @@ export default {
                 })
                 .then(response => {
                     this.model.child.pictureUrl = response.data;
-                    this.loadImageFromApi();
+                    this.loadChildImageFromApi();
                 })
                 .catch(() => {
                     this.errorList.push("Erro ao fazer upload da imagem.");
@@ -414,7 +538,7 @@ export default {
                 this.errorList.push("Nenhum arquivo selecionado.");
             }
         },
-        async loadImageFromApi() {
+        async loadChildImageFromApi() {
             try {
                 const token = localStorage.getItem("jwtToken");
                 const response = await axios.get('/api/upload/open/' + this.model.child.pictureUrl, {
@@ -426,7 +550,7 @@ export default {
 
                 // Create object URL from blob
                 const blobUrl = URL.createObjectURL(response.data);
-                this.imageObjectUrl = blobUrl;
+                this.imageChildObjectUrl = blobUrl;
 
                 // Clean up when component is destroyed
                 onUnmounted(() => {
@@ -436,6 +560,9 @@ export default {
                 console.error("Image load failed:", error);
             }
         },
-    }
+
+
+  
+}
 }
 </script>

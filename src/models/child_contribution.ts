@@ -6,4 +6,5 @@ export interface childContribution {
     wasDelivered: boolean,
     acceptance: string,
     observation: string,
+    toyDelivered: boolean,
 }
