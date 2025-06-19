@@ -16,6 +16,7 @@
     "@popperjs/core": "^2.11.8",
     "@types/jwt-decode": "^2.2.1",
     "axios": "^1.5.0",
+    "big.js": "^7.0.1",
     "bootstrap": "^5.3.3",
     "chart.js": "^4.4.9",
     "jspdf-autotable": "^5.0.2",
@@ -25,6 +26,7 @@
   },
   "devDependencies": {
     "@tsconfig/node22": "^22.0.0",
+    "@types/big.js": "^6.2.2",
     "@types/node": "^22.13.9",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vue/eslint-config-prettier": "^10.2.0",
